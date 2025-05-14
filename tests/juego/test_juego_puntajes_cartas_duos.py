@@ -2,7 +2,7 @@ import pytest
 from juego.carta import Carta
 from juego.juego import EstadoDelJuego
 
-def test_001_SiSeTieneUnPezEnLaMano_ElPuntajeEsCero():
+def test_SiSeTieneUnPezEnLaMano_ElPuntajeEsCero():
 	juego = EstadoDelJuego(cantidadDeJugadores=2)
 	juego.iniciarRonda()
 	
@@ -10,7 +10,7 @@ def test_001_SiSeTieneUnPezEnLaMano_ElPuntajeEsCero():
 	
 	assert juego.estadoDelJugador[0].puntajeDeRonda() == 0
 
-def test_002_SiSeTienenDosPecesEnLaMano_ElPuntajeEsUno():
+def test_SiSeTienenDosPecesEnLaMano_ElPuntajeEsUno():
 	juego = EstadoDelJuego(cantidadDeJugadores=2)
 	juego.iniciarRonda()
 	
@@ -19,7 +19,7 @@ def test_002_SiSeTienenDosPecesEnLaMano_ElPuntajeEsUno():
 	
 	assert juego.estadoDelJugador[0].puntajeDeRonda() == 1
 
-def test_003_SiSeTienenTresPecesEnLaMano_ElPuntajeEsUno():
+def test_SiSeTienenTresPecesEnLaMano_ElPuntajeEsUno():
 	juego = EstadoDelJuego(cantidadDeJugadores=2)
 	juego.iniciarRonda()
 	
@@ -29,7 +29,7 @@ def test_003_SiSeTienenTresPecesEnLaMano_ElPuntajeEsUno():
 	
 	assert juego.estadoDelJugador[0].puntajeDeRonda() == 1
 
-def test_004_SiSeTienenCuatroPecesEnLaMano_ElPuntajeEsDos():
+def test_SiSeTienenCuatroPecesEnLaMano_ElPuntajeEsDos():
 	juego = EstadoDelJuego(cantidadDeJugadores=2)
 	juego.iniciarRonda()
 	
@@ -41,7 +41,7 @@ def test_004_SiSeTienenCuatroPecesEnLaMano_ElPuntajeEsDos():
 	assert juego.estadoDelJugador[0].puntajeDeRonda() == 2
 	
 
-def test_005_SiSeTieneUnDuoDePeces_ElPuntajeEsUno():
+def test_SiSeTieneUnDuoDePeces_ElPuntajeEsUno():
 	juego = EstadoDelJuego(cantidadDeJugadores=2)
 	juego.iniciarRonda()
 	
@@ -51,7 +51,7 @@ def test_005_SiSeTieneUnDuoDePeces_ElPuntajeEsUno():
 	
 	assert juego.estadoDelJugador[0].puntajeDeRonda() == 1
 	
-def test_006_SiSeTienenDosDuosDePeces_ElPuntajeEsDos():
+def test_SiSeTienenDosDuosDePeces_ElPuntajeEsDos():
 	juego = EstadoDelJuego(cantidadDeJugadores=2)
 	juego.iniciarRonda()
 	
@@ -64,7 +64,7 @@ def test_006_SiSeTienenDosDuosDePeces_ElPuntajeEsDos():
 	
 	assert juego.estadoDelJugador[0].puntajeDeRonda() == 2
 
-def test_007_SiSeTienenDosPecesEnLaManoYUnDuoDePeces_ElPuntajeEsDos():
+def test_SiSeTienenDosPecesEnLaManoYUnDuoDePeces_ElPuntajeEsDos():
 	juego = EstadoDelJuego(cantidadDeJugadores=2)
 	juego.iniciarRonda()
 	
@@ -79,7 +79,7 @@ def test_007_SiSeTienenDosPecesEnLaManoYUnDuoDePeces_ElPuntajeEsDos():
 
 
 
-def test_008_SiSeTieneUnBarcoEnLaMano_ElPuntajeEsCero():
+def test_SiSeTieneUnBarcoEnLaMano_ElPuntajeEsCero():
 	juego = EstadoDelJuego(cantidadDeJugadores=2)
 	juego.iniciarRonda()
 	
@@ -87,7 +87,7 @@ def test_008_SiSeTieneUnBarcoEnLaMano_ElPuntajeEsCero():
 	
 	assert juego.estadoDelJugador[0].puntajeDeRonda() == 0
 
-def test_009_SiSeTienenDosBarcosEnLaMano_ElPuntajeEsUno():
+def test_SiSeTienenDosBarcosEnLaMano_ElPuntajeEsUno():
 	juego = EstadoDelJuego(cantidadDeJugadores=2)
 	juego.iniciarRonda()
 	
@@ -96,7 +96,7 @@ def test_009_SiSeTienenDosBarcosEnLaMano_ElPuntajeEsUno():
 	
 	assert juego.estadoDelJugador[0].puntajeDeRonda() == 1
 
-def test_010_SiSeTienenTresBarcosEnLaMano_ElPuntajeEsUno():
+def test_SiSeTienenTresBarcosEnLaMano_ElPuntajeEsUno():
 	juego = EstadoDelJuego(cantidadDeJugadores=2)
 	juego.iniciarRonda()
 	
@@ -106,7 +106,7 @@ def test_010_SiSeTienenTresBarcosEnLaMano_ElPuntajeEsUno():
 	
 	assert juego.estadoDelJugador[0].puntajeDeRonda() == 1
 
-def test_011_SiSeTienenCuatroBarcosEnLaMano_ElPuntajeEsDos():
+def test_SiSeTienenCuatroBarcosEnLaMano_ElPuntajeEsDos():
 	juego = EstadoDelJuego(cantidadDeJugadores=2)
 	juego.iniciarRonda()
 	
@@ -118,7 +118,7 @@ def test_011_SiSeTienenCuatroBarcosEnLaMano_ElPuntajeEsDos():
 	assert juego.estadoDelJugador[0].puntajeDeRonda() == 2
 	
 
-def test_012_SiSeTieneUnDuoDeBarcos_ElPuntajeEsUno():
+def test_SiSeTieneUnDuoDeBarcos_ElPuntajeEsUno():
 	juego = EstadoDelJuego(cantidadDeJugadores=2)
 	juego.iniciarRonda()
 	
@@ -128,7 +128,7 @@ def test_012_SiSeTieneUnDuoDeBarcos_ElPuntajeEsUno():
 	
 	assert juego.estadoDelJugador[0].puntajeDeRonda() == 1
 	
-def test_013_SiSeTienenDosDuosDeBarcos_ElPuntajeEsDos():
+def test_SiSeTienenDosDuosDeBarcos_ElPuntajeEsDos():
 	juego = EstadoDelJuego(cantidadDeJugadores=2)
 	juego.iniciarRonda()
 	
@@ -143,7 +143,7 @@ def test_013_SiSeTienenDosDuosDeBarcos_ElPuntajeEsDos():
 
 
 
-def test_014_SiSeTienenDosPecesEnLaManoYUnDuoDePeces_ElPuntajeEsDos():
+def test_SiSeTienenDosPecesEnLaManoYUnDuoDePeces_ElPuntajeEsDos():
 	juego = EstadoDelJuego(cantidadDeJugadores=2)
 	juego.iniciarRonda()
 	
@@ -157,7 +157,7 @@ def test_014_SiSeTienenDosPecesEnLaManoYUnDuoDePeces_ElPuntajeEsDos():
 
 
 
-def test_015_SiSeTieneUnCangrejoEnLaMano_ElPuntajeEsCero():
+def test_SiSeTieneUnCangrejoEnLaMano_ElPuntajeEsCero():
 	juego = EstadoDelJuego(cantidadDeJugadores=2)
 	juego.iniciarRonda()
 	
@@ -165,7 +165,7 @@ def test_015_SiSeTieneUnCangrejoEnLaMano_ElPuntajeEsCero():
 	
 	assert juego.estadoDelJugador[0].puntajeDeRonda() == 0
 
-def test_016_SiSeTienenDosCangrejosEnLaMano_ElPuntajeEsUno():
+def test_SiSeTienenDosCangrejosEnLaMano_ElPuntajeEsUno():
 	juego = EstadoDelJuego(cantidadDeJugadores=2)
 	juego.iniciarRonda()
 	
@@ -174,7 +174,7 @@ def test_016_SiSeTienenDosCangrejosEnLaMano_ElPuntajeEsUno():
 	
 	assert juego.estadoDelJugador[0].puntajeDeRonda() == 1
 
-def test_017_SiSeTienenTresCangrejosEnLaMano_ElPuntajeEsUno():
+def test_SiSeTienenTresCangrejosEnLaMano_ElPuntajeEsUno():
 	juego = EstadoDelJuego(cantidadDeJugadores=2)
 	juego.iniciarRonda()
 	
@@ -184,7 +184,7 @@ def test_017_SiSeTienenTresCangrejosEnLaMano_ElPuntajeEsUno():
 	
 	assert juego.estadoDelJugador[0].puntajeDeRonda() == 1
 
-def test_018_SiSeTienenCuatroCangrejosEnLaMano_ElPuntajeEsDos():
+def test_SiSeTienenCuatroCangrejosEnLaMano_ElPuntajeEsDos():
 	juego = EstadoDelJuego(cantidadDeJugadores=2)
 	juego.iniciarRonda()
 	
@@ -196,7 +196,7 @@ def test_018_SiSeTienenCuatroCangrejosEnLaMano_ElPuntajeEsDos():
 	assert juego.estadoDelJugador[0].puntajeDeRonda() == 2
 	
 
-def test_019_SiSeTieneUnDuoDeCangrejos_ElPuntajeEsUno():
+def test_SiSeTieneUnDuoDeCangrejos_ElPuntajeEsUno():
 	juego = EstadoDelJuego(cantidadDeJugadores=2)
 	juego.iniciarRonda()
 	
@@ -206,7 +206,7 @@ def test_019_SiSeTieneUnDuoDeCangrejos_ElPuntajeEsUno():
 	
 	assert juego.estadoDelJugador[0].puntajeDeRonda() == 1
 	
-def test_020_SiSeTienenDosDuosDeCangrejos_ElPuntajeEsDos():
+def test_SiSeTienenDosDuosDeCangrejos_ElPuntajeEsDos():
 	juego = EstadoDelJuego(cantidadDeJugadores=2)
 	juego.iniciarRonda()
 	
@@ -219,7 +219,7 @@ def test_020_SiSeTienenDosDuosDeCangrejos_ElPuntajeEsDos():
 	
 	assert juego.estadoDelJugador[0].puntajeDeRonda() == 2
 
-def test_021_SiSeTienenDosPecesEnLaManoYUnDuoDePeces_ElPuntajeEsDos():
+def test_SiSeTienenDosPecesEnLaManoYUnDuoDePeces_ElPuntajeEsDos():
 	juego = EstadoDelJuego(cantidadDeJugadores=2)
 	juego.iniciarRonda()
 	
@@ -234,7 +234,7 @@ def test_021_SiSeTienenDosPecesEnLaManoYUnDuoDePeces_ElPuntajeEsDos():
 
 
 
-def test_022_SiSeTieneUnNadadorEnLaMano_ElPuntajeEsCero():
+def test_SiSeTieneUnNadadorEnLaMano_ElPuntajeEsCero():
 	juego = EstadoDelJuego(cantidadDeJugadores=2)
 	juego.iniciarRonda()
 	
@@ -242,7 +242,7 @@ def test_022_SiSeTieneUnNadadorEnLaMano_ElPuntajeEsCero():
 	
 	assert juego.estadoDelJugador[0].puntajeDeRonda() == 0
 
-def test_023_SiSeTieneUnTiburónEnLaMano_ElPuntajeEsCero():
+def test_SiSeTieneUnTiburónEnLaMano_ElPuntajeEsCero():
 	juego = EstadoDelJuego(cantidadDeJugadores=2)
 	juego.iniciarRonda()
 	
@@ -250,7 +250,7 @@ def test_023_SiSeTieneUnTiburónEnLaMano_ElPuntajeEsCero():
 	
 	assert juego.estadoDelJugador[0].puntajeDeRonda() == 0
 
-def test_024_SiSeTieneUnNadadorYUnTiburónEnLaMano_ElPuntajeEsUno():
+def test_SiSeTieneUnNadadorYUnTiburónEnLaMano_ElPuntajeEsUno():
 	juego = EstadoDelJuego(cantidadDeJugadores=2)
 	juego.iniciarRonda()
 	
@@ -259,7 +259,7 @@ def test_024_SiSeTieneUnNadadorYUnTiburónEnLaMano_ElPuntajeEsUno():
 	
 	assert juego.estadoDelJugador[0].puntajeDeRonda() == 1
 
-def test_024_SiSeTienenDosNadadoresYUnTiburónEnLaMano_ElPuntajeEsUno():
+def test_SiSeTienenDosNadadoresYUnTiburónEnLaMano_ElPuntajeEsUno():
 	juego = EstadoDelJuego(cantidadDeJugadores=2)
 	juego.iniciarRonda()
 	
@@ -269,7 +269,7 @@ def test_024_SiSeTienenDosNadadoresYUnTiburónEnLaMano_ElPuntajeEsUno():
 	
 	assert juego.estadoDelJugador[0].puntajeDeRonda() == 1
 
-def test_024_SiSeTieneUnNadadorYDosTiburonesEnLaMano_ElPuntajeEsUno():
+def test_SiSeTieneUnNadadorYDosTiburonesEnLaMano_ElPuntajeEsUno():
 	juego = EstadoDelJuego(cantidadDeJugadores=2)
 	juego.iniciarRonda()
 	
@@ -279,7 +279,7 @@ def test_024_SiSeTieneUnNadadorYDosTiburonesEnLaMano_ElPuntajeEsUno():
 	
 	assert juego.estadoDelJugador[0].puntajeDeRonda() == 1
 
-def test_024_SiSeTienenDosNadadoresYDosTiburonesEnLaMano_ElPuntajeEsDos():
+def test_SiSeTienenDosNadadoresYDosTiburonesEnLaMano_ElPuntajeEsDos():
 	juego = EstadoDelJuego(cantidadDeJugadores=2)
 	juego.iniciarRonda()
 	
@@ -290,7 +290,7 @@ def test_024_SiSeTienenDosNadadoresYDosTiburonesEnLaMano_ElPuntajeEsDos():
 	
 	assert juego.estadoDelJugador[0].puntajeDeRonda() == 2
 
-def test_025_SiSeTieneUnDuoDeNadadorYTiburón_ElPuntajeEsUno():
+def test_SiSeTieneUnDuoDeNadadorYTiburón_ElPuntajeEsUno():
 	juego = EstadoDelJuego(cantidadDeJugadores=2)
 	juego.iniciarRonda()
 	
@@ -300,7 +300,7 @@ def test_025_SiSeTieneUnDuoDeNadadorYTiburón_ElPuntajeEsUno():
 	
 	assert juego.estadoDelJugador[0].puntajeDeRonda() == 1
 
-def test_026_SiSeTienenDosDuosDeNadadorYTiburón_ElPuntajeEsUno():
+def test_SiSeTienenDosDuosDeNadadorYTiburón_ElPuntajeEsUno():
 	juego = EstadoDelJuego(cantidadDeJugadores=2)
 	juego.iniciarRonda()
 	
@@ -313,7 +313,7 @@ def test_026_SiSeTienenDosDuosDeNadadorYTiburón_ElPuntajeEsUno():
 	
 	assert juego.estadoDelJugador[0].puntajeDeRonda() == 2
 
-def test_027_SiSeTieneUnNadadorYUnTiburónEnLaManoYUnDuoDeNadadorYTiburón_ElPuntajeEsDos():
+def test_SiSeTieneUnNadadorYUnTiburónEnLaManoYUnDuoDeNadadorYTiburón_ElPuntajeEsDos():
 	juego = EstadoDelJuego(cantidadDeJugadores=2)
 	juego.iniciarRonda()
 	
@@ -328,7 +328,7 @@ def test_027_SiSeTieneUnNadadorYUnTiburónEnLaManoYUnDuoDeNadadorYTiburón_ElPun
 
 
 
-def test_028_SiSeTieneUnBarcoYUnCangrejoEnMano_ElPuntajeEsCero():
+def test_SiSeTieneUnBarcoYUnCangrejoEnMano_ElPuntajeEsCero():
 	juego = EstadoDelJuego(cantidadDeJugadores=2)
 	juego.iniciarRonda()
 	

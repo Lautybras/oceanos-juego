@@ -1,7 +1,7 @@
 import pytest
 from juego.juego import EstadoDelJuego, JuegoException
 
-def test_001_SiSeInicióRonda_AlRobarDelMazo_SeDevuelvenDosCartas():
+def test_SiSeInicióRonda_AlRobarDelMazo_SeDevuelvenDosCartas():
 	juego = EstadoDelJuego(cantidadDeJugadores=2)
 	juego.iniciarRonda()
 	
@@ -9,7 +9,7 @@ def test_001_SiSeInicióRonda_AlRobarDelMazo_SeDevuelvenDosCartas():
 	
 	assert len(cartasParaRobarDelMazo) == 2
 
-def test_002_SiSeInicióRonda_AlRobarDelMazo_LasCartasDevueltasSonLasDelTopeDelMazo():
+def test_SiSeInicióRonda_AlRobarDelMazo_LasCartasDevueltasSonLasDelTopeDelMazo():
 	juego = EstadoDelJuego(cantidadDeJugadores=2)
 	juego.iniciarRonda()
 	
@@ -18,7 +18,7 @@ def test_002_SiSeInicióRonda_AlRobarDelMazo_LasCartasDevueltasSonLasDelTopeDelM
 	assert cartasParaRobarDelMazo[0] == juego.mazo[-1]
 	assert cartasParaRobarDelMazo[1] == juego.mazo[-2]
 
-def test_003_SiElMazoTieneUnaCarta_AlRobarDelMazo_SeDevuelveUnaCarta():
+def test_SiElMazoTieneUnaCarta_AlRobarDelMazo_SeDevuelveUnaCarta():
 	juego = EstadoDelJuego(cantidadDeJugadores=2)
 	juego.iniciarRonda()
 	juego.mazo = [juego.mazo[0]]
@@ -27,7 +27,7 @@ def test_003_SiElMazoTieneUnaCarta_AlRobarDelMazo_SeDevuelveUnaCarta():
 	
 	assert len(cartasParaRobarDelMazo) == 1
 
-def test_004_SiElMazoTieneUnaCarta_AlRobarDelMazo_LaCartaDevueltaEsLaDelTopeDelMazo():
+def test_SiElMazoTieneUnaCarta_AlRobarDelMazo_LaCartaDevueltaEsLaDelTopeDelMazo():
 	juego = EstadoDelJuego(cantidadDeJugadores=2)
 	juego.iniciarRonda()
 	
@@ -35,7 +35,7 @@ def test_004_SiElMazoTieneUnaCarta_AlRobarDelMazo_LaCartaDevueltaEsLaDelTopeDelM
 	
 	assert cartasParaRobarDelMazo[0] == juego.mazo[-1]
 
-def test_005_SiElMazoNoTieneCartas_NoSePuedeRobarDelMazo():
+def test_SiElMazoNoTieneCartas_NoSePuedeRobarDelMazo():
 	juego = EstadoDelJuego(cantidadDeJugadores=2)
 	juego.iniciarRonda()
 	juego.mazo = []
@@ -45,7 +45,7 @@ def test_005_SiElMazoNoTieneCartas_NoSePuedeRobarDelMazo():
 	
 	assert "No se puede robar de un mazo vacío" in str(excepcion.value)
 
-def test_006_SiSeIntentóRobarDelMazoSinElegir_NoSePuedeRobarDelMazo():
+def test_SiSeIntentóRobarDelMazoSinElegir_NoSePuedeRobarDelMazo():
 	juego = EstadoDelJuego(cantidadDeJugadores=2)
 	juego.iniciarRonda()
 	juego.robarDelMazo()
@@ -55,7 +55,7 @@ def test_006_SiSeIntentóRobarDelMazoSinElegir_NoSePuedeRobarDelMazo():
 	
 	assert "No se ha concretado el robo del mazo (¡falta elegir!)" in str(excepcion.value)
 
-def test_007_SiSeIntentóRobarDelMazoSinElegir_NoSePuedePasarDeTurno():
+def test_SiSeIntentóRobarDelMazoSinElegir_NoSePuedePasarDeTurno():
 	juego = EstadoDelJuego(cantidadDeJugadores=2)
 	juego.iniciarRonda()
 	juego.robarDelMazo()
@@ -65,7 +65,7 @@ def test_007_SiSeIntentóRobarDelMazoSinElegir_NoSePuedePasarDeTurno():
 	
 	assert "No se ha concretado el robo del mazo (¡falta elegir!)" in str(excepcion.value)
 
-def test_008_SiSeIntentóRobarDelMazoSinElegir_NoSePuedeRobarDelDescarte():
+def test_SiSeIntentóRobarDelMazoSinElegir_NoSePuedeRobarDelDescarte():
 	juego = EstadoDelJuego(cantidadDeJugadores=2)
 	juego.iniciarRonda()
 	juego.robarDelMazo()
@@ -75,7 +75,7 @@ def test_008_SiSeIntentóRobarDelMazoSinElegir_NoSePuedeRobarDelDescarte():
 	
 	assert "No se ha concretado el robo del mazo (¡falta elegir!)" in str(excepcion.value)
 
-def test_009_SiSeInicióRondaYSeRobóDelMazo_NoSePuedeRobarDelMazo():
+def test_SiSeInicióRondaYSeRobóDelMazo_NoSePuedeRobarDelMazo():
 	juego = EstadoDelJuego(cantidadDeJugadores=2)
 	juego.iniciarRonda()
 	juego.robarDelMazo()

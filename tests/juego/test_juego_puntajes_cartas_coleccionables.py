@@ -2,7 +2,7 @@ import pytest
 from juego.carta import Carta
 from juego.juego import EstadoDelJuego
 
-def test_001_SiSeTieneUnPinguino_ElPuntajeEsUno():
+def test_SiSeTieneUnPinguino_ElPuntajeEsUno():
 	juego = EstadoDelJuego(cantidadDeJugadores=2)
 	juego.iniciarRonda()
 	
@@ -10,7 +10,7 @@ def test_001_SiSeTieneUnPinguino_ElPuntajeEsUno():
 	
 	assert juego.estadoDelJugador[0].puntajeDeRonda() == 1 
 
-def test_002_SiSeTieneUnPinguinoYOtraCarta_ElPuntajeEsUno():
+def test_SiSeTieneUnPinguinoYOtraCarta_ElPuntajeEsUno():
 	juego = EstadoDelJuego(cantidadDeJugadores=2)
 	juego.iniciarRonda()
 	
@@ -19,7 +19,7 @@ def test_002_SiSeTieneUnPinguinoYOtraCarta_ElPuntajeEsUno():
 	
 	assert juego.estadoDelJugador[0].puntajeDeRonda() == 1 
 
-def test_003_SiSeTienenDosPinguinos_ElPuntajeEsTres():
+def test_SiSeTienenDosPinguinos_ElPuntajeEsTres():
 	juego = EstadoDelJuego(cantidadDeJugadores=2)
 	juego.iniciarRonda()
 	
@@ -28,7 +28,7 @@ def test_003_SiSeTienenDosPinguinos_ElPuntajeEsTres():
 	
 	assert juego.estadoDelJugador[0].puntajeDeRonda() == 3
 
-def test_004_SiSeTienenTresPinguinos_ElPuntajeEsCinco():
+def test_SiSeTienenTresPinguinos_ElPuntajeEsCinco():
 	juego = EstadoDelJuego(cantidadDeJugadores=2)
 	juego.iniciarRonda()
 	
@@ -38,7 +38,7 @@ def test_004_SiSeTienenTresPinguinos_ElPuntajeEsCinco():
 	
 	assert juego.estadoDelJugador[0].puntajeDeRonda() == 5
 
-def test_005_SiSeTieneUnAncla_ElPuntajeEsCero():
+def test_SiSeTieneUnAncla_ElPuntajeEsCero():
 	juego = EstadoDelJuego(cantidadDeJugadores=2)
 	juego.iniciarRonda()
 	
@@ -46,7 +46,7 @@ def test_005_SiSeTieneUnAncla_ElPuntajeEsCero():
 	
 	assert juego.estadoDelJugador[0].puntajeDeRonda() == 0
 
-def test_006_SiSeTienenDosAnclas_ElPuntajeEsCinco():
+def test_SiSeTienenDosAnclas_ElPuntajeEsCinco():
 	juego = EstadoDelJuego(cantidadDeJugadores=2)
 	juego.iniciarRonda()
 	
@@ -55,7 +55,7 @@ def test_006_SiSeTienenDosAnclas_ElPuntajeEsCinco():
 	
 	assert juego.estadoDelJugador[0].puntajeDeRonda() == 5
 
-def test_007_SiSeTienenDosAnclasYUnPinguino_ElPuntajeEsSeis():
+def test_SiSeTienenDosAnclasYUnPinguino_ElPuntajeEsSeis():
 	juego = EstadoDelJuego(cantidadDeJugadores=2)
 	juego.iniciarRonda()
 	
@@ -65,7 +65,7 @@ def test_007_SiSeTienenDosAnclasYUnPinguino_ElPuntajeEsSeis():
 	
 	assert juego.estadoDelJugador[0].puntajeDeRonda() == 5 + 1
 
-def test_008_SiSeTieneUnaConcha_ElPuntajeEsCero():
+def test_SiSeTieneUnaConcha_ElPuntajeEsCero():
 	juego = EstadoDelJuego(cantidadDeJugadores=2)
 	juego.iniciarRonda()
 	
@@ -73,7 +73,7 @@ def test_008_SiSeTieneUnaConcha_ElPuntajeEsCero():
 	
 	assert juego.estadoDelJugador[0].puntajeDeRonda() == 0
 
-def test_009_SiSeTienenDosConchas_ElPuntajeEsDos():
+def test_SiSeTienenDosConchas_ElPuntajeEsDos():
 	juego = EstadoDelJuego(cantidadDeJugadores=2)
 	juego.iniciarRonda()
 	
@@ -82,7 +82,7 @@ def test_009_SiSeTienenDosConchas_ElPuntajeEsDos():
 	
 	assert juego.estadoDelJugador[0].puntajeDeRonda() == 2
 
-def test_010_SiSeTienenTresConchas_ElPuntajeEsCuatro():
+def test_SiSeTienenTresConchas_ElPuntajeEsCuatro():
 	juego = EstadoDelJuego(cantidadDeJugadores=2)
 	juego.iniciarRonda()
 	
@@ -92,7 +92,7 @@ def test_010_SiSeTienenTresConchas_ElPuntajeEsCuatro():
 	
 	assert juego.estadoDelJugador[0].puntajeDeRonda() == 4
 
-def test_011_SiSeTienenCuatroConchas_ElPuntajeEsSeis():
+def test_SiSeTienenCuatroConchas_ElPuntajeEsSeis():
 	juego = EstadoDelJuego(cantidadDeJugadores=2)
 	juego.iniciarRonda()
 	
@@ -103,7 +103,7 @@ def test_011_SiSeTienenCuatroConchas_ElPuntajeEsSeis():
 	
 	assert juego.estadoDelJugador[0].puntajeDeRonda() == 6
 
-def test_012_SiSeTienenCincoConchas_ElPuntajeEsOcho():
+def test_SiSeTienenCincoConchas_ElPuntajeEsOcho():
 	juego = EstadoDelJuego(cantidadDeJugadores=2)
 	juego.iniciarRonda()
 	
@@ -115,7 +115,7 @@ def test_012_SiSeTienenCincoConchas_ElPuntajeEsOcho():
 	
 	assert juego.estadoDelJugador[0].puntajeDeRonda() == 8
 
-def test_013_SiSeTienenSeisConchas_ElPuntajeEsDiez():
+def test_SiSeTienenSeisConchas_ElPuntajeEsDiez():
 	juego = EstadoDelJuego(cantidadDeJugadores=2)
 	juego.iniciarRonda()
 	
@@ -128,7 +128,7 @@ def test_013_SiSeTienenSeisConchas_ElPuntajeEsDiez():
 	
 	assert juego.estadoDelJugador[0].puntajeDeRonda() == 10
 
-def test_014_SiSeTieneUnPuplo_ElPuntajeEsCero():
+def test_SiSeTieneUnPuplo_ElPuntajeEsCero():
 	juego = EstadoDelJuego(cantidadDeJugadores=2)
 	juego.iniciarRonda()
 	
@@ -136,7 +136,7 @@ def test_014_SiSeTieneUnPuplo_ElPuntajeEsCero():
 	
 	assert juego.estadoDelJugador[0].puntajeDeRonda() == 0
 
-def test_015_SiSeTienenDosPulpos_ElPuntajeEsTres():
+def test_SiSeTienenDosPulpos_ElPuntajeEsTres():
 	juego = EstadoDelJuego(cantidadDeJugadores=2)
 	juego.iniciarRonda()
 	
@@ -145,7 +145,7 @@ def test_015_SiSeTienenDosPulpos_ElPuntajeEsTres():
 	
 	assert juego.estadoDelJugador[0].puntajeDeRonda() == 3
 
-def test_016_SiSeTienenTresPulpos_ElPuntajeEsSeis():
+def test_SiSeTienenTresPulpos_ElPuntajeEsSeis():
 	juego = EstadoDelJuego(cantidadDeJugadores=2)
 	juego.iniciarRonda()
 	
@@ -155,7 +155,7 @@ def test_016_SiSeTienenTresPulpos_ElPuntajeEsSeis():
 	
 	assert juego.estadoDelJugador[0].puntajeDeRonda() == 6
 
-def test_017_SiSeTienenCuatroPulpos_ElPuntajeEsNueve():
+def test_SiSeTienenCuatroPulpos_ElPuntajeEsNueve():
 	juego = EstadoDelJuego(cantidadDeJugadores=2)
 	juego.iniciarRonda()
 	
@@ -166,7 +166,7 @@ def test_017_SiSeTienenCuatroPulpos_ElPuntajeEsNueve():
 	
 	assert juego.estadoDelJugador[0].puntajeDeRonda() == 9
 
-def test_018_SiSeTienenCincoPulpos_ElPuntajeEsDoce():
+def test_SiSeTienenCincoPulpos_ElPuntajeEsDoce():
 	juego = EstadoDelJuego(cantidadDeJugadores=2)
 	juego.iniciarRonda()
 	
