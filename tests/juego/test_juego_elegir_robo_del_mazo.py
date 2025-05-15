@@ -1,5 +1,5 @@
 import pytest
-import collections
+from collections import Counter as Multiset
 from juego.carta import Carta
 from juego.juego import EstadoDelJuego, JuegoInvalidoException, JuegoException, cartasDelJuego
 
@@ -11,8 +11,8 @@ def test_SiSeInicióRonda_AlElegirRobarLaPrimeraCartaYDescartarEnLaPrimeraPila_L
 	juego.robarDelMazo()
 	juego.elegirRoboDelMazo(0,0)
 	
-	assert len(juego.estadoDelJugador[0].mano) == 1
-	assert juego.estadoDelJugador[0].mano[0] == cartaElegida
+	assert juego.estadoDelJugador[0].mano.total() == 1
+	assert list(juego.estadoDelJugador[0].mano.elements())[0] == cartaElegida
 
 def test_SiSeInicióRonda_AlElegirRobarLaSegundaCartaYDescartarEnLaPrimeraPila_LaManoDelJugadorCeroTieneLaCartaSeleccionada():
 	juego = EstadoDelJuego(cantidadDeJugadores=2)
@@ -22,8 +22,8 @@ def test_SiSeInicióRonda_AlElegirRobarLaSegundaCartaYDescartarEnLaPrimeraPila_L
 	juego.robarDelMazo()
 	juego.elegirRoboDelMazo(1,0)
 	
-	assert len(juego.estadoDelJugador[0].mano) == 1
-	assert juego.estadoDelJugador[0].mano[0] == cartaElegida
+	assert juego.estadoDelJugador[0].mano.total() == 1
+	assert list(juego.estadoDelJugador[0].mano.elements())[0] == cartaElegida
 
 def test_SiSeInicióRonda_AlElegirRobarLaPrimeraCartaYDescartarEnLaPrimeraPila_LaPrimeraPilaDeDescarteTieneLaCartaNoSeleccionada():
 	juego = EstadoDelJuego(cantidadDeJugadores=2)
@@ -48,8 +48,8 @@ def test_SiSeInicióRondaYElJugadorCeroRobóDelMazoYPasóDeTurno_AlElegirRobarLa
 	juego.robarDelMazo()
 	juego.elegirRoboDelMazo(0,0)
 	
-	assert len(juego.estadoDelJugador[1].mano) == 1
-	assert juego.estadoDelJugador[1].mano[0] == cartaElegida
+	assert juego.estadoDelJugador[1].mano.total() == 1
+	assert list(juego.estadoDelJugador[1].mano.elements())[0] == cartaElegida
 	
 def test_SiSeInicióRondaYSeIntentóRobarDelMazo_NoSePuedeRobarUnaCartaFueraDelRangoDeDosCartas():
 	juego = EstadoDelJuego(cantidadDeJugadores=2)
@@ -96,17 +96,17 @@ def test_SiElMazoTieneUnaCartaYSeIntentóRobarDelMazo_NoSePuedeRobarUnaCartaFuer
 def test_SiElJugadorCeroYaTeníaOtrasCartasEnLaMano_AlElegirRobarDelMazoLaPrimerCarta_LaManoDelJugadorCeroTieneSusCartasYLaRobada():
 	juego = EstadoDelJuego(cantidadDeJugadores=2)
 	juego.iniciarRonda()
-	juego.estadoDelJugador[0].mano = [
+	juego.estadoDelJugador[0].mano = Multiset([
 		Carta(Carta.Tipo.BARCO, Carta.Color.NARANJA),
 		Carta(Carta.Tipo.ANCLA, Carta.Color.AMARILLO)
-	]
+	])
 	cartaARobar = juego.mazo[-1]
 	juego.robarDelMazo()
 	
 	juego.elegirRoboDelMazo(0,0)
 	
-	assert juego.estadoDelJugador[0].mano == [
+	assert juego.estadoDelJugador[0].mano == Multiset([
 		Carta(Carta.Tipo.BARCO, Carta.Color.NARANJA),
 		Carta(Carta.Tipo.ANCLA, Carta.Color.AMARILLO),
 		cartaARobar
-	]
+	])

@@ -24,8 +24,8 @@ def test_SiSeInicióRonda_AlRobarDelDescarte_LaCartaRobadaEstáEnLaManoDelJugado
 	cartaEnDescarte = juego.descarte[0][0]
 	juego.robarDelDescarte(0)
 
-	assert len(juego.estadoDelJugador[0].mano) == 1
-	assert juego.estadoDelJugador[0].mano[0] == cartaEnDescarte
+	assert juego.estadoDelJugador[0].mano.total() == 1
+	assert list(juego.estadoDelJugador[0].mano.elements())[0] == cartaEnDescarte
 
 def test_SiSeInicióRonda_NoSePuedeRobarDeUnaPilaDescarteNoExistente():
 	juego = EstadoDelJuego(cantidadDeJugadores=2)

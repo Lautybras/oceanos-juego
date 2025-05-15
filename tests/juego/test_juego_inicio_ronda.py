@@ -64,8 +64,8 @@ def test_SiSeCreóJuegoParaDosJugadores_AlIniciarRonda_LaManoDeCadaJugadorEstáV
 
 	juego.iniciarRonda()
 
-	assert len(juego.estadoDelJugador[0].mano) == 0
-	assert len(juego.estadoDelJugador[1].mano) == 0
+	assert juego.estadoDelJugador[0].mano.total() == 0
+	assert juego.estadoDelJugador[1].mano.total() == 0
 
 def test_SiSeCreóJuegoParaDosJugadores_AlIniciarRonda_LaZonaDeDuosDeCadaJugadorEstáVacía():
 	juego = EstadoDelJuego(cantidadDeJugadores=2)

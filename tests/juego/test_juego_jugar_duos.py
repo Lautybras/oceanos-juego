@@ -99,5 +99,5 @@ def test_SiSeTienenDosPeces_AlJugarDúoDePeces_LosPecesVanALaZonaDeDúos():
 		Carta(Carta.Tipo.PEZ,Carta.Color.AMARILLO)
 	]))
 	
-	assert len(juego.estadoDelJugador[0].mano) == 0
+	assert juego.estadoDelJugador[0].mano.total() == 0
 	

@@ -84,8 +84,8 @@ class JuegoException(Exception):
 
 class EstadoDeJugador():
 	def __init__(self):
-		self.mano = []
-		self.zonaDeDuos = []
+		self.mano = Multiset()
+		self.zonaDeDuos = Multiset()
 		
 	def puntajeDeRonda(self):
 		cantidadDeCartasEnManoDeTipo = {tipo: 0 for tipo in Carta.Tipo}
@@ -97,14 +97,14 @@ class EstadoDeJugador():
 		}
 		cantidadDeCartasDeColor = {color: 0 for color in Carta.Color}
 		
-		for carta in self.mano:
-			cantidadDeCartasEnManoDeTipo[carta.tipo] += 1
-			cantidadDeCartasDeColor[carta.color] += 1
+		for claveDeCarta in self.mano:
+			cantidadDeCartasEnManoDeTipo[claveDeCarta.tipo] += self.mano[claveDeCarta]
+			cantidadDeCartasDeColor[claveDeCarta.color] += self.mano[claveDeCarta]
 		
-		for duo in self.zonaDeDuos:
-			cantidadDeDuosEnJuegoDeTipo[duo[0].tipo] += 1
-			cantidadDeCartasDeColor[duo[0].color] += 1
-			cantidadDeCartasDeColor[duo[1].color] += 1
+		for claveDeDuo in self.zonaDeDuos:
+			cantidadDeDuosEnJuegoDeTipo[claveDeDuo[0].tipo] += self.zonaDeDuos[claveDeDuo]
+			cantidadDeCartasDeColor[claveDeDuo[0].color] += self.zonaDeDuos[claveDeDuo]
+			cantidadDeCartasDeColor[claveDeDuo[1].color] += self.zonaDeDuos[claveDeDuo]
 		
 		return (
 			self._puntajePorDuosEnMano(cantidadDeCartasEnManoDeTipo) +
@@ -123,7 +123,7 @@ class EstadoDeJugador():
 		)
 	
 	def _puntajePorDuosJugados(self):
-		return len(self.zonaDeDuos)
+		return self.zonaDeDuos.total()
 	
 	def _puntajePorColeccionables(self, cantidadDeColeccionables):
 		return (
@@ -225,7 +225,7 @@ class EstadoDelJuego():
 		
 		cartaRobada = self.descarte[indicePilaDeDescarte].pop()
 		
-		self.estadoDelJugador[self.deQuienEsTurno].mano.append(cartaRobada)
+		self.estadoDelJugador[self.deQuienEsTurno].mano[cartaRobada] += 1
 		
 		self.seHaRobadoEsteTurno = True
 		
@@ -261,7 +261,7 @@ class EstadoDelJuego():
 		if len(self.mazo) > 1:
 			cartasRobadasDelMazo.append(self.mazo.pop())
 			self.descarte[indiceDePilaDondeDescartar].append(cartasRobadasDelMazo[1 - indiceDeCartaARobar])
-		self.estadoDelJugador[self.deQuienEsTurno].mano.append(cartasRobadasDelMazo[indiceDeCartaARobar])
+		self.estadoDelJugador[self.deQuienEsTurno].mano[cartasRobadasDelMazo[indiceDeCartaARobar]] += 1
 		
 		self.hayQueTomarDecisionesDeRoboDelMazo = False
 		self.seHaRobadoEsteTurno = True
@@ -286,7 +286,7 @@ class EstadoDelJuego():
 			if cartasAJugar[clave] > Multiset(self.estadoDelJugador[self.deQuienEsTurno].mano)[clave]:
 				raise JuegoException("Las cartas seleccionadas no están en la mano")
 		
-		self.estadoDelJugador[self.deQuienEsTurno].mano = []
+		self.estadoDelJugador[self.deQuienEsTurno].mano = Multiset() #todo sacar...
 		
 		
 	def pasarTurno(self):
