@@ -1,5 +1,6 @@
 import random
 from .carta import Carta
+from collections import Counter as Multiset
 
 def cartasDelJuego():
 	return list([
@@ -198,6 +199,7 @@ class EstadoDelJuego():
 		self.deQuienEsTurno = None
 		self.seHaRobadoEsteTurno = None
 		self.hayQueTomarDecisionesDeRoboDelMazo = None
+		self.rondaEnCurso = False
 	
 	def iniciarRonda(self):
 		self.estadoDelJugador = [EstadoDeJugador() for _ in range(self.cantidadDeJugadores)]
@@ -207,8 +209,11 @@ class EstadoDelJuego():
 		self.deQuienEsTurno = 0
 		self.seHaRobadoEsteTurno = False
 		self.hayQueTomarDecisionesDeRoboDelMazo = False
-
+		self.rondaEnCurso = True
+	
 	def robarDelDescarte(self, indicePilaDeDescarte):
+		if not self.rondaEnCurso:
+			raise JuegoException("No hay una ronda en curso")
 		if self.hayQueTomarDecisionesDeRoboDelMazo:
 			raise JuegoException("No se ha concretado el robo del mazo (¡falta elegir!)")
 		if self.seHaRobadoEsteTurno:
@@ -227,6 +232,8 @@ class EstadoDelJuego():
 		return cartaRobada
 	
 	def robarDelMazo(self):
+		if not self.rondaEnCurso:
+			raise JuegoException("No hay una ronda en curso")
 		if self.hayQueTomarDecisionesDeRoboDelMazo:
 			raise JuegoException("No se ha concretado el robo del mazo (¡falta elegir!)")
 		if self.seHaRobadoEsteTurno:
@@ -240,6 +247,8 @@ class EstadoDelJuego():
 		return [self.mazo[-1], self.mazo[-2]]
 	
 	def elegirRoboDelMazo(self, indiceDeCartaARobar, indiceDePilaDondeDescartar):
+		if not self.rondaEnCurso:
+			raise JuegoException("No hay una ronda en curso")
 		
 		if not (0 <= indiceDePilaDondeDescartar and indiceDePilaDondeDescartar <= 1):
 			raise JuegoException("Pila de descarte no existente")
@@ -252,12 +261,37 @@ class EstadoDelJuego():
 		if len(self.mazo) > 1:
 			cartasRobadasDelMazo.append(self.mazo.pop())
 			self.descarte[indiceDePilaDondeDescartar].append(cartasRobadasDelMazo[1 - indiceDeCartaARobar])
-		self.estadoDelJugador[self.deQuienEsTurno].mano = [cartasRobadasDelMazo[indiceDeCartaARobar]]
+		self.estadoDelJugador[self.deQuienEsTurno].mano.append(cartasRobadasDelMazo[indiceDeCartaARobar])
 		
 		self.hayQueTomarDecisionesDeRoboDelMazo = False
 		self.seHaRobadoEsteTurno = True
 	
+	def jugarDuo(self, cartasAJugar):
+		if not self.rondaEnCurso:
+			raise JuegoException("No hay una ronda en curso")
+		
+		if cartasAJugar.total() != 2:
+			raise JuegoException("Se necesitan dos cartas para jugar un dúo")
+		
+		for carta in cartasAJugar.elements():
+			if not carta.esDuo():
+				raise JuegoException("Se necesitan cartas dúo para jugar un dúo")
+		
+		tipoDeDuo = next(iter(cartasAJugar)).tipo
+		for carta in cartasAJugar.elements():
+			if carta.tipo != tipoDeDuo:
+				raise JuegoException("Se necesitan cartas del mismo tipo dúo para jugar un dúo")
+			
+		for clave in cartasAJugar:
+			if cartasAJugar[clave] > Multiset(self.estadoDelJugador[self.deQuienEsTurno].mano)[clave]:
+				raise JuegoException("Las cartas seleccionadas no están en la mano")
+		
+		self.estadoDelJugador[self.deQuienEsTurno].mano = []
+		
+		
 	def pasarTurno(self):
+		if not self.rondaEnCurso:
+			raise JuegoException("No hay una ronda en curso")
 		if self.hayQueTomarDecisionesDeRoboDelMazo:
 			raise JuegoException("No se ha concretado el robo del mazo (¡falta elegir!)")
 		if not self.seHaRobadoEsteTurno:
@@ -265,7 +299,7 @@ class EstadoDelJuego():
 		
 		self.deQuienEsTurno = (self.deQuienEsTurno + 1) % self.cantidadDeJugadores
 		self.seHaRobadoEsteTurno = False
-		
+	
 
 	def puntajeParaGanar(self):
 		return self._obtenerPuntajeParaGanarParaCantidadDeJugadores(self.cantidadDeJugadores)

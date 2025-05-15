@@ -1,7 +1,7 @@
 import pytest
-import collections
+from collections import Counter as Multiset
 from juego.carta import Carta
-from juego.juego import EstadoDelJuego, cartasDelJuego
+from juego.juego import EstadoDelJuego, cartasDelJuego, JuegoException
 
 def test_SiSeCreóJuegoParaDosJugadores_AlIniciarRonda_LosPuntajesDeRondaInicianEnCero():
 	juego = EstadoDelJuego(cantidadDeJugadores=2)
@@ -50,7 +50,7 @@ def test_SiSeCreóJuegoParaDosJugadores_AlIniciarRonda_ElMazoYLasPilasDeDescarte
 
 	juego.iniciarRonda()
 
-	assert collections.Counter(juego.mazo + juego.descarte[0] + juego.descarte[1]) == collections.Counter(cartasDelJuego())
+	assert Multiset(juego.mazo + juego.descarte[0] + juego.descarte[1]) == Multiset(cartasDelJuego())
 
 def test_SiSeCreóJuegoParaDosJugadores_AlIniciarRonda_HayUnEstadoDelJugadorPorCadaJugador():
 	juego = EstadoDelJuego(cantidadDeJugadores=2)
@@ -75,3 +75,52 @@ def test_SiSeCreóJuegoParaDosJugadores_AlIniciarRonda_LaZonaDeDuosDeCadaJugador
 	assert len(juego.estadoDelJugador[0].zonaDeDuos) == 0
 	assert len(juego.estadoDelJugador[1].zonaDeDuos) == 0
 
+
+
+def test_SiNoSeInicióLaPrimeraRonda_NoSePuedeRobarDelMazo():
+	
+	juego = EstadoDelJuego(cantidadDeJugadores=2)
+	
+	with pytest.raises(JuegoException) as excepcion:
+		juego.robarDelMazo()
+	
+	assert "No hay una ronda en curso" in str(excepcion.value)
+
+def test_SiNoSeInicióLaPrimeraRonda_NoSePuedeElegirRoboDelMazo():
+	
+	juego = EstadoDelJuego(cantidadDeJugadores=2)
+	
+	with pytest.raises(JuegoException) as excepcion:
+		juego.elegirRoboDelMazo(0,0)
+	
+	assert "No hay una ronda en curso" in str(excepcion.value)
+
+def test_SiNoSeInicióLaPrimeraRonda_NoSePuedeRobarDelDescarte():
+	
+	juego = EstadoDelJuego(cantidadDeJugadores=2)
+	
+	with pytest.raises(JuegoException) as excepcion:
+		juego.robarDelDescarte(0)
+	
+	assert "No hay una ronda en curso" in str(excepcion.value)
+
+def test_SiNoSeInicióLaPrimeraRonda_NoSePuedePasarTurno():
+	
+	juego = EstadoDelJuego(cantidadDeJugadores=2)
+	
+	with pytest.raises(JuegoException) as excepcion:
+		juego.pasarTurno()
+	
+	assert "No hay una ronda en curso" in str(excepcion.value)
+
+def test_SiNoSeInicióLaPrimeraRonda_NoSePuedeJugarUnDúo():
+	
+	juego = EstadoDelJuego(cantidadDeJugadores=2)
+	
+	with pytest.raises(JuegoException) as excepcion:
+		juego.jugarDuo(Multiset([
+		Carta(Carta.Tipo.PEZ, Carta.Color.BLANCO),
+		Carta(Carta.Tipo.PEZ, Carta.Color.BLANCO)
+	]))
+	
+	assert "No hay una ronda en curso" in str(excepcion.value)

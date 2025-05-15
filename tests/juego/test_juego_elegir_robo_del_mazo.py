@@ -92,3 +92,21 @@ def test_SiElMazoTieneUnaCartaYSeIntentóRobarDelMazo_NoSePuedeRobarUnaCartaFuer
 		juego.elegirRoboDelMazo(1,0)
 	
 	assert "No se puede elegir una carta para robar fuera del rango" in str(excepcion.value)
+
+def test_SiElJugadorCeroYaTeníaOtrasCartasEnLaMano_AlElegirRobarDelMazoLaPrimerCarta_LaManoDelJugadorCeroTieneSusCartasYLaRobada():
+	juego = EstadoDelJuego(cantidadDeJugadores=2)
+	juego.iniciarRonda()
+	juego.estadoDelJugador[0].mano = [
+		Carta(Carta.Tipo.BARCO, Carta.Color.NARANJA),
+		Carta(Carta.Tipo.ANCLA, Carta.Color.AMARILLO)
+	]
+	cartaARobar = juego.mazo[-1]
+	juego.robarDelMazo()
+	
+	juego.elegirRoboDelMazo(0,0)
+	
+	assert juego.estadoDelJugador[0].mano == [
+		Carta(Carta.Tipo.BARCO, Carta.Color.NARANJA),
+		Carta(Carta.Tipo.ANCLA, Carta.Color.AMARILLO),
+		cartaARobar
+	]
