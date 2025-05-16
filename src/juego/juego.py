@@ -286,6 +286,8 @@ class EstadoDelJuego():
 			raise JuegoException("Ese tipo de dúo no es válido para esta acción")
 		
 		self._moverDúoAZonaDeDúo(cartasAJugar)
+		
+		self.seHaRobadoEsteTurno = False
 	
 	def jugarDuoDeCangrejos(self, cartasAJugar, pilaDeDescarteARobar, indiceDeCartaARobar):
 		self._assertSePuedeJugarDuo(cartasAJugar)
