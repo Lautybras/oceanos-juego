@@ -1,4 +1,5 @@
 import pytest
+from collections import Counter as Multiset
 from juego.juego import EstadoDelJuego, JuegoException
 
 def test_SiSeInicióRonda_AlRobarDelMazo_SeDevuelvenDosCartas():
@@ -52,6 +53,16 @@ def test_SiSeIntentóRobarDelMazoSinElegir_NoSePuedeRobarDelMazo():
 	
 	with pytest.raises(JuegoException) as excepcion:
 		juego.robarDelMazo()
+	
+	assert "No se ha concretado el robo del mazo (¡falta elegir!)" in str(excepcion.value)
+
+def test_SiSeIntentóRobarDelMazoSinElegir_NoSePuedeJugarDúos():
+	juego = EstadoDelJuego(cantidadDeJugadores=2)
+	juego.iniciarRonda()
+	juego.robarDelMazo()
+	
+	with pytest.raises(JuegoException) as excepcion:
+		juego.jugarDuo(Multiset())
 	
 	assert "No se ha concretado el robo del mazo (¡falta elegir!)" in str(excepcion.value)
 
