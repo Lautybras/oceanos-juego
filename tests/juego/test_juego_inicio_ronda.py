@@ -118,7 +118,7 @@ def test_SiNoSeInicióLaPrimeraRonda_NoSePuedeJugarUnDúo():
 	juego = EstadoDelJuego(cantidadDeJugadores=2)
 	
 	with pytest.raises(JuegoException) as excepcion:
-		juego.jugarDuo(Multiset([
+		juego.jugarDuoDeBarcos(Multiset([
 		Carta(Carta.Tipo.PEZ, Carta.Color.BLANCO),
 		Carta(Carta.Tipo.PEZ, Carta.Color.BLANCO)
 	]))

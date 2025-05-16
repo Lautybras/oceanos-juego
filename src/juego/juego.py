@@ -266,7 +266,19 @@ class EstadoDelJuego():
 		self.hayQueTomarDecisionesDeRoboDelMazo = False
 		self.seHaRobadoEsteTurno = True
 	
-	def jugarDuo(self, cartasAJugar):
+	def jugarDuoDeBarcos(self, cartasAJugar):
+		self._assertSePuedeJugarDuo(cartasAJugar)
+		
+		for clave in cartasAJugar:
+			self.estadoDelJugador[self.deQuienEsTurno].mano[clave] -= cartasAJugar[clave]
+			if self.estadoDelJugador[self.deQuienEsTurno].mano[clave] == 0:
+				del self.estadoDelJugador[self.deQuienEsTurno].mano[clave]
+		
+		self.estadoDelJugador[self.deQuienEsTurno].zonaDeDuos[
+			tuple(sorted((list(cartasAJugar.elements())[0], list(cartasAJugar.elements())[1])))
+		] += 1
+	
+	def _assertSePuedeJugarDuo(self, cartasAJugar):
 		if not self.rondaEnCurso:
 			raise JuegoException("No hay una ronda en curso")
 		if self.hayQueTomarDecisionesDeRoboDelMazo:
@@ -288,16 +300,6 @@ class EstadoDelJuego():
 			
 		if not (cartasAJugar <= self.estadoDelJugador[self.deQuienEsTurno].mano):
 			raise JuegoException("Las cartas seleccionadas no están en la mano")
-		
-		
-		for clave in cartasAJugar:
-			self.estadoDelJugador[self.deQuienEsTurno].mano[clave] -= cartasAJugar[clave]
-			if self.estadoDelJugador[self.deQuienEsTurno].mano[clave] == 0:
-				del self.estadoDelJugador[self.deQuienEsTurno].mano[clave]
-		
-		self.estadoDelJugador[self.deQuienEsTurno].zonaDeDuos[
-			tuple(sorted((list(cartasAJugar.elements())[0], list(cartasAJugar.elements())[1])))
-		] += 1
 		
 	def pasarTurno(self):
 		if not self.rondaEnCurso:

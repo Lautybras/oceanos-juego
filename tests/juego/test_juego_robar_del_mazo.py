@@ -62,7 +62,7 @@ def test_SiSeIntentóRobarDelMazoSinElegir_NoSePuedeJugarDúos():
 	juego.robarDelMazo()
 	
 	with pytest.raises(JuegoException) as excepcion:
-		juego.jugarDuo(Multiset())
+		juego.jugarDuoDeBarcos(Multiset())
 	
 	assert "No se ha concretado el robo del mazo (¡falta elegir!)" in str(excepcion.value)
 
