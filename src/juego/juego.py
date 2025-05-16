@@ -266,17 +266,40 @@ class EstadoDelJuego():
 		self.hayQueTomarDecisionesDeRoboDelMazo = False
 		self.seHaRobadoEsteTurno = True
 	
+	def jugarDuoDePeces(self, cartasAJugar):
+		self._assertSePuedeJugarDuo(cartasAJugar)
+		if next(iter(cartasAJugar)).tipo != Carta.Tipo.PEZ:
+			raise JuegoException("Ese tipo de dúo no es válido para esta acción")
+		
+		self._moverDúoAZonaDeDúo(cartasAJugar)
+		
+		cartaRobada = None
+		if len(self.mazo) > 0:
+			cartaRobada = self.mazo.pop()
+			self.estadoDelJugador[self.deQuienEsTurno].mano[cartaRobada] += 1
+		
+		return cartaRobada
+	
 	def jugarDuoDeBarcos(self, cartasAJugar):
 		self._assertSePuedeJugarDuo(cartasAJugar)
+		if next(iter(cartasAJugar)).tipo != Carta.Tipo.BARCO:
+			raise JuegoException("Ese tipo de dúo no es válido para esta acción")
 		
-		for clave in cartasAJugar:
-			self.estadoDelJugador[self.deQuienEsTurno].mano[clave] -= cartasAJugar[clave]
-			if self.estadoDelJugador[self.deQuienEsTurno].mano[clave] == 0:
-				del self.estadoDelJugador[self.deQuienEsTurno].mano[clave]
+		self._moverDúoAZonaDeDúo(cartasAJugar)
+	
+	def jugarDuoDeCangrejos(self, cartasAJugar, pilaDeDescarteARobar, indiceDeCartaARobar):
+		self._assertSePuedeJugarDuo(cartasAJugar)
+		if next(iter(cartasAJugar)).tipo != Carta.Tipo.CANGREJO:
+			raise JuegoException("Ese tipo de dúo no es válido para esta acción")
 		
-		self.estadoDelJugador[self.deQuienEsTurno].zonaDeDuos[
-			tuple(sorted((list(cartasAJugar.elements())[0], list(cartasAJugar.elements())[1])))
-		] += 1
+		self._moverDúoAZonaDeDúo(cartasAJugar)
+	
+	def jugarDuoDeNadadorYTiburón(self, cartasAJugar, jugadorARobar):
+		self._assertSePuedeJugarDuo(cartasAJugar)
+		if next(iter(cartasAJugar)).tipo != Carta.Tipo.NADADOR:
+			raise JuegoException("Ese tipo de dúo no es válido para esta acción")
+		
+		self._moverDúoAZonaDeDúo(cartasAJugar)
 	
 	def _assertSePuedeJugarDuo(self, cartasAJugar):
 		if not self.rondaEnCurso:
@@ -294,12 +317,28 @@ class EstadoDelJuego():
 				raise JuegoException("Se necesitan cartas dúo para jugar un dúo")
 		
 		tipoDeDuo = next(iter(cartasAJugar)).tipo
-		for carta in cartasAJugar.elements():
-			if carta.tipo != tipoDeDuo:
-				raise JuegoException("Se necesitan cartas del mismo tipo dúo para jugar un dúo")
-			
+		
+		if not ((
+				list(cartasAJugar.elements())[0].tipo == Carta.Tipo.NADADOR and
+				list(cartasAJugar.elements())[1].tipo == Carta.Tipo.TIBURON
+			) or (
+				list(cartasAJugar.elements())[0].tipo != Carta.Tipo.NADADOR and
+				list(cartasAJugar.elements())[0].tipo == list(cartasAJugar.elements())[1].tipo
+		)):
+			raise JuegoException("Se necesitan cartas del mismo tipo dúo para jugar un dúo")
+		
 		if not (cartasAJugar <= self.estadoDelJugador[self.deQuienEsTurno].mano):
 			raise JuegoException("Las cartas seleccionadas no están en la mano")
+	
+	def _moverDúoAZonaDeDúo(self, cartasAJugar):
+		for clave in cartasAJugar:
+			self.estadoDelJugador[self.deQuienEsTurno].mano[clave] -= cartasAJugar[clave]
+			if self.estadoDelJugador[self.deQuienEsTurno].mano[clave] == 0:
+				del self.estadoDelJugador[self.deQuienEsTurno].mano[clave]
+		
+		self.estadoDelJugador[self.deQuienEsTurno].zonaDeDuos[
+			tuple(sorted((list(cartasAJugar.elements())[0], list(cartasAJugar.elements())[1])))
+		] += 1
 		
 	def pasarTurno(self):
 		if not self.rondaEnCurso:
