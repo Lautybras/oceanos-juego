@@ -295,9 +295,9 @@ class EstadoDelJuego():
 			if self.estadoDelJugador[self.deQuienEsTurno].mano[clave] == 0:
 				del self.estadoDelJugador[self.deQuienEsTurno].mano[clave]
 		
-		self.estadoDelJugador[self.deQuienEsTurno].zonaDeDuos[(
-			list(cartasAJugar.elements())[0], list(cartasAJugar.elements())[1] 
-		)] += 1
+		self.estadoDelJugador[self.deQuienEsTurno].zonaDeDuos[
+			tuple(sorted((list(cartasAJugar.elements())[0], list(cartasAJugar.elements())[1])))
+		] += 1
 		
 	def pasarTurno(self):
 		if not self.rondaEnCurso:

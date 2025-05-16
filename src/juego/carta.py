@@ -76,7 +76,10 @@ class Carta():
 	def __eq__(self, other):
 		if not isinstance(other, Carta):
 			return NotImplemented
-		return self.tipo == other.tipo and self.color == other.color
-
+		return self.tipo.value == other.tipo.value and self.color.value == other.color.value
+	
+	def __lt__(self, other):
+		return (self.tipo.value < other.tipo.value) or (self.tipo.value == other.tipo.value and self.color.value < other.color.value)
+	
 	def __hash__(self):
 		return hash((self.tipo, self.color))

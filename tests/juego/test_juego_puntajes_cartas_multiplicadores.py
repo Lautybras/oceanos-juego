@@ -82,7 +82,7 @@ def test_SiSeTieneUnCardumenYUnDuoDePeces_ElPuntajeEsTres():
 	
 	juego.estadoDelJugador[0].mano[Carta(Carta.Tipo.CARDUMEN, Carta.Color.BLANCO)] += 1
 	juego.estadoDelJugador[0].zonaDeDuos[
-		(Carta(Carta.Tipo.PEZ, Carta.Color.BLANCO), Carta(Carta.Tipo.PEZ, Carta.Color.BLANCO))
+		tuple(sorted((Carta(Carta.Tipo.PEZ, Carta.Color.BLANCO), Carta(Carta.Tipo.PEZ, Carta.Color.BLANCO))))
 	] += 1
 	
 	assert juego.estadoDelJugador[0].puntajeDeRonda() == 2 + 1
@@ -93,7 +93,7 @@ def test_SiSeTieneUnCardumenYDosDuosDePeces_ElPuntajeEsSeis():
 	
 	juego.estadoDelJugador[0].mano[Carta(Carta.Tipo.CARDUMEN, Carta.Color.BLANCO)] += 1
 	juego.estadoDelJugador[0].zonaDeDuos[
-		(Carta(Carta.Tipo.PEZ, Carta.Color.BLANCO), Carta(Carta.Tipo.PEZ, Carta.Color.BLANCO))
+		tuple(sorted((Carta(Carta.Tipo.PEZ, Carta.Color.BLANCO), Carta(Carta.Tipo.PEZ, Carta.Color.BLANCO))))
 	] += 2
 	
 	assert juego.estadoDelJugador[0].puntajeDeRonda() == 4 + 2
@@ -154,7 +154,7 @@ def test_SiSeTieneUnFaroYUnDuoDeBarcos_ElPuntajeEsTres():
 	
 	juego.estadoDelJugador[0].mano[Carta(Carta.Tipo.FARO, Carta.Color.BLANCO)] += 1
 	juego.estadoDelJugador[0].zonaDeDuos[
-		(Carta(Carta.Tipo.BARCO, Carta.Color.BLANCO), Carta(Carta.Tipo.BARCO, Carta.Color.BLANCO))
+		tuple(sorted((Carta(Carta.Tipo.BARCO, Carta.Color.BLANCO), Carta(Carta.Tipo.BARCO, Carta.Color.BLANCO))))
 	] += 1
 	
 	assert juego.estadoDelJugador[0].puntajeDeRonda() == 2 + 1
@@ -165,7 +165,7 @@ def test_SiSeTieneUnFaroYDosDuosDeBarcos_ElPuntajeEsSeis():
 	
 	juego.estadoDelJugador[0].mano[Carta(Carta.Tipo.FARO, Carta.Color.BLANCO)] += 1
 	juego.estadoDelJugador[0].zonaDeDuos[
-		(Carta(Carta.Tipo.BARCO, Carta.Color.BLANCO), Carta(Carta.Tipo.BARCO, Carta.Color.BLANCO))
+		tuple(sorted((Carta(Carta.Tipo.BARCO, Carta.Color.BLANCO), Carta(Carta.Tipo.BARCO, Carta.Color.BLANCO))))
 	] += 2
 	
 	assert juego.estadoDelJugador[0].puntajeDeRonda() == 4 + 2
