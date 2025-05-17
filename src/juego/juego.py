@@ -184,6 +184,20 @@ class EstadoDeJugador():
 			return 1 + ((cantidadDePinguinos - 1) * 2)
 		else:
 			raise JuegoException("Cantidad de pingüinos inválida")
+	
+	def _bonificacionPorColor(self):
+		cantidadDeCartasDeColor = {color: 0 for color in Carta.Color}
+		
+		for claveDeCarta in self.mano:
+			cantidadDeCartasDeColor[claveDeCarta.color] += self.mano[claveDeCarta]
+		
+		for claveDeDuo in self.zonaDeDuos:
+			cantidadDeCartasDeColor[claveDeDuo[0].color] += self.zonaDeDuos[claveDeDuo]
+			cantidadDeCartasDeColor[claveDeDuo[1].color] += self.zonaDeDuos[claveDeDuo]
+		
+		return sum(
+			(sorted(list(cantidadDeCartasDeColor.values()), reverse=True))[0:1]
+		)
 
 class EstadoDelJuego():
 	def __init__(self, cantidadDeJugadores=2):
@@ -200,6 +214,7 @@ class EstadoDelJuego():
 		self.seHaRobadoEsteTurno = None
 		self.hayQueTomarDecisionesDeRoboDelMazo = None
 		self.rondaEnCurso = False
+		self.ultimaChancePorJugador = None
 	
 	def iniciarRonda(self):
 		self.estadoDelJugador = [EstadoDeJugador() for _ in range(self.cantidadDeJugadores)]
@@ -210,6 +225,7 @@ class EstadoDelJuego():
 		self.seHaRobadoEsteTurno = False
 		self.hayQueTomarDecisionesDeRoboDelMazo = False
 		self.rondaEnCurso = True
+		self.ultimaChancePorJugador = None
 	
 	def robarDelDescarte(self, indicePilaDeDescarte):
 		if not self.rondaEnCurso:
@@ -312,10 +328,12 @@ class EstadoDelJuego():
 	
 	def jugarDuoDeNadadorYTiburón(self, cartasAJugar, jugadorARobar):
 		self._assertSePuedeJugarDuo(cartasAJugar)
-		if list(cartasAJugar.elements())[0].tipo != Carta.Tipo.NADADOR or list(cartasAJugar.elements())[1].tipo != Carta.Tipo.TIBURON:
+		tipos = [list(cartasAJugar.elements())[0].tipo, list(cartasAJugar.elements())[1].tipo] if (list(cartasAJugar.elements())[0].tipo.value < list(cartasAJugar.elements())[1].tipo.value) else [list(cartasAJugar.elements())[1].tipo, list(cartasAJugar.elements())[0].tipo]
+		if tipos[0] != Carta.Tipo.NADADOR or tipos[1] != Carta.Tipo.TIBURON:
 			raise JuegoException("Ese tipo de dúo no es válido para esta acción")
 		if not (
 			0 <= jugadorARobar and jugadorARobar < self.cantidadDeJugadores and jugadorARobar != self.deQuienEsTurno
+			and not self._jugadorMostróSuManoPorÚltimaChance(jugadorARobar)
 		):
 			raise JuegoException("La selección de jugador a robar con el dúo de nadador y tiburón es inválida")
 		
@@ -348,14 +366,14 @@ class EstadoDelJuego():
 			if not carta.esDuo():
 				raise JuegoException("Se necesitan cartas dúo para jugar un dúo")
 		
-		tipoDeDuo = next(iter(cartasAJugar)).tipo
+		tipos = [list(cartasAJugar.elements())[0].tipo, list(cartasAJugar.elements())[1].tipo] if (list(cartasAJugar.elements())[0].tipo.value < list(cartasAJugar.elements())[1].tipo.value) else [list(cartasAJugar.elements())[1].tipo, list(cartasAJugar.elements())[0].tipo]
 		
 		if not ((
-				list(cartasAJugar.elements())[0].tipo == Carta.Tipo.NADADOR and
-				list(cartasAJugar.elements())[1].tipo == Carta.Tipo.TIBURON
+				tipos[0] == Carta.Tipo.NADADOR and
+				tipos[1] == Carta.Tipo.TIBURON
 			) or (
-				list(cartasAJugar.elements())[0].tipo != Carta.Tipo.NADADOR and
-				list(cartasAJugar.elements())[0].tipo == list(cartasAJugar.elements())[1].tipo
+				tipos[0] != Carta.Tipo.NADADOR and
+				tipos[1] == tipos[0]
 		)):
 			raise JuegoException("Se necesitan cartas del mismo tipo dúo para jugar un dúo")
 		
@@ -382,6 +400,22 @@ class EstadoDelJuego():
 		
 		self.deQuienEsTurno = (self.deQuienEsTurno + 1) % self.cantidadDeJugadores
 		self.seHaRobadoEsteTurno = False
+		
+		if self.ultimaChancePorJugador == self.deQuienEsTurno:
+			#calcular fin de ronda por apuesta de última chance
+			if self.estadoDelJugador[self.ultimaChancePorJugador].puntajeDeRonda() == max([self.estadoDelJugador[j].puntajeDeRonda() for j in range(self.cantidadDeJugadores)]):
+				# apuesta ganada
+				for jugador in range(self.cantidadDeJugadores):
+					self.puntajesDeJuego[jugador] += self.estadoDelJugador[jugador]._bonificacionPorColor()
+				self.puntajesDeJuego[self.ultimaChancePorJugador] += self.estadoDelJugador[self.ultimaChancePorJugador].puntajeDeRonda()
+			else: 
+				# apuesta perdida
+				for jugador in range(self.cantidadDeJugadores):
+					if jugador != self.ultimaChancePorJugador:
+						self.puntajesDeJuego[jugador] += self.estadoDelJugador[jugador].puntajeDeRonda()
+				self.puntajesDeJuego[self.ultimaChancePorJugador] += self.estadoDelJugador[self.ultimaChancePorJugador]._bonificacionPorColor()
+			
+			self.rondaEnCurso = False
 	
 	def decirBasta(self):
 		if not self.rondaEnCurso:
@@ -390,9 +424,10 @@ class EstadoDelJuego():
 			raise JuegoException("No se ha concretado el robo del mazo (¡falta elegir!)")
 		if not self.seHaRobadoEsteTurno:
 			raise JuegoException("No se puede decir basta sin antes haber robado")
-		
 		if not (self.estadoDelJugador[self.deQuienEsTurno].puntajeDeRonda() >= 7):
 			raise JuegoException("No se puede terminar la ronda si no se tienen al menos siete puntos")
+		if self.ultimaChancePorJugador != None:
+			raise JuegoException("Ya se está jugando una ronda de última chance")
 		
 		for jugador in range(self.cantidadDeJugadores):
 			self.puntajesDeJuego[jugador] += self.estadoDelJugador[jugador].puntajeDeRonda()
@@ -403,6 +438,18 @@ class EstadoDelJuego():
 	def decirÚltimaChance(self):
 		if not self.rondaEnCurso:
 			raise JuegoException("No hay una ronda en curso")
+		if self.hayQueTomarDecisionesDeRoboDelMazo:
+			raise JuegoException("No se ha concretado el robo del mazo (¡falta elegir!)")
+		if not self.seHaRobadoEsteTurno:
+			raise JuegoException("No se puede decir última chance sin antes haber robado")
+		if not (self.estadoDelJugador[self.deQuienEsTurno].puntajeDeRonda() >= 7):
+			raise JuegoException("No se puede terminar la ronda si no se tienen al menos siete puntos")
+		if self.ultimaChancePorJugador != None:
+			raise JuegoException("Ya se está jugando una ronda de última chance")
+		
+		self.ultimaChancePorJugador = self.deQuienEsTurno
+		self.deQuienEsTurno = (self.deQuienEsTurno + 1) % self.cantidadDeJugadores
+		self.seHaRobadoEsteTurno = False
 		
 	
 	def puntajeParaGanar(self):
@@ -417,3 +464,14 @@ class EstadoDelJuego():
 			return 30
 		else:
 			raise JuegoException("La cantidad de jugadores no es válida")
+	
+	def _jugadorMostróSuManoPorÚltimaChance(self, jugador):
+		if self.ultimaChancePorJugador == None:
+			return False
+		else:
+			for orden in range(self.ultimaChancePorJugador + 1, self.ultimaChancePorJugador + 1 + self.cantidadDeJugadores):
+				jugadorEnOrden = orden % self.cantidadDeJugadores
+				if jugadorEnOrden == self.deQuienEsTurno:
+					return False
+				if jugadorEnOrden == jugador:
+					return True
