@@ -68,10 +68,10 @@ class Carta():
 		]
 
 	def __str__(self):
-		return f"Carta de {self.tipo.name.capitalize()}, color {self.color.name.lower().replace('_',' ')}"
+		return f"Carta de {self.tipo.name.capitalize()} {self.color.name.lower().replace('_',' ')}"
 	
 	def __repr__(self):
-		return f"Carta de {self.tipo.name.capitalize()}, color {self.color.name.lower()}"
+		return f"Carta de {self.tipo.name.capitalize()} {self.color.name.lower().replace('_',' ')}"
 
 	def __eq__(self, other):
 		if not isinstance(other, Carta):
