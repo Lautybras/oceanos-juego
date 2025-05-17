@@ -1,4 +1,4 @@
-import random
+from random import shuffle, choice
 from .carta import Carta
 from collections import Counter as Multiset
 
@@ -204,7 +204,7 @@ class EstadoDelJuego():
 	def iniciarRonda(self):
 		self.estadoDelJugador = [EstadoDeJugador() for _ in range(self.cantidadDeJugadores)]
 		self.mazo = list(cartasDelJuego())
-		random.shuffle(self.mazo)
+		shuffle(self.mazo)
 		self.descarte = ([self.mazo.pop(0)], [self.mazo.pop(0)])
 		self.deQuienEsTurno = 0
 		self.seHaRobadoEsteTurno = False
@@ -312,10 +312,26 @@ class EstadoDelJuego():
 	
 	def jugarDuoDeNadadorYTiburón(self, cartasAJugar, jugadorARobar):
 		self._assertSePuedeJugarDuo(cartasAJugar)
-		if next(iter(cartasAJugar)).tipo != Carta.Tipo.NADADOR:
+		if list(cartasAJugar.elements())[0].tipo != Carta.Tipo.NADADOR or list(cartasAJugar.elements())[1].tipo != Carta.Tipo.TIBURON:
 			raise JuegoException("Ese tipo de dúo no es válido para esta acción")
+		if not (
+			0 <= jugadorARobar and jugadorARobar < self.cantidadDeJugadores and jugadorARobar != self.deQuienEsTurno
+		):
+			raise JuegoException("La selección de jugador a robar con el dúo de nadador y tiburón es inválida")
 		
 		self._moverDúoAZonaDeDúo(cartasAJugar)
+		
+		cartaRobada = None
+		if self.estadoDelJugador[jugadorARobar].mano.total() > 0:
+			cartaRobada = choice(list(self.estadoDelJugador[jugadorARobar].mano.elements()))
+			
+			self.estadoDelJugador[self.deQuienEsTurno].mano[cartaRobada] += 1
+			
+			self.estadoDelJugador[jugadorARobar].mano[cartaRobada] -= 1
+			if self.estadoDelJugador[jugadorARobar].mano[cartaRobada] == 0:
+				del self.estadoDelJugador[jugadorARobar].mano[cartaRobada]
+		
+		return cartaRobada
 	
 	def _assertSePuedeJugarDuo(self, cartasAJugar):
 		if not self.rondaEnCurso:
