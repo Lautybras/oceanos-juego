@@ -295,6 +295,20 @@ class EstadoDelJuego():
 			raise JuegoException("Ese tipo de dúo no es válido para esta acción")
 		
 		self._moverDúoAZonaDeDúo(cartasAJugar)
+		
+		if len(self.descarte[0]) == 0 and len(self.descarte[1]) == 0:
+			return None
+		if (
+			(not (0 <= pilaDeDescarteARobar and pilaDeDescarteARobar <= 1) )
+			or (
+				not (0 <= indiceDeCartaARobar and indiceDeCartaARobar < len(self.descarte[pilaDeDescarteARobar]))
+			)
+		):
+			raise JuegoException("La selección de robo con el dúo de cangrejos es inválida")
+		cartaRobada = self.descarte[pilaDeDescarteARobar][indiceDeCartaARobar]
+		self.estadoDelJugador[self.deQuienEsTurno].mano[cartaRobada] += 1
+		del self.descarte[pilaDeDescarteARobar][indiceDeCartaARobar]
+		return cartaRobada
 	
 	def jugarDuoDeNadadorYTiburón(self, cartasAJugar, jugadorARobar):
 		self._assertSePuedeJugarDuo(cartasAJugar)
