@@ -86,6 +86,16 @@ def test_SiSeIntentóRobarDelMazoSinElegir_NoSePuedeRobarDelDescarte():
 	
 	assert "No se ha concretado el robo del mazo (¡falta elegir!)" in str(excepcion.value)
 
+def test_SiSeInicióRondaYSeRobóDelMazo_NoSePuedeDecirBasta():
+	juego = EstadoDelJuego(cantidadDeJugadores=2)
+	juego.iniciarRonda()
+	juego.robarDelMazo()
+	
+	with pytest.raises(JuegoException) as excepcion:
+		juego.decirBasta()
+	
+	assert "No se ha concretado el robo del mazo (¡falta elegir!)" in str(excepcion.value)
+
 def test_SiSeInicióRondaYSeRobóDelMazo_NoSePuedeRobarDelMazo():
 	juego = EstadoDelJuego(cantidadDeJugadores=2)
 	juego.iniciarRonda()

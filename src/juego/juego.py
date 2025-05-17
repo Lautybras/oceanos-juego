@@ -383,7 +383,28 @@ class EstadoDelJuego():
 		self.deQuienEsTurno = (self.deQuienEsTurno + 1) % self.cantidadDeJugadores
 		self.seHaRobadoEsteTurno = False
 	
-
+	def decirBasta(self):
+		if not self.rondaEnCurso:
+			raise JuegoException("No hay una ronda en curso")
+		if self.hayQueTomarDecisionesDeRoboDelMazo:
+			raise JuegoException("No se ha concretado el robo del mazo (¡falta elegir!)")
+		if not self.seHaRobadoEsteTurno:
+			raise JuegoException("No se puede decir basta sin antes haber robado")
+		
+		if not (self.estadoDelJugador[self.deQuienEsTurno].puntajeDeRonda() >= 7):
+			raise JuegoException("No se puede terminar la ronda si no se tienen al menos siete puntos")
+		
+		for jugador in range(self.cantidadDeJugadores):
+			self.puntajesDeJuego[jugador] += self.estadoDelJugador[jugador].puntajeDeRonda()
+		
+		self.rondaEnCurso = False
+		
+		
+	def decirÚltimaChance(self):
+		if not self.rondaEnCurso:
+			raise JuegoException("No hay una ronda en curso")
+		
+	
 	def puntajeParaGanar(self):
 		return self._obtenerPuntajeParaGanarParaCantidadDeJugadores(self.cantidadDeJugadores)
 	
