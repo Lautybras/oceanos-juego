@@ -212,7 +212,7 @@ class EstadoDelJuego():
 		self.mazo = None
 		self.descarte = None
 		self.haTerminado = False
-		self.deQuienEsTurno = None
+		self.deQuienEsTurno = 0
 		self.seHaRobadoEsteTurno = None
 		self.hayQueTomarDecisionesDeRoboDelMazo = None
 		self.rondaEnCurso = False
@@ -224,7 +224,6 @@ class EstadoDelJuego():
 		self.mazo = list(cartasDelJuego())
 		shuffle(self.mazo)
 		self.descarte = ([self.mazo.pop(0)], [self.mazo.pop(0)])
-		self.deQuienEsTurno = 0
 		self.seHaRobadoEsteTurno = False
 		self.hayQueTomarDecisionesDeRoboDelMazo = False
 		self.rondaEnCurso = True
@@ -313,6 +312,7 @@ class EstadoDelJuego():
 		if len(self.mazo) == 0:
 			# ronda anulada por mazo vacío
 			self.rondaEnCurso = False
+			self.deQuienEsTurno = (self.deQuienEsTurno + 1) % self.cantidadDeJugadores
 			return
 		
 		self.seHaRobadoEsteTurno = False
@@ -416,6 +416,7 @@ class EstadoDelJuego():
 		if len(self.mazo) == 0:
 			# ronda anulada por mazo vacío
 			self.rondaEnCurso = False
+			self.deQuienEsTurno = (self.deQuienEsTurno + 1) % self.cantidadDeJugadores
 			return
 		
 		
@@ -437,6 +438,7 @@ class EstadoDelJuego():
 				self.puntajesDeJuego[self.ultimaChancePorJugador] += self.estadoDelJugador[self.ultimaChancePorJugador]._bonificacionPorColor()
 			
 			self.rondaEnCurso = False
+			self.deQuienEsTurno = (self.deQuienEsTurno + 1) % self.cantidadDeJugadores
 			self._calcularSiHayGanador()
 	
 	def decirBasta(self):
@@ -454,8 +456,8 @@ class EstadoDelJuego():
 		for jugador in range(self.cantidadDeJugadores):
 			self.puntajesDeJuego[jugador] += self.estadoDelJugador[jugador].puntajeDeRonda()
 		
-		self.deQuienEsTurno = (self.deQuienEsTurno + 1) % self.cantidadDeJugadores
 		self.rondaEnCurso = False
+		self.deQuienEsTurno = (self.deQuienEsTurno + 1) % self.cantidadDeJugadores
 		self._calcularSiHayGanador()
 	
 	def decirÚltimaChance(self):
@@ -473,6 +475,7 @@ class EstadoDelJuego():
 		if len(self.mazo) == 0:
 			# ronda anulada por mazo vacío
 			self.rondaEnCurso = False
+			self.deQuienEsTurno = (self.deQuienEsTurno + 1) % self.cantidadDeJugadores
 			return
 		
 		self.ultimaChancePorJugador = self.deQuienEsTurno

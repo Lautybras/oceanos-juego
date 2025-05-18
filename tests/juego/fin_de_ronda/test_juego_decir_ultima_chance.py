@@ -117,8 +117,6 @@ def test_SiSeDijoÚltimaChance_AlVolverASerTurnoDelJugadorQueDijoÚltimaChance_L
 	juego.pasarTurno()
 	
 	assert juego.rondaEnCurso == False
-	assert juego.deQuienEsTurno == 0
-
 
 
 def test_SiSeDijoÚltimaChance_NoSePuedeDecirBasta():

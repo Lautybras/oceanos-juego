@@ -24,7 +24,6 @@ def test_SiSeTerminóUnaRondaYNoSeAlcanzóElPuntajeRequerido_SePuedeIniciarRonda
 	assert isinstance(juego.descarte[0][0], Carta) == True
 	assert isinstance(juego.descarte[1][0], Carta) == True
 	assert len(juego.mazo) == 56
-	assert juego.deQuienEsTurno == 0
 
 def test_SiSeTerminóUnaRonda_AlAlcanzarElPuntajeRequeridoSinEmpates_ElJugadorConMásPuntosGanaLaPartida():
 	juego = EstadoDelJuego(cantidadDeJugadores=2)
