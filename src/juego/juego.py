@@ -281,11 +281,14 @@ class EstadoDelJuego():
 		if len(self.mazo) > 1:
 			cartasRobadasDelMazo.append(self.mazo.pop())
 			self.descarte[indiceDePilaDondeDescartar].append(cartasRobadasDelMazo[1 - indiceDeCartaARobar])
-		self.estadoDelJugador[self.deQuienEsTurno].mano[cartasRobadasDelMazo[indiceDeCartaARobar]] += 1
+		cartaRobada = cartasRobadasDelMazo[indiceDeCartaARobar]
+		self.estadoDelJugador[self.deQuienEsTurno].mano[cartaRobada] += 1
 		
 		self.hayQueTomarDecisionesDeRoboDelMazo = False
 		self.seHaRobadoEsteTurno = True
 		self._calcularSiHayGanadorPorSirenas()
+		
+		return cartaRobada
 	
 	def jugarDuoDePeces(self, cartasAJugar):
 		self._assertSePuedeJugarDuo(cartasAJugar)
