@@ -310,6 +310,11 @@ class EstadoDelJuego():
 		
 		self._moverDúoAZonaDeDúo(cartasAJugar)
 		
+		if len(self.mazo) == 0:
+			# ronda anulada por mazo vacío
+			self.rondaEnCurso = False
+			return
+		
 		self.seHaRobadoEsteTurno = False
 	
 	def jugarDuoDeCangrejos(self, cartasAJugar, pilaDeDescarteARobar, indiceDeCartaARobar):
@@ -408,6 +413,12 @@ class EstadoDelJuego():
 		if not self.seHaRobadoEsteTurno:
 			raise JuegoException("No se puede pasar de turno sin antes haber robado")
 		
+		if len(self.mazo) == 0:
+			# ronda anulada por mazo vacío
+			self.rondaEnCurso = False
+			return
+		
+		
 		self.deQuienEsTurno = (self.deQuienEsTurno + 1) % self.cantidadDeJugadores
 		self.seHaRobadoEsteTurno = False
 		
@@ -458,6 +469,11 @@ class EstadoDelJuego():
 			raise JuegoException("No se puede terminar la ronda si no se tienen al menos siete puntos")
 		if self.ultimaChancePorJugador != None:
 			raise JuegoException("Ya se está jugando una ronda de última chance")
+		
+		if len(self.mazo) == 0:
+			# ronda anulada por mazo vacío
+			self.rondaEnCurso = False
+			return
 		
 		self.ultimaChancePorJugador = self.deQuienEsTurno
 		self.deQuienEsTurno = (self.deQuienEsTurno + 1) % self.cantidadDeJugadores
