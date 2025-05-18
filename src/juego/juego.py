@@ -2,6 +2,8 @@ from random import shuffle, choice
 from .carta import Carta
 from collections import Counter as Multiset
 
+SIRENAS_INF = 999
+
 def cartasDelJuego():
 	return list([
 		Carta(Carta.Tipo.CANGREJO, Carta.Color.AZUL),
@@ -215,6 +217,7 @@ class EstadoDelJuego():
 		self.hayQueTomarDecisionesDeRoboDelMazo = None
 		self.rondaEnCurso = False
 		self.ultimaChancePorJugador = None
+		self.ganador = None
 	
 	def iniciarRonda(self):
 		self.estadoDelJugador = [EstadoDeJugador() for _ in range(self.cantidadDeJugadores)]
@@ -245,6 +248,8 @@ class EstadoDelJuego():
 		
 		self.seHaRobadoEsteTurno = True
 		
+		self._calcularSiHayGanadorPorSirenas()
+		
 		return cartaRobada
 	
 	def robarDelMazo(self):
@@ -268,7 +273,7 @@ class EstadoDelJuego():
 		
 		if not (0 <= indiceDePilaDondeDescartar and indiceDePilaDondeDescartar <= 1):
 			raise JuegoException("Pila de descarte no existente")
-		elif len(self.descarte[indiceDePilaDondeDescartar]) == 0 and len(self.descarte[1 - indiceDePilaDondeDescartar]) > 0:
+		elif len(self.descarte[indiceDePilaDondeDescartar]) > 0 and len(self.descarte[1 - indiceDePilaDondeDescartar]) == 0:
 			raise JuegoException("No se puede descartar en una pila no vacía mientras la otra se encuentre vacía")
 		elif not (0 <= indiceDeCartaARobar and indiceDeCartaARobar < min(2, len(self.mazo))):
 			raise JuegoException("No se puede elegir una carta para robar fuera del rango")
@@ -281,6 +286,7 @@ class EstadoDelJuego():
 		
 		self.hayQueTomarDecisionesDeRoboDelMazo = False
 		self.seHaRobadoEsteTurno = True
+		self._calcularSiHayGanadorPorSirenas()
 	
 	def jugarDuoDePeces(self, cartasAJugar):
 		self._assertSePuedeJugarDuo(cartasAJugar)
@@ -293,6 +299,7 @@ class EstadoDelJuego():
 		if len(self.mazo) > 0:
 			cartaRobada = self.mazo.pop()
 			self.estadoDelJugador[self.deQuienEsTurno].mano[cartaRobada] += 1
+			self._calcularSiHayGanadorPorSirenas()
 		
 		return cartaRobada
 	
@@ -324,6 +331,7 @@ class EstadoDelJuego():
 		cartaRobada = self.descarte[pilaDeDescarteARobar][indiceDeCartaARobar]
 		self.estadoDelJugador[self.deQuienEsTurno].mano[cartaRobada] += 1
 		del self.descarte[pilaDeDescarteARobar][indiceDeCartaARobar]
+		self._calcularSiHayGanadorPorSirenas()
 		return cartaRobada
 	
 	def jugarDuoDeNadadorYTiburón(self, cartasAJugar, jugadorARobar):
@@ -348,6 +356,8 @@ class EstadoDelJuego():
 			self.estadoDelJugador[jugadorARobar].mano[cartaRobada] -= 1
 			if self.estadoDelJugador[jugadorARobar].mano[cartaRobada] == 0:
 				del self.estadoDelJugador[jugadorARobar].mano[cartaRobada]
+			
+			self._calcularSiHayGanadorPorSirenas()
 		
 		return cartaRobada
 	
@@ -416,6 +426,7 @@ class EstadoDelJuego():
 				self.puntajesDeJuego[self.ultimaChancePorJugador] += self.estadoDelJugador[self.ultimaChancePorJugador]._bonificacionPorColor()
 			
 			self.rondaEnCurso = False
+			self._calcularSiHayGanador()
 	
 	def decirBasta(self):
 		if not self.rondaEnCurso:
@@ -432,9 +443,10 @@ class EstadoDelJuego():
 		for jugador in range(self.cantidadDeJugadores):
 			self.puntajesDeJuego[jugador] += self.estadoDelJugador[jugador].puntajeDeRonda()
 		
+		self.deQuienEsTurno = (self.deQuienEsTurno + 1) % self.cantidadDeJugadores
 		self.rondaEnCurso = False
-		
-		
+		self._calcularSiHayGanador()
+	
 	def decirÚltimaChance(self):
 		if not self.rondaEnCurso:
 			raise JuegoException("No hay una ronda en curso")
@@ -450,7 +462,6 @@ class EstadoDelJuego():
 		self.ultimaChancePorJugador = self.deQuienEsTurno
 		self.deQuienEsTurno = (self.deQuienEsTurno + 1) % self.cantidadDeJugadores
 		self.seHaRobadoEsteTurno = False
-		
 	
 	def puntajeParaGanar(self):
 		return self._obtenerPuntajeParaGanarParaCantidadDeJugadores(self.cantidadDeJugadores)
@@ -475,3 +486,22 @@ class EstadoDelJuego():
 					return False
 				if jugadorEnOrden == jugador:
 					return True
+	
+	def _calcularSiHayGanador(self):
+		puntajeMáximoAlcanzado = max(self.puntajesDeJuego)
+		if puntajeMáximoAlcanzado >= self.puntajeParaGanar():
+			self.haTerminado = True
+			# calcular ganador
+			for orden in range(self.cantidadDeJugadores):
+				jugadorEnOrden = (self.deQuienEsTurno - 1 - orden) % self.cantidadDeJugadores
+				if self.puntajesDeJuego[jugadorEnOrden] == puntajeMáximoAlcanzado:
+					self.ganador = jugadorEnOrden
+					break;
+	
+	def _calcularSiHayGanadorPorSirenas(self):
+		for j in range(self.cantidadDeJugadores):
+			if self.estadoDelJugador[j].mano[Carta(Carta.Tipo.SIRENA, Carta.Color.BLANCO)] == 4:
+				self.ganador = j
+				self.haTerminado = True
+				self.rondaEnCurso = False
+				self.puntajesDeJuego[j] = SIRENAS_INF

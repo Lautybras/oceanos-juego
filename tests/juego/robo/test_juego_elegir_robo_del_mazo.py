@@ -78,7 +78,7 @@ def test_SiSeInicióRondaYExactamenteUnaPilaDeDescarteEstáVacíaYSeIntentóRoba
 	juego.robarDelMazo()
 	
 	with pytest.raises(JuegoException) as excepcion:
-		juego.elegirRoboDelMazo(0,0)
+		juego.elegirRoboDelMazo(0,1)
 	
 	assert "No se puede descartar en una pila no vacía mientras la otra se encuentre vacía" in str(excepcion.value)
 
