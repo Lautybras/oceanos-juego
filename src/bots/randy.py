@@ -5,7 +5,11 @@ from juego.carta import Carta
 from juego.juego import EstadoDelJuego, EstadoDeJugador
 
 class RandyBot():
-	def __init__(self, juego, númeroDeJugador):
+	def __init__(self):
+		self._juego = None
+		self._númeroDeJugador = None
+	
+	def configurarParaJuego(self, juego, númeroDeJugador):
 		self._juego = juego
 		self._númeroDeJugador = númeroDeJugador
 	
