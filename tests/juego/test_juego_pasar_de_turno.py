@@ -16,7 +16,7 @@ def test_SiSeInicióRonda_NoSePuedePasarTurno():
 	with pytest.raises(JuegoException) as excepcion:
 		juego.pasarTurno()
 	
-	assert "No se puede pasar de turno sin antes haber robado" in str(excepcion.value)
+	assert "No se puede terminar el turno sin antes haber robado" in str(excepcion.value)
 	
 def test_SiSeInicióRondaYSePasóDeTurno_NoSePuedePasarTurno():
 	juego = EstadoDelJuego(cantidadDeJugadores=2)
@@ -27,7 +27,7 @@ def test_SiSeInicióRondaYSePasóDeTurno_NoSePuedePasarTurno():
 	with pytest.raises(JuegoException) as excepcion:
 		juego.pasarTurno()
 	
-	assert "No se puede pasar de turno sin antes haber robado" in str(excepcion.value)
+	assert "No se puede terminar el turno sin antes haber robado" in str(excepcion.value)
 
 def test_SiSeInicióRondaParaDosJugadoresYSePasóDeTurnoYSeRobóDelDescarte_AlPasarTurno_EsTurnoDelJugadorCero():
 	juego = EstadoDelJuego(cantidadDeJugadores=2)

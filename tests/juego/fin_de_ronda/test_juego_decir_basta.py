@@ -10,7 +10,7 @@ def test_SiNoSeRobó_NoSePuedeDecirBasta():
 	with pytest.raises(JuegoException) as excepcion:
 		juego.decirBasta()
 	
-	assert "No se puede decir basta sin antes haber robado" in str(excepcion.value)
+	assert "No se puede terminar el turno sin antes haber robado" in str(excepcion.value)
 
 def test_SiNoSeTienenSietePuntos_NoSePuedeDecirBasta():
 	juego = EstadoDelJuego(cantidadDeJugadores=2)

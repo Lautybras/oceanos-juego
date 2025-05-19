@@ -62,7 +62,7 @@ def test_SiSePuedeJugarDúoDeBarcos_AlJugarDúoDeBarcos_NoSePuedePasarTurno():
 	with pytest.raises(JuegoException) as excepcion:
 		juego.pasarTurno()
 	
-	assert "No se puede pasar de turno sin antes haber robado" in str(excepcion.value)
+	assert "No se puede terminar el turno sin antes haber robado" in str(excepcion.value)
 	
 def test_SiSeJugóUnDúoDeBarcos_SePuedeRobarDelMazo():
 	juego = EstadoDelJuego(cantidadDeJugadores=2)

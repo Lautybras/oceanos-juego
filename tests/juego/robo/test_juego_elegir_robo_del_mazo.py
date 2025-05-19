@@ -110,3 +110,24 @@ def test_SiElJugadorCeroYaTeníaOtrasCartasEnLaMano_AlElegirRobarDelMazoLaPrimer
 		Carta(Carta.Tipo.ANCLA, Carta.Color.AMARILLO),
 		cartaARobar
 	])
+
+def test_SiNoSeRobóDelMazo_NoSePuedeElegirRobarDelMazo():
+	juego = EstadoDelJuego(cantidadDeJugadores=2)
+	juego.iniciarRonda()
+	
+	with pytest.raises(JuegoException) as excepcion:
+		juego.elegirRoboDelMazo(0,0)
+	
+	assert "Debe confirmarse que se va a robar del mazo" in str(excepcion.value)
+
+def test_SiYaSeEligióRobarDelMazo_NoSePuedeElegirRobarDelMazo():
+	juego = EstadoDelJuego(cantidadDeJugadores=2)
+	juego.iniciarRonda()
+	juego.robarDelMazo()
+	juego.elegirRoboDelMazo(0,0)
+	
+	with pytest.raises(JuegoException) as excepcion:
+		juego.elegirRoboDelMazo(0,0)
+	
+	assert "Debe confirmarse que se va a robar del mazo" in str(excepcion.value)
+	

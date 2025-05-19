@@ -10,7 +10,7 @@ def test_SiNoSeRobó_NoSePuedeDecirÚltimaChance():
 	with pytest.raises(JuegoException) as excepcion:
 		juego.decirÚltimaChance()
 	
-	assert "No se puede decir última chance sin antes haber robado" in str(excepcion.value)
+	assert "No se puede terminar el turno sin antes haber robado" in str(excepcion.value)
 
 def test_SiNoSeTienenSietePuntos_NoSePuedeDecirÚltimaChance():
 	juego = EstadoDelJuego(cantidadDeJugadores=2)
@@ -89,7 +89,6 @@ def test_SiSeDijoÚltimaChance_AlJugarUnTurnoCompletoElSiguienteJugador_SuManoNo
 	juego.decirÚltimaChance()
 	
 	juego.robarDelMazo()
-	juego.elegirRoboDelMazo(0,0)
 	juego.elegirRoboDelMazo(0,0)
 	juego.pasarTurno()
 	
