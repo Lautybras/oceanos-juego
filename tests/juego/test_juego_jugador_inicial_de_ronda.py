@@ -14,7 +14,7 @@ def test_SiSeDijoBastaYNoSeAlcanzóElPuntajeRequerido_AlIniciarRonda_ElJugadorIn
 	juego.iniciarRonda()
 	
 	assert juego.deQuienEsTurno == 1
-	assert juego.rondaEnCurso == True
+	assert juego.rondaEnCurso() == True
 
 def test_SiSeDijoÚltimaChanceYNoSeAlcanzóElPuntajeRequerido_AlIniciarRonda_ElJugadorInicialEsElSiguienteAlQueDijoÚltimaChance():
 	juego = EstadoDelJuego(cantidadDeJugadores=2)
@@ -28,7 +28,7 @@ def test_SiSeDijoÚltimaChanceYNoSeAlcanzóElPuntajeRequerido_AlIniciarRonda_ElJ
 	juego.iniciarRonda()
 	
 	assert juego.deQuienEsTurno == 1
-	assert juego.rondaEnCurso == True
+	assert juego.rondaEnCurso() == True
 
 def test_SiSeTerminóLaRondaPorNoQuedarCartasEnElMazo_AlIniciarRonda_ElJugadorInicialEsElSiguienteAlQueJugóElÚltimoTurno():
 	juego = EstadoDelJuego(cantidadDeJugadores=3)
@@ -43,4 +43,4 @@ def test_SiSeTerminóLaRondaPorNoQuedarCartasEnElMazo_AlIniciarRonda_ElJugadorIn
 	juego.iniciarRonda()
 	
 	assert juego.deQuienEsTurno == 2
-	assert juego.rondaEnCurso == True
+	assert juego.rondaEnCurso() == True

@@ -14,8 +14,8 @@ def test_SiSeTerminóUnaRondaYNoSeAlcanzóElPuntajeRequerido_SePuedeIniciarRonda
 	
 	juego.iniciarRonda()
 	
-	assert juego.rondaEnCurso == True
-	assert juego.haTerminado == False
+	assert juego.rondaEnCurso() == True
+	assert juego.haTerminado() == False
 	assert juego.puntajesDeJuego[0] == 9
 	assert juego.puntajesDeJuego[1] == 2
 	
@@ -36,8 +36,8 @@ def test_SiSeTerminóUnaRonda_AlAlcanzarElPuntajeRequeridoSinEmpates_ElJugadorCo
 	
 	juego.decirBasta()
 	
-	assert juego.rondaEnCurso == False
-	assert juego.haTerminado == True
+	assert juego.rondaEnCurso() == False
+	assert juego.haTerminado() == True
 	assert juego.ganador == 0
 	assert juego.puntajesDeJuego[0] == 38 + 9
 	assert juego.puntajesDeJuego[1] == 2
@@ -59,8 +59,8 @@ def test_SiSeTerminóUnaRonda_AlAlcanzarElPuntajeRequeridoConEmpates_ElJugadorCo
 	
 	juego.decirBasta()
 	
-	assert juego.haTerminado == True
-	assert juego.rondaEnCurso == False
+	assert juego.haTerminado() == True
+	assert juego.rondaEnCurso() == False
 	assert juego.ganador == 1
 	assert juego.puntajesDeJuego[0] == 35
 	assert juego.puntajesDeJuego[1] == 35

@@ -32,7 +32,7 @@ def test_SiSeTienenAlMenosSietePuntosYSeRobó_AlDecirBasta_LaRondaTerminaYCadaJu
 	
 	juego.decirBasta()
 	
-	assert juego.rondaEnCurso == False
+	assert juego.rondaEnCurso() == False
 	assert juego.puntajesDeJuego[0] == puntajesEsperados[0]
 	assert juego.puntajesDeJuego[1] == puntajesEsperados[1]
 

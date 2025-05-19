@@ -1,4 +1,5 @@
 from random import shuffle, choice
+from enum import Enum, auto
 from .carta import Carta
 from collections import Counter as Multiset
 
@@ -202,6 +203,51 @@ class EstadoDeJugador():
 		)
 
 class EstadoDelJuego():
+	class Estado():
+		PARTIDA_NO_INICIADA = auto()
+		FASE_ROBO = auto()
+		FASE_ROBO_DEL_MAZO = auto()
+		FASE_DÚOS = auto()
+		FASE_ROBO_ÚLTIMA_CHANCE = auto()
+		FASE_ROBO_DEL_MAZO_ÚLTIMA_CHANCE = auto()
+		FASE_DÚOS_ÚLTIMA_CHANCE = auto()
+		RONDA_TERMINADA = auto()
+		PARTIDA_TERMINADA = auto()
+	
+	def rondaEnCurso(self):
+		return self.estado in [
+			self.Estado.FASE_ROBO,
+			self.Estado.FASE_ROBO_DEL_MAZO,
+			self.Estado.FASE_DÚOS,
+			self.Estado.FASE_ROBO_ÚLTIMA_CHANCE,
+			self.Estado.FASE_ROBO_DEL_MAZO_ÚLTIMA_CHANCE,
+			self.Estado.FASE_DÚOS_ÚLTIMA_CHANCE
+		]
+		#return self._rondaEnCurso
+	
+	def haTerminado(self):
+		return self.estado == self.Estado.PARTIDA_TERMINADA
+		#return self._haTerminado
+		
+	def seHaRobadoEsteTurno(self):
+		return self.estado in [
+			self.Estado.FASE_DÚOS,
+			self.Estado.FASE_DÚOS_ÚLTIMA_CHANCE
+		]
+	
+	def hayQueTomarDecisionesDeRoboDelMazo(self):
+		return self.estado in [
+			self.Estado.FASE_ROBO_DEL_MAZO,
+			self.Estado.FASE_ROBO_DEL_MAZO_ÚLTIMA_CHANCE
+		]
+	
+	def útlimaChanceEnCurso(self):
+		return self.estado in [
+			self.Estado.FASE_ROBO_ÚLTIMA_CHANCE,
+			self.Estado.FASE_ROBO_DEL_MAZO_ÚLTIMA_CHANCE,
+			self.Estado.FASE_DÚOS_ÚLTIMA_CHANCE
+		]
+	
 	def __init__(self, cantidadDeJugadores=2):
 		if(not (2 <= cantidadDeJugadores and cantidadDeJugadores <= 4)):
 			raise JuegoInvalidoException("La cantidad de jugadores es inválida")
@@ -211,30 +257,35 @@ class EstadoDelJuego():
 		self.estadoDelJugador = None
 		self.mazo = None
 		self.descarte = None
-		self.haTerminado = False
+		#*self._haTerminado = False
 		self.deQuienEsTurno = 0
-		self.seHaRobadoEsteTurno = None
-		self.hayQueTomarDecisionesDeRoboDelMazo = None
-		self.rondaEnCurso = False
+		#*self.seHaRobadoEsteTurno = None
+		#*self.hayQueTomarDecisionesDeRoboDelMazo = None
+		#*self._rondaEnCurso = False
 		self.ultimaChancePorJugador = None
 		self.ganador = None
+		
+		self.estado = self.Estado.PARTIDA_NO_INICIADA
 	
 	def iniciarRonda(self):
 		self.estadoDelJugador = [EstadoDeJugador() for _ in range(self.cantidadDeJugadores)]
 		self.mazo = list(cartasDelJuego())
 		shuffle(self.mazo)
 		self.descarte = ([self.mazo.pop(0)], [self.mazo.pop(0)])
-		self.seHaRobadoEsteTurno = False
-		self.hayQueTomarDecisionesDeRoboDelMazo = False
-		self.rondaEnCurso = True
+		#*self.seHaRobadoEsteTurno = False
+		#*self.hayQueTomarDecisionesDeRoboDelMazo = False
+		#*self._rondaEnCurso = True
 		self.ultimaChancePorJugador = None
+		
+		if self.estado in [self.Estado.PARTIDA_NO_INICIADA, self.Estado.RONDA_TERMINADA]:
+			self.estado = self.Estado.FASE_ROBO
 	
 	def robarDelDescarte(self, indicePilaDeDescarte):
-		if not self.rondaEnCurso:
+		if not self.rondaEnCurso():
 			raise JuegoException("No hay una ronda en curso")
-		if self.hayQueTomarDecisionesDeRoboDelMazo:
+		if self.hayQueTomarDecisionesDeRoboDelMazo():
 			raise JuegoException("No se ha concretado el robo del mazo (¡falta elegir!)")
-		if self.seHaRobadoEsteTurno:
+		if self.seHaRobadoEsteTurno():
 			raise JuegoException("Ya se ha robado en este turno")
 		if not (0 <= indicePilaDeDescarte and indicePilaDeDescarte < len(self.descarte)):
 			raise JuegoException("Pila de descarte no existente")
@@ -245,29 +296,40 @@ class EstadoDelJuego():
 		
 		self.estadoDelJugador[self.deQuienEsTurno].mano[cartaRobada] += 1
 		
-		self.seHaRobadoEsteTurno = True
+		if self.estado == self.Estado.FASE_ROBO:
+			self.estado = self.Estado.FASE_DÚOS
+		elif self.estado == self.Estado.FASE_ROBO_ÚLTIMA_CHANCE:
+			self.estado = self.Estado.FASE_DÚOS_ÚLTIMA_CHANCE
+		
+		#*self.seHaRobadoEsteTurno = True
 		
 		self._calcularSiHayGanadorPorSirenas()
 		
 		return cartaRobada
 	
 	def robarDelMazo(self):
-		if not self.rondaEnCurso:
+		if not self.rondaEnCurso():
 			raise JuegoException("No hay una ronda en curso")
-		if self.hayQueTomarDecisionesDeRoboDelMazo:
+		if self.hayQueTomarDecisionesDeRoboDelMazo():
 			raise JuegoException("No se ha concretado el robo del mazo (¡falta elegir!)")
-		if self.seHaRobadoEsteTurno:
+		if self.seHaRobadoEsteTurno():
 			raise JuegoException("Ya se ha robado en este turno")
 		if len(self.mazo) == 0:
 			raise JuegoException("No se puede robar de un mazo vacío")
 		
-		self.hayQueTomarDecisionesDeRoboDelMazo = True
+		#*self.hayQueTomarDecisionesDeRoboDelMazo = True
+		
+		if self.estado == self.Estado.FASE_ROBO:
+			self.estado = self.Estado.FASE_ROBO_DEL_MAZO
+		elif self.estado == self.Estado.FASE_ROBO_ÚLTIMA_CHANCE:
+			self.estado = self.Estado.FASE_ROBO_DEL_MAZO_ÚLTIMA_CHANCE
+		
 		if len(self.mazo) == 1:
 			return [self.mazo[-1]]
 		return [self.mazo[-1], self.mazo[-2]]
 	
 	def elegirRoboDelMazo(self, indiceDeCartaARobar, indiceDePilaDondeDescartar):
-		if not self.rondaEnCurso:
+		if not self.rondaEnCurso():
 			raise JuegoException("No hay una ronda en curso")
 		
 		if not (0 <= indiceDePilaDondeDescartar and indiceDePilaDondeDescartar <= 1):
@@ -284,8 +346,14 @@ class EstadoDelJuego():
 		cartaRobada = cartasRobadasDelMazo[indiceDeCartaARobar]
 		self.estadoDelJugador[self.deQuienEsTurno].mano[cartaRobada] += 1
 		
-		self.hayQueTomarDecisionesDeRoboDelMazo = False
-		self.seHaRobadoEsteTurno = True
+		
+		if self.estado == self.Estado.FASE_ROBO_DEL_MAZO:
+			self.estado = self.Estado.FASE_DÚOS
+		elif self.estado == self.Estado.FASE_ROBO_DEL_MAZO_ÚLTIMA_CHANCE:
+			self.estado = self.Estado.FASE_DÚOS_ÚLTIMA_CHANCE
+		
+		#*self.hayQueTomarDecisionesDeRoboDelMazo = False
+		#*self.seHaRobadoEsteTurno = True
 		self._calcularSiHayGanadorPorSirenas()
 		
 		return cartaRobada
@@ -314,11 +382,20 @@ class EstadoDelJuego():
 		
 		if len(self.mazo) == 0:
 			# ronda anulada por mazo vacío
-			self.rondaEnCurso = False
+			
+			self.estado = self.Estado.RONDA_TERMINADA
+			
+			#*self._rondaEnCurso = False
 			self.deQuienEsTurno = (self.deQuienEsTurno + 1) % self.cantidadDeJugadores
 			return
 		
-		self.seHaRobadoEsteTurno = False
+		
+		if self.estado == self.Estado.FASE_DÚOS:
+			self.estado = self.Estado.FASE_ROBO
+		elif self.estado == self.Estado.FASE_DÚOS_ÚLTIMA_CHANCE:
+			self.estado = self.Estado.FASE_ROBO_ÚLTIMA_CHANCE
+		
+		#*self.seHaRobadoEsteTurno = False
 	
 	def jugarDuoDeCangrejos(self, cartasAJugar, pilaDeDescarteARobar, indiceDeCartaARobar):
 		self._assertSePuedeJugarDuo(cartasAJugar)
@@ -370,11 +447,11 @@ class EstadoDelJuego():
 		return cartaRobada
 	
 	def _assertSePuedeJugarDuo(self, cartasAJugar):
-		if not self.rondaEnCurso:
+		if not self.rondaEnCurso():
 			raise JuegoException("No hay una ronda en curso")
-		if self.hayQueTomarDecisionesDeRoboDelMazo:
+		if self.hayQueTomarDecisionesDeRoboDelMazo():
 			raise JuegoException("No se ha concretado el robo del mazo (¡falta elegir!)")
-		if not self.seHaRobadoEsteTurno:
+		if not self.seHaRobadoEsteTurno():
 			raise JuegoException("No se puede jugar dúos sin antes haber robado")
 		
 		if cartasAJugar.total() != 2:
@@ -409,22 +486,24 @@ class EstadoDelJuego():
 		] += 1
 		
 	def pasarTurno(self):
-		if not self.rondaEnCurso:
+		if not self.rondaEnCurso():
 			raise JuegoException("No hay una ronda en curso")
-		if self.hayQueTomarDecisionesDeRoboDelMazo:
+		if self.hayQueTomarDecisionesDeRoboDelMazo():
 			raise JuegoException("No se ha concretado el robo del mazo (¡falta elegir!)")
-		if not self.seHaRobadoEsteTurno:
+		if not self.seHaRobadoEsteTurno():
 			raise JuegoException("No se puede pasar de turno sin antes haber robado")
 		
 		if len(self.mazo) == 0:
 			# ronda anulada por mazo vacío
-			self.rondaEnCurso = False
+			
+			self.estado = self.Estado.RONDA_TERMINADA
+			
+			#*self._rondaEnCurso = False
 			self.deQuienEsTurno = (self.deQuienEsTurno + 1) % self.cantidadDeJugadores
 			return
 		
 		
 		self.deQuienEsTurno = (self.deQuienEsTurno + 1) % self.cantidadDeJugadores
-		self.seHaRobadoEsteTurno = False
 		
 		if self.ultimaChancePorJugador == self.deQuienEsTurno:
 			#calcular fin de ronda por apuesta de última chance
@@ -440,50 +519,76 @@ class EstadoDelJuego():
 						self.puntajesDeJuego[jugador] += self.estadoDelJugador[jugador].puntajeDeRonda()
 				self.puntajesDeJuego[self.ultimaChancePorJugador] += self.estadoDelJugador[self.ultimaChancePorJugador]._bonificacionPorColor()
 			
-			self.rondaEnCurso = False
+			
+			if self.estado == self.Estado.FASE_DÚOS_ÚLTIMA_CHANCE:
+				self.estado = self.Estado.RONDA_TERMINADA
+			
+			#*self.seHaRobadoEsteTurno = False
+			#*self._rondaEnCurso = False
 			self.deQuienEsTurno = (self.deQuienEsTurno + 1) % self.cantidadDeJugadores
 			self._calcularSiHayGanador()
+		
+		else:
+			
+			if self.estado == self.Estado.FASE_DÚOS:
+				self.estado = self.Estado.FASE_ROBO
+			elif self.estado == self.Estado.FASE_DÚOS_ÚLTIMA_CHANCE:
+				self.estado = self.Estado.FASE_ROBO_ÚLTIMA_CHANCE
+			
+			#*self.seHaRobadoEsteTurno = False
+			
 	
 	def decirBasta(self):
-		if not self.rondaEnCurso:
+		if not self.rondaEnCurso():
 			raise JuegoException("No hay una ronda en curso")
-		if self.hayQueTomarDecisionesDeRoboDelMazo:
+		if self.hayQueTomarDecisionesDeRoboDelMazo():
 			raise JuegoException("No se ha concretado el robo del mazo (¡falta elegir!)")
-		if not self.seHaRobadoEsteTurno:
+		if not self.seHaRobadoEsteTurno():
 			raise JuegoException("No se puede decir basta sin antes haber robado")
 		if not (self.estadoDelJugador[self.deQuienEsTurno].puntajeDeRonda() >= 7):
 			raise JuegoException("No se puede terminar la ronda si no se tienen al menos siete puntos")
-		if self.ultimaChancePorJugador != None:
+		if self.útlimaChanceEnCurso():
 			raise JuegoException("Ya se está jugando una ronda de última chance")
 		
 		for jugador in range(self.cantidadDeJugadores):
 			self.puntajesDeJuego[jugador] += self.estadoDelJugador[jugador].puntajeDeRonda()
 		
-		self.rondaEnCurso = False
+		
+		if self.estado == self.Estado.FASE_DÚOS:
+			self.estado = self.Estado.RONDA_TERMINADA
+		
+		#*self._rondaEnCurso = False
 		self.deQuienEsTurno = (self.deQuienEsTurno + 1) % self.cantidadDeJugadores
 		self._calcularSiHayGanador()
 	
 	def decirÚltimaChance(self):
-		if not self.rondaEnCurso:
+		if not self.rondaEnCurso():
 			raise JuegoException("No hay una ronda en curso")
-		if self.hayQueTomarDecisionesDeRoboDelMazo:
+		if self.hayQueTomarDecisionesDeRoboDelMazo():
 			raise JuegoException("No se ha concretado el robo del mazo (¡falta elegir!)")
-		if not self.seHaRobadoEsteTurno:
+		if not self.seHaRobadoEsteTurno():
 			raise JuegoException("No se puede decir última chance sin antes haber robado")
 		if not (self.estadoDelJugador[self.deQuienEsTurno].puntajeDeRonda() >= 7):
 			raise JuegoException("No se puede terminar la ronda si no se tienen al menos siete puntos")
-		if self.ultimaChancePorJugador != None:
+		if self.útlimaChanceEnCurso():
 			raise JuegoException("Ya se está jugando una ronda de última chance")
 		
 		if len(self.mazo) == 0:
 			# ronda anulada por mazo vacío
-			self.rondaEnCurso = False
+			
+			self.estado = self.Estado.RONDA_TERMINADA
+			
+			#*self._rondaEnCurso = False
 			self.deQuienEsTurno = (self.deQuienEsTurno + 1) % self.cantidadDeJugadores
 			return
 		
+		
+		if self.estado == self.Estado.FASE_DÚOS:
+			self.estado = self.Estado.FASE_ROBO_ÚLTIMA_CHANCE
+		
 		self.ultimaChancePorJugador = self.deQuienEsTurno
 		self.deQuienEsTurno = (self.deQuienEsTurno + 1) % self.cantidadDeJugadores
-		self.seHaRobadoEsteTurno = False
+		#*self.seHaRobadoEsteTurno = False
 	
 	def puntajeParaGanar(self):
 		return self._obtenerPuntajeParaGanarParaCantidadDeJugadores(self.cantidadDeJugadores)
@@ -499,7 +604,7 @@ class EstadoDelJuego():
 			raise JuegoException("La cantidad de jugadores no es válida")
 	
 	def _jugadorMostróSuManoPorÚltimaChance(self, jugador):
-		if self.ultimaChancePorJugador == None:
+		if not self.útlimaChanceEnCurso():
 			return False
 		else:
 			for orden in range(self.ultimaChancePorJugador + 1, self.ultimaChancePorJugador + 1 + self.cantidadDeJugadores):
@@ -512,7 +617,12 @@ class EstadoDelJuego():
 	def _calcularSiHayGanador(self):
 		puntajeMáximoAlcanzado = max(self.puntajesDeJuego)
 		if puntajeMáximoAlcanzado >= self.puntajeParaGanar():
-			self.haTerminado = True
+			
+			if self.estado == self.Estado.RONDA_TERMINADA:
+				self.estado = self.Estado.PARTIDA_TERMINADA
+			
+			
+			#*self._haTerminado = True
 			# calcular ganador
 			for orden in range(self.cantidadDeJugadores):
 				jugadorEnOrden = (self.deQuienEsTurno - 1 - orden) % self.cantidadDeJugadores
@@ -523,7 +633,12 @@ class EstadoDelJuego():
 	def _calcularSiHayGanadorPorSirenas(self):
 		for j in range(self.cantidadDeJugadores):
 			if self.estadoDelJugador[j].mano[Carta(Carta.Tipo.SIRENA, Carta.Color.BLANCO)] == 4:
+				
+				if self.estado in [self.Estado.FASE_DÚOS, self.Estado.FASE_DÚOS_ÚLTIMA_CHANCE]:
+					self.estado = self.Estado.PARTIDA_TERMINADA
+				
+				
 				self.ganador = j
-				self.haTerminado = True
-				self.rondaEnCurso = False
+				#*self._haTerminado = True
+				#*self._rondaEnCurso = False
 				self.puntajesDeJuego[j] = SIRENAS_INF

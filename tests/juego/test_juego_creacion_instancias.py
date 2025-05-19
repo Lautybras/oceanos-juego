@@ -4,7 +4,7 @@ from juego.juego import EstadoDelJuego, JuegoInvalidoException
 def test_AlCrearJuegoParaDosJugadores_JuegoNoHaTerminado():
 	juego = EstadoDelJuego(cantidadDeJugadores=2)
 
-	assert juego.haTerminado == False
+	assert juego.haTerminado() == False
 
 def test_AlCrearJuegoParaDosJugadores_LosPuntajesDeJuegoInicianEnCero():
 	juego = EstadoDelJuego(cantidadDeJugadores=2)

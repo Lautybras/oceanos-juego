@@ -14,14 +14,14 @@ class AdministradorDeJuego():
 		for j in range(len(self._jugadores)):
 			self._jugadores[j].configurarParaJuego(self._juego, j)
 		
-		while not self._juego.haTerminado:
+		while not self._juego.haTerminado():
 			self._juego.iniciarRonda()
 			if self._verbose:
 				print("~~~~~~~~~~~~~~~~~~~~~ Inicia Ronda ~~~~~~~~~~~~~~~~~~~~~~")
 				print(f"Jugador inicial: {self._juego.deQuienEsTurno}")
 				print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
 
-			while self._juego.rondaEnCurso:
+			while self._juego.rondaEnCurso():
 				if self._verbose:
 					print(f"~~~~~~~~~~~~~~~~~~~ Turno del jugador {self._juego.deQuienEsTurno} ~~~~~~~~~~~~~~~~~~~~")
 					print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
@@ -70,7 +70,7 @@ class AdministradorDeJuego():
 	def _faseDeDúos(self):
 		noSeQuierenJugarMásDúos = False
 		
-		while not noSeQuierenJugarMásDúos and not self._juego.haTerminado:
+		while not noSeQuierenJugarMásDúos and not self._juego.haTerminado():
 			(acciónDeDúos, cartasAJugar, parametrosDelDúo) = self._jugadores[self._juego.deQuienEsTurno].decidirAcciónDeDúos()
 			if acciónDeDúos == Acción.Dúos.JUGAR_PECES:
 				# Jugar dúo de peces
@@ -112,7 +112,7 @@ class AdministradorDeJuego():
 				raise Exception("Error")
 
 	def _faseDeFin(self):
-		if self._juego.haTerminado:
+		if self._juego.haTerminado():
 			if self._verbose:
 				print("################### CUATRO SIRENAS ###################")
 				print(f"Ganador: {self._juego.ganador}")

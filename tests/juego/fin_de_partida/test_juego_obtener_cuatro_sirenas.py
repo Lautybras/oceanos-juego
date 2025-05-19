@@ -11,8 +11,8 @@ def test_SiAlRobarDelDescarteSeConsiguenCuatroSirenas_ElJugadorConLasSirenasGana
 	juego.descarte[0].append(Carta(Carta.Tipo.SIRENA, Carta.Color.BLANCO))
 	juego.robarDelDescarte(0)
 	
-	assert juego.rondaEnCurso == False
-	assert juego.haTerminado == True
+	assert juego.rondaEnCurso() == False
+	assert juego.haTerminado() == True
 	assert juego.ganador == 0
 	assert juego.puntajesDeJuego[0] == SIRENAS_INF
 	
@@ -29,8 +29,8 @@ def test_SiAlRobarDelMazoSeConsiguenCuatroSirenas_ElJugadorConLasSirenasGanaLaPa
 	juego.robarDelMazo()
 	juego.elegirRoboDelMazo(0,0)
 	
-	assert juego.rondaEnCurso == False
-	assert juego.haTerminado == True
+	assert juego.rondaEnCurso() == False
+	assert juego.haTerminado() == True
 	assert juego.ganador == 0
 	assert juego.puntajesDeJuego[0] == SIRENAS_INF
 	
@@ -52,8 +52,8 @@ def test_SiAlJugarDúoDePecesSeConsiguenCuatroSirenas_ElJugadorConLasSirenasGana
 		Carta(Carta.Tipo.PEZ, Carta.Color.NARANJA)
 	]))
 	
-	assert juego.rondaEnCurso == False
-	assert juego.haTerminado == True
+	assert juego.rondaEnCurso() == False
+	assert juego.haTerminado() == True
 	assert juego.ganador == 0
 	assert juego.puntajesDeJuego[0] == SIRENAS_INF
 	
@@ -76,8 +76,8 @@ def test_SiAlJugarDúoDeCangrejosSeConsiguenCuatroSirenas_ElJugadorConLasSirenas
 		Carta(Carta.Tipo.CANGREJO, Carta.Color.ROSA)
 	]), 0, 0)
 	
-	assert juego.rondaEnCurso == False
-	assert juego.haTerminado == True
+	assert juego.rondaEnCurso() == False
+	assert juego.haTerminado() == True
 	assert juego.ganador == 0
 	assert juego.puntajesDeJuego[0] == SIRENAS_INF
 	
@@ -99,8 +99,8 @@ def test_SiAlJugarDúoDeNadadorYTiburónSeConsiguenCuatroSirenas_ElJugadorConLas
 		Carta(Carta.Tipo.NADADOR, Carta.Color.AMARILLO)
 	]), 1)
 	
-	assert juego.rondaEnCurso == False
-	assert juego.haTerminado == True
+	assert juego.rondaEnCurso() == False
+	assert juego.haTerminado() == True
 	assert juego.ganador == 0
 	assert juego.puntajesDeJuego[0] == SIRENAS_INF
 	

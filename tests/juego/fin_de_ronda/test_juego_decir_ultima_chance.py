@@ -30,7 +30,7 @@ def test_SiSeTienenAlMenosSietePuntosYSeRobó_AlDecirÚltimaChance_ElTurnoTermin
 	
 	juego.decirÚltimaChance()
 	
-	assert juego.rondaEnCurso == True
+	assert juego.rondaEnCurso() == True
 	assert juego.deQuienEsTurno == 1
 
 def test_SiSeTienenAlMenosSietePuntosYSeRobó_AlDecirÚltimaChance_ElSiguienteJugadorPuedeJugarUnTurnoCompleto():
@@ -116,7 +116,7 @@ def test_SiSeDijoÚltimaChance_AlVolverASerTurnoDelJugadorQueDijoÚltimaChance_L
 	juego.robarDelDescarte(1)
 	juego.pasarTurno()
 	
-	assert juego.rondaEnCurso == False
+	assert juego.rondaEnCurso() == False
 
 
 def test_SiSeDijoÚltimaChance_NoSePuedeDecirBasta():
@@ -170,7 +170,7 @@ def test_SiElJugadorQueDijoÚltimaChanceTieneElMayorPuntajeDeRonda_AlVolverASerT
 	
 	juego.pasarTurno()
 	
-	assert juego.rondaEnCurso == False
+	assert juego.rondaEnCurso() == False
 	assert juego.puntajesDeJuego[0] == puntajesDeRonda[0] + 4
 	assert juego.puntajesDeJuego[1] == 2
 
@@ -197,7 +197,7 @@ def test_SiElJugadorQueDijoÚltimaChanceNoTieneElMayorPuntajeDeRonda_AlVolverASe
 	
 	juego.pasarTurno()
 	
-	assert juego.rondaEnCurso == False
+	assert juego.rondaEnCurso() == False
 	assert juego.puntajesDeJuego[0] == 4
 	assert juego.puntajesDeJuego[1] == puntajesDeRonda[1]
 

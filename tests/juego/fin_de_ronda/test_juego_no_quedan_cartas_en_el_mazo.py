@@ -11,7 +11,7 @@ def test_SiNoHayCartasEnElMazo_AlPasarTurno_LaRondaTerminaYNadieObtienePuntos():
 	
 	juego.pasarTurno()
 	
-	assert juego.rondaEnCurso == False
+	assert juego.rondaEnCurso() == False
 	assert juego.puntajesDeJuego[0] == 0
 	assert juego.puntajesDeJuego[1] == 0
 	with pytest.raises(JuegoException) as excepcion:
@@ -27,7 +27,7 @@ def test_SiNoHayCartasEnElMazo_AlDecirÚltimaChance_LaRondaTerminaYNadieObtieneP
 	
 	juego.decirÚltimaChance()
 	
-	assert juego.rondaEnCurso == False
+	assert juego.rondaEnCurso() == False
 	assert juego.puntajesDeJuego[0] == 0
 	assert juego.puntajesDeJuego[1] == 0
 	with pytest.raises(JuegoException) as excepcion:
@@ -45,7 +45,7 @@ def test_SiNoHayCartasEnElMazo_AlJugarDúoDeBarcos_LaRondaTerminaYNadieObtienePu
 		Carta(Carta.Tipo.BARCO, Carta.Color.CELESTE), Carta(Carta.Tipo.BARCO, Carta.Color.CELESTE)
 	]))
 	
-	assert juego.rondaEnCurso == False
+	assert juego.rondaEnCurso() == False
 	assert juego.puntajesDeJuego[0] == 0
 	assert juego.puntajesDeJuego[1] == 0
 	with pytest.raises(JuegoException) as excepcion:
@@ -64,7 +64,7 @@ def test_SiNoHayCartasEnElMazo_AlDecirBasta_LaRondaTerminaYCadaJugadorObtieneSuP
 	
 	juego.decirBasta()
 	
-	assert juego.rondaEnCurso == False
+	assert juego.rondaEnCurso() == False
 	assert juego.puntajesDeJuego[0] == 9
 	assert juego.puntajesDeJuego[1] == 0
 	with pytest.raises(JuegoException) as excepcion:
