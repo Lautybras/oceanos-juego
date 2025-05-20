@@ -16,17 +16,17 @@ def test_AlCrearJuegoParaDosJugadores_LosPuntajesDeJuegoInicianEnCero():
 def test_AlCrearJuegoParaDosJugadores_ElPuntajeParaGanarEsCuarenta():
 	juego = PartidaDeOcéanos(cantidadDeJugadores=2)
 
-	assert juego.puntajeParaGanar() == 40
+	assert juego.puntajeParaGanar == 40
 
 def test_AlCrearJuegoParaTresJugadores_ElPuntajeParaGanarEsTreintaYCinco():
 	juego = PartidaDeOcéanos(cantidadDeJugadores=3)
 
-	assert juego.puntajeParaGanar() == 35
+	assert juego.puntajeParaGanar == 35
 
 def test_AlCrearJuegoParaTresJugadores_ElPuntajeParaGanarEsTreinta():
 	juego = PartidaDeOcéanos(cantidadDeJugadores=4)
 
-	assert juego.puntajeParaGanar() == 30
+	assert juego.puntajeParaGanar == 30
 
 def test_NoSePuedeCrearJuegoParaMenosDeDosJugadores():
 	with pytest.raises(JuegoInvalidoException):

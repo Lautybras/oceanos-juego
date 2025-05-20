@@ -212,6 +212,7 @@ class PartidaDeOcéanos():
 		RONDA_TERMINADA = auto()
 		PARTIDA_TERMINADA = auto()
 	
+	# ============================ ESTADO PÚBLICO ============================
 	def rondaEnCurso(self):
 		return self._estadoActual in [
 			self.Estado.FASE_ROBO,
@@ -231,26 +232,30 @@ class PartidaDeOcéanos():
 	def útlimaChanceEnCurso(self):
 		return self._últimaChancePorJugador != None
 	
-	
-	
 	@property
 	def cantidadDeJugadores(self):
 		return int(self._cantidadDeJugadores)
+	
 	@property
 	def deQuiénEsTurno(self):
 		return int(self._deQuiénEsTurno)
+	
 	@property
 	def puntajes(self):
 		return list(self._puntajes.copy())
+	
+	@property
+	def puntajeParaGanar(self):
+		return self._obtenerPuntajeParaGanarParaCantidadDeJugadores(self._cantidadDeJugadores)
+	
 	@property
 	def jugadorGanador(self):
 		return int(self._jugadorGanador) if self._jugadorGanador != None else None
-	@property
-	def últimaChanceEnCurso(self):
-		return (self._últimaChancePorJugador != None)
+	
 	@property
 	def jugadorQueDijoÚltimaChance(self):
 		return int(self._últimaChancePorJugador) if self._últimaChancePorJugador != None else None
+	
 	@property
 	def descarte(self):
 		return deepcopy(self._descarte)
@@ -270,6 +275,7 @@ class PartidaDeOcéanos():
 		self._mazo = None
 		self._estadoActual = self.Estado.PARTIDA_NO_INICIADA
 	
+	# ============================ FLUJO DE PARTIDA ============================
 	def iniciarRonda(self):
 		if self.rondaEnCurso():
 			raise JuegoException("Ya hay una ronda en curso!")
@@ -281,6 +287,7 @@ class PartidaDeOcéanos():
 		self._estadoActual = self.Estado.FASE_ROBO
 		self._últimaChancePorJugador = None
 	
+	# ============================== FASE DE ROBO ==============================
 	def robarDelDescarte(self, indicePilaDeDescarte):
 		self._assertSePuedeElegirAcciónDeRobo()
 		self._assertÍndicePilaDeDescarteVálidoParaRobar(indicePilaDeDescarte)
@@ -322,6 +329,7 @@ class PartidaDeOcéanos():
 		
 		return cartaRobada
 	
+	# ============================== FASE DE DÚOS ===============================
 	def jugarDuoDePeces(self, cartasAJugar):
 		self._assertSePuedeJugarDuo(cartasAJugar)
 		self._assertDúoEsDeTipo(cartasAJugar, Carta.Tipo.PEZ)
@@ -391,6 +399,7 @@ class PartidaDeOcéanos():
 		
 		return cartaRobada
 	
+	# =============================== FASE DE FIN ================================
 	def pasarTurno(self):
 		self._assertSePuedeTerminarElTurno()
 		
@@ -458,38 +467,31 @@ class PartidaDeOcéanos():
 		self._últimaChancePorJugador = self._deQuiénEsTurno
 		self._deQuiénEsTurno = (self._deQuiénEsTurno + 1) % self._cantidadDeJugadores
 	
-	def puntajeParaGanar(self):
-		return self._obtenerPuntajeParaGanarParaCantidadDeJugadores(self._cantidadDeJugadores)
+	# =========================== AUXILIARES DE CÁLCULO ===========================
+	def _calcularSiHayGanador(self):
+		puntajeMáximoAlcanzado = max(self._puntajes)
+		if puntajeMáximoAlcanzado >= self.puntajeParaGanar:
+			
+			self._estadoActual = self.Estado.PARTIDA_TERMINADA
+			
+			
+			# calcular ganador
+			for orden in range(self._cantidadDeJugadores):
+				jugadorEnOrden = (self._deQuiénEsTurno - 1 - orden) % self._cantidadDeJugadores
+				if self._puntajes[jugadorEnOrden] == puntajeMáximoAlcanzado:
+					self._jugadorGanador = jugadorEnOrden
+					break;
 	
-	def _assertSePuedeJugarDuo(self, cartasAJugar):
-		if not self.rondaEnCurso():
-			raise JuegoException("No hay una ronda en curso")
-		if self.hayQueTomarDecisionesDeRoboDelMazo():
-			raise JuegoException("No se ha concretado el robo del mazo (¡falta elegir!)")
-		if not self.seHaRobadoEsteTurno():
-			raise JuegoException("No se puede jugar dúos sin antes haber robado")
+	def _calcularSiHayGanadorPorSirenas(self):
+		for j in range(self._cantidadDeJugadores):
+			if self._estadosDeJugadores[j].mano[Carta(Carta.Tipo.SIRENA, Carta.Color.BLANCO)] == 4:
+				
+				self._estadoActual = self.Estado.PARTIDA_TERMINADA
+				
+				self._jugadorGanador = j
+				self._puntajes[j] = SIRENAS_INF
 		
-		if cartasAJugar.total() != 2:
-			raise JuegoException("Se necesitan dos cartas para jugar un dúo")
-		
-		for carta in cartasAJugar.elements():
-			if not carta.esDuo():
-				raise JuegoException("Se necesitan cartas dúo para jugar un dúo")
-		
-		tipos = [list(cartasAJugar.elements())[0].tipo, list(cartasAJugar.elements())[1].tipo] if (list(cartasAJugar.elements())[0].tipo.value < list(cartasAJugar.elements())[1].tipo.value) else [list(cartasAJugar.elements())[1].tipo, list(cartasAJugar.elements())[0].tipo]
-		
-		if not ((
-				tipos[0] == Carta.Tipo.NADADOR and
-				tipos[1] == Carta.Tipo.TIBURON
-			) or (
-				tipos[0] != Carta.Tipo.NADADOR and
-				tipos[1] == tipos[0]
-		)):
-			raise JuegoException("Se necesitan cartas del mismo tipo dúo para jugar un dúo")
-		
-		if not (cartasAJugar <= self._estadosDeJugadores[self._deQuiénEsTurno].mano):
-			raise JuegoException("Las cartas seleccionadas no están en la mano")
-	
+	# ============================= AUXILIARES VARIOS ==============================
 	def _moverDúoAZonaDeDúo(self, cartasAJugar):
 		for clave in cartasAJugar:
 			self._estadosDeJugadores[self._deQuiénEsTurno].mano[clave] -= cartasAJugar[clave]
@@ -521,29 +523,7 @@ class PartidaDeOcéanos():
 				if jugadorEnOrden == jugador:
 					return True
 	
-	def _calcularSiHayGanador(self):
-		puntajeMáximoAlcanzado = max(self._puntajes)
-		if puntajeMáximoAlcanzado >= self.puntajeParaGanar():
-			
-			self._estadoActual = self.Estado.PARTIDA_TERMINADA
-			
-			
-			# calcular ganador
-			for orden in range(self._cantidadDeJugadores):
-				jugadorEnOrden = (self._deQuiénEsTurno - 1 - orden) % self._cantidadDeJugadores
-				if self._puntajes[jugadorEnOrden] == puntajeMáximoAlcanzado:
-					self._jugadorGanador = jugadorEnOrden
-					break;
-	
-	def _calcularSiHayGanadorPorSirenas(self):
-		for j in range(self._cantidadDeJugadores):
-			if self._estadosDeJugadores[j].mano[Carta(Carta.Tipo.SIRENA, Carta.Color.BLANCO)] == 4:
-				
-				self._estadoActual = self.Estado.PARTIDA_TERMINADA
-				
-				self._jugadorGanador = j
-				self._puntajes[j] = SIRENAS_INF
-			
+	# ========================== AUXILIARES DE ASERCIONES ==========================
 	def _assertSePuedeElegirAcciónDeRobo(self):
 		if not self.rondaEnCurso():
 			raise JuegoException("No hay una ronda en curso")
@@ -574,6 +554,35 @@ class PartidaDeOcéanos():
 		if len(self._descarte[indicePilaDeDescarte]) == 0:
 			raise JuegoException("No se puede robar de una pila de descarte vacía")
 	
+	def _assertSePuedeJugarDuo(self, cartasAJugar):
+		if not self.rondaEnCurso():
+			raise JuegoException("No hay una ronda en curso")
+		if self.hayQueTomarDecisionesDeRoboDelMazo():
+			raise JuegoException("No se ha concretado el robo del mazo (¡falta elegir!)")
+		if not self.seHaRobadoEsteTurno():
+			raise JuegoException("No se puede jugar dúos sin antes haber robado")
+		
+		if cartasAJugar.total() != 2:
+			raise JuegoException("Se necesitan dos cartas para jugar un dúo")
+		
+		for carta in cartasAJugar.elements():
+			if not carta.esDuo():
+				raise JuegoException("Se necesitan cartas dúo para jugar un dúo")
+		
+		tipos = [list(cartasAJugar.elements())[0].tipo, list(cartasAJugar.elements())[1].tipo] if (list(cartasAJugar.elements())[0].tipo.value < list(cartasAJugar.elements())[1].tipo.value) else [list(cartasAJugar.elements())[1].tipo, list(cartasAJugar.elements())[0].tipo]
+		
+		if not ((
+				tipos[0] == Carta.Tipo.NADADOR and
+				tipos[1] == Carta.Tipo.TIBURON
+			) or (
+				tipos[0] != Carta.Tipo.NADADOR and
+				tipos[1] == tipos[0]
+		)):
+			raise JuegoException("Se necesitan cartas del mismo tipo dúo para jugar un dúo")
+		
+		if not (cartasAJugar <= self._estadosDeJugadores[self._deQuiénEsTurno].mano):
+			raise JuegoException("Las cartas seleccionadas no están en la mano")
+	
 	def _assertDúoEsDeTipo(self, cartasAJugar, tipoObjetivo):
 		if tipoObjetivo in [Carta.Tipo.NADADOR, Carta.Tipo.TIBURON]:
 			tipos = [list(cartasAJugar.elements())[0].tipo, list(cartasAJugar.elements())[1].tipo] if (list(cartasAJugar.elements())[0].tipo.value < list(cartasAJugar.elements())[1].tipo.value) else [list(cartasAJugar.elements())[1].tipo, list(cartasAJugar.elements())[0].tipo]
@@ -583,13 +592,6 @@ class PartidaDeOcéanos():
 			if next(iter(cartasAJugar)).tipo !=  tipoObjetivo:
 				raise JuegoException("Ese tipo de dúo no es válido para esta acción")
 	
-	def _assertSelecciónDeJugadorVálida(self, jugadorARobar):
-		if not (
-			0 <= jugadorARobar and jugadorARobar < self._cantidadDeJugadores and jugadorARobar != self._deQuiénEsTurno
-			and not self._jugadorMostróSuManoPorÚltimaChance(jugadorARobar)
-		):
-			raise JuegoException("La selección de jugador a robar con el dúo de nadador y tiburón es inválida")
-	
 	def _assertObjetivoDeDúoDeCangrejosVálido(self, pilaDeDescarteARobar, indiceDeCartaARobar):
 		if (len(self._descarte[0]) != 0 or len(self._descarte[1]) != 0) and (
 			(not (0 <= pilaDeDescarteARobar and pilaDeDescarteARobar <= 1) )
@@ -598,6 +600,13 @@ class PartidaDeOcéanos():
 			)
 		):
 			raise JuegoException("La selección de robo con el dúo de cangrejos es inválida")
+	
+	def _assertSelecciónDeJugadorVálida(self, jugadorARobar):
+		if not (
+			0 <= jugadorARobar and jugadorARobar < self._cantidadDeJugadores and jugadorARobar != self._deQuiénEsTurno
+			and not self._jugadorMostróSuManoPorÚltimaChance(jugadorARobar)
+		):
+			raise JuegoException("La selección de jugador a robar con el dúo de nadador y tiburón es inválida")
 	
 	def _assertSePuedeTerminarElTurno(self):
 		if not self.rondaEnCurso():
@@ -612,3 +621,4 @@ class PartidaDeOcéanos():
 			raise JuegoException("No se puede terminar la ronda si no se tienen al menos siete puntos")
 		if self.útlimaChanceEnCurso():
 			raise JuegoException("Ya se está jugando una ronda de última chance")
+	

@@ -35,7 +35,7 @@ class AdministradorDeJuego():
 			if self._verbose:
 				print("******************** Ronda terminada ********************")
 				for j in range(self._juego.cantidadDeJugadores):
-					print(f"Jugador {j}: +{self._juego._estadosDeJugadores[j].puntajeDeRonda()} ({self._juego.puntajes[j]}/{self._juego.puntajeParaGanar()})")
+					print(f"Jugador {j}: +{self._juego._estadosDeJugadores[j].puntajeDeRonda()} ({self._juego.puntajes[j]}/{self._juego.puntajeParaGanar})")
 				print("*********************************************************")
 		
 		if self._verbose:
@@ -117,7 +117,7 @@ class AdministradorDeJuego():
 				print("################### CUATRO SIRENAS ###################")
 				print(f"Ganador: {self._juego._jugadorGanador}")
 				for j in range(self._juego.cantidadDeJugadores()):
-					print(f"Jugador {j}: +{self._juego._estadosDeJugadores[j].puntajeDeRonda()} ({self._juego.puntajes[j]}/{self._juego.puntajeParaGanar()})")
+					print(f"Jugador {j}: +{self._juego._estadosDeJugadores[j].puntajeDeRonda()} ({self._juego.puntajes[j]}/{self._juego.puntajeParaGanar})")
 				print("######################################################")
 		else:
 		
