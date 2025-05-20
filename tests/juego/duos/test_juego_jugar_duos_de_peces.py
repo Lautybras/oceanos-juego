@@ -1,12 +1,12 @@
 import pytest
 from juego.carta import Carta
-from juego.juego import EstadoDelJuego, JuegoException
+from juego.juego import PartidaDeOcéanos, JuegoException
 from collections import Counter as Multiset
 
 def test_NoSePuedeJugarDúoDePecesConDúoDeOtroTipo():
-	juego = EstadoDelJuego(cantidadDeJugadores=2)
+	juego = PartidaDeOcéanos(cantidadDeJugadores=2)
 	juego.iniciarRonda()
-	juego.estadoDelJugador[0].mano[Carta(Carta.Tipo.BARCO, Carta.Color.AZUL)] += 2
+	juego._estadosDeJugadores[0].mano[Carta(Carta.Tipo.BARCO, Carta.Color.AZUL)] += 2
 	juego.robarDelMazo()
 	juego.elegirRoboDelMazo(0,0)
 	
@@ -19,10 +19,10 @@ def test_NoSePuedeJugarDúoDePecesConDúoDeOtroTipo():
 	assert "Ese tipo de dúo no es válido para esta acción" in str(excepcion.value)
 
 def test_SiSePuedeJugarDúoDePecesYQuedanCartasEnElMazo_AlJugarDúoDePeces_SeRobaLaCartaSuperiorDelMazo():
-	juego = EstadoDelJuego(cantidadDeJugadores=2)
+	juego = PartidaDeOcéanos(cantidadDeJugadores=2)
 	juego.iniciarRonda()
-	juego.mazo[-1] = Carta(Carta.Tipo.PEZ,Carta.Color.AZUL)
-	juego.mazo[-3] = Carta(Carta.Tipo.PEZ,Carta.Color.AMARILLO)
+	juego._mazo[-1] = Carta(Carta.Tipo.PEZ,Carta.Color.AZUL)
+	juego._mazo[-3] = Carta(Carta.Tipo.PEZ,Carta.Color.AMARILLO)
 	
 	juego.robarDelMazo()
 	juego.elegirRoboDelMazo(0,0)
@@ -31,7 +31,7 @@ def test_SiSePuedeJugarDúoDePecesYQuedanCartasEnElMazo_AlJugarDúoDePeces_SeRob
 	juego.pasarTurno()
 	juego.robarDelMazo()
 	juego.elegirRoboDelMazo(0,0)
-	cartaSuperiorDelMazo = juego.mazo[-1]
+	cartaSuperiorDelMazo = juego._mazo[-1]
 	
 	
 	cartaRobada = juego.jugarDuoDePeces(Multiset([
@@ -39,15 +39,15 @@ def test_SiSePuedeJugarDúoDePecesYQuedanCartasEnElMazo_AlJugarDúoDePeces_SeRob
 		Carta(Carta.Tipo.PEZ,Carta.Color.AMARILLO)
 	]))
 	
-	assert juego.estadoDelJugador[0].mano == Multiset([cartaSuperiorDelMazo])
+	assert juego._estadosDeJugadores[0].mano == Multiset([cartaSuperiorDelMazo])
 	assert cartaRobada == cartaSuperiorDelMazo
-	assert len(juego.mazo) == 56 - 2 - 0 - 2 - 1
+	assert len(juego._mazo) == 56 - 2 - 0 - 2 - 1
 
 def test_SiSePuedeJugarDúoDePecesYNoQuedanCartasEnElMazo_AlJugarDúoDePeces_NoSeRobanCartas():
-	juego = EstadoDelJuego(cantidadDeJugadores=2)
+	juego = PartidaDeOcéanos(cantidadDeJugadores=2)
 	juego.iniciarRonda()
-	juego.mazo[-1] = Carta(Carta.Tipo.PEZ,Carta.Color.AZUL)
-	juego.mazo[-3] = Carta(Carta.Tipo.PEZ,Carta.Color.AMARILLO)
+	juego._mazo[-1] = Carta(Carta.Tipo.PEZ,Carta.Color.AZUL)
+	juego._mazo[-3] = Carta(Carta.Tipo.PEZ,Carta.Color.AMARILLO)
 	
 	juego.robarDelMazo()
 	juego.elegirRoboDelMazo(0,0)
@@ -56,7 +56,7 @@ def test_SiSePuedeJugarDúoDePecesYNoQuedanCartasEnElMazo_AlJugarDúoDePeces_NoS
 	juego.pasarTurno()
 	juego.robarDelMazo()
 	juego.elegirRoboDelMazo(0,0)
-	juego.mazo = []
+	juego._mazo = []
 	
 
 	cartaRobada = juego.jugarDuoDePeces(Multiset([
@@ -64,6 +64,6 @@ def test_SiSePuedeJugarDúoDePecesYNoQuedanCartasEnElMazo_AlJugarDúoDePeces_NoS
 		Carta(Carta.Tipo.PEZ,Carta.Color.AMARILLO)
 	]))
 	
-	assert juego.estadoDelJugador[0].mano == Multiset()
-	assert len(juego.mazo) == 0
+	assert juego._estadosDeJugadores[0].mano == Multiset()
+	assert len(juego._mazo) == 0
 	assert cartaRobada == None

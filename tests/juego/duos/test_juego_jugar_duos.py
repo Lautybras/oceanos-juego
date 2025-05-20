@@ -1,10 +1,10 @@
 import pytest
 from juego.carta import Carta
-from juego.juego import EstadoDelJuego, JuegoException
+from juego.juego import PartidaDeOcéanos, JuegoException
 from collections import Counter as Multiset
 
 def test_SiSeInicióRonda_NoSePuedeJugarDúosAntesDeRobar():
-	juego = EstadoDelJuego(cantidadDeJugadores=2)
+	juego = PartidaDeOcéanos(cantidadDeJugadores=2)
 	juego.iniciarRonda()
 	
 	with pytest.raises(JuegoException) as excepcion:
@@ -14,7 +14,7 @@ def test_SiSeInicióRonda_NoSePuedeJugarDúosAntesDeRobar():
 
 def test_NoSePuedeJugarUnDúoDeCeroCartas():
 	
-	juego = EstadoDelJuego(cantidadDeJugadores=2)
+	juego = PartidaDeOcéanos(cantidadDeJugadores=2)
 	juego.iniciarRonda()
 	juego.robarDelMazo()
 	juego.elegirRoboDelMazo(0,0)
@@ -26,7 +26,7 @@ def test_NoSePuedeJugarUnDúoDeCeroCartas():
 
 def test_NoSePuedeJugarUnDúoDeUnaCarta():
 	
-	juego = EstadoDelJuego(cantidadDeJugadores=2)
+	juego = PartidaDeOcéanos(cantidadDeJugadores=2)
 	juego.iniciarRonda()
 	juego.robarDelMazo()
 	juego.elegirRoboDelMazo(0,0)
@@ -38,7 +38,7 @@ def test_NoSePuedeJugarUnDúoDeUnaCarta():
 
 def test_NoSePuedeJugarUnDúoDeMásDeDosCartas():
 	
-	juego = EstadoDelJuego(cantidadDeJugadores=2)
+	juego = PartidaDeOcéanos(cantidadDeJugadores=2)
 	juego.iniciarRonda()
 	juego.robarDelMazo()
 	juego.elegirRoboDelMazo(0,0)
@@ -54,7 +54,7 @@ def test_NoSePuedeJugarUnDúoDeMásDeDosCartas():
 	
 def test_NoSePuedeJugarUnDúoDeCartasQueNoSeanDeTipoDúo():
 	
-	juego = EstadoDelJuego(cantidadDeJugadores=2)
+	juego = PartidaDeOcéanos(cantidadDeJugadores=2)
 	juego.iniciarRonda()
 	juego.robarDelMazo()
 	juego.elegirRoboDelMazo(0,0)
@@ -69,7 +69,7 @@ def test_NoSePuedeJugarUnDúoDeCartasQueNoSeanDeTipoDúo():
 
 def test_NoSePuedeJugarUnDúoDeCartasQueNoSeanDelMismoTipo():
 	
-	juego = EstadoDelJuego(cantidadDeJugadores=2)
+	juego = PartidaDeOcéanos(cantidadDeJugadores=2)
 	juego.iniciarRonda()
 	juego.robarDelMazo()
 	juego.elegirRoboDelMazo(0,0)
@@ -84,7 +84,7 @@ def test_NoSePuedeJugarUnDúoDeCartasQueNoSeanDelMismoTipo():
 
 def test_NoSePuedeJugarUnDúoDeCartasQueNoEsténEnLaManoDelJugador():
 	
-	juego = EstadoDelJuego(cantidadDeJugadores=2)
+	juego = PartidaDeOcéanos(cantidadDeJugadores=2)
 	juego.iniciarRonda()
 	juego.robarDelMazo()
 	juego.elegirRoboDelMazo(0,0)
@@ -99,10 +99,10 @@ def test_NoSePuedeJugarUnDúoDeCartasQueNoEsténEnLaManoDelJugador():
 
 def test_SiSeTieneUnDúo_AlJugarDúo_LasCartasDelDúoNoEstánEnLaMano():
 	
-	juego = EstadoDelJuego(cantidadDeJugadores=2)
+	juego = PartidaDeOcéanos(cantidadDeJugadores=2)
 	juego.iniciarRonda()
-	juego.mazo[-1] = Carta(Carta.Tipo.BARCO,Carta.Color.AZUL)
-	juego.mazo[-3] = Carta(Carta.Tipo.BARCO,Carta.Color.AMARILLO)
+	juego._mazo[-1] = Carta(Carta.Tipo.BARCO,Carta.Color.AZUL)
+	juego._mazo[-3] = Carta(Carta.Tipo.BARCO,Carta.Color.AMARILLO)
 	
 	juego.robarDelMazo()
 	juego.elegirRoboDelMazo(0,0)
@@ -118,14 +118,14 @@ def test_SiSeTieneUnDúo_AlJugarDúo_LasCartasDelDúoNoEstánEnLaMano():
 		Carta(Carta.Tipo.BARCO,Carta.Color.AMARILLO)
 	]))
 	
-	assert juego.estadoDelJugador[0].mano.total() == 0
+	assert juego._estadosDeJugadores[0].mano.total() == 0
 	
 def test_SiSeTieneUnDúo_AlJugarDúo_ElRestoDeLaManoQuedaIgual():
 	
-	juego = EstadoDelJuego(cantidadDeJugadores=2)
+	juego = PartidaDeOcéanos(cantidadDeJugadores=2)
 	juego.iniciarRonda()
-	juego.mazo[-1] = Carta(Carta.Tipo.BARCO,Carta.Color.AZUL)
-	juego.mazo[-3] = Carta(Carta.Tipo.BARCO,Carta.Color.AMARILLO)
+	juego._mazo[-1] = Carta(Carta.Tipo.BARCO,Carta.Color.AZUL)
+	juego._mazo[-3] = Carta(Carta.Tipo.BARCO,Carta.Color.AMARILLO)
 	
 	juego.robarDelMazo()
 	juego.elegirRoboDelMazo(0,0)
@@ -135,7 +135,7 @@ def test_SiSeTieneUnDúo_AlJugarDúo_ElRestoDeLaManoQuedaIgual():
 	juego.robarDelMazo()
 	juego.elegirRoboDelMazo(0,0)
 	juego.pasarTurno()
-	cartaEnMano = juego.mazo[-1]
+	cartaEnMano = juego._mazo[-1]
 	juego.robarDelMazo()
 	juego.elegirRoboDelMazo(1,1)
 	juego.pasarTurno()
@@ -146,14 +146,14 @@ def test_SiSeTieneUnDúo_AlJugarDúo_ElRestoDeLaManoQuedaIgual():
 		Carta(Carta.Tipo.BARCO,Carta.Color.AMARILLO)
 	]))
 	
-	assert juego.estadoDelJugador[0].mano == Multiset([cartaEnMano])
+	assert juego._estadosDeJugadores[0].mano == Multiset([cartaEnMano])
 	
 def test_SiSeTieneUnDúo_AlJugarDúo_LasCartasDelDúoEstánEnLaZonaDeDúos():
 	
-	juego = EstadoDelJuego(cantidadDeJugadores=2)
+	juego = PartidaDeOcéanos(cantidadDeJugadores=2)
 	juego.iniciarRonda()
-	juego.mazo[-1] = Carta(Carta.Tipo.BARCO,Carta.Color.AZUL)
-	juego.mazo[-3] = Carta(Carta.Tipo.BARCO,Carta.Color.AMARILLO)
+	juego._mazo[-1] = Carta(Carta.Tipo.BARCO,Carta.Color.AZUL)
+	juego._mazo[-3] = Carta(Carta.Tipo.BARCO,Carta.Color.AMARILLO)
 	
 	juego.robarDelMazo()
 	juego.elegirRoboDelMazo(0,0)
@@ -169,7 +169,7 @@ def test_SiSeTieneUnDúo_AlJugarDúo_LasCartasDelDúoEstánEnLaZonaDeDúos():
 		Carta(Carta.Tipo.BARCO,Carta.Color.AMARILLO)
 	]))
 	
-	assert juego.estadoDelJugador[0].zonaDeDuos == Multiset([(
+	assert juego._estadosDeJugadores[0].zonaDeDuos == Multiset([(
 		Carta(Carta.Tipo.BARCO,Carta.Color.AZUL),
 		Carta(Carta.Tipo.BARCO,Carta.Color.AMARILLO)
 	)])

@@ -2,7 +2,7 @@ from random import choice
 from collections import Counter as Multiset
 from administrador.enums import Acción
 from juego.carta import Carta
-from juego.juego import EstadoDelJuego, EstadoDeJugador
+from juego.juego import PartidaDeOcéanos
 
 class RandyBot():
 	def __init__(self):
@@ -15,9 +15,9 @@ class RandyBot():
 	
 	def decidirAcciónDeRobo(self):
 		accionesPosibles = [Acción.Robo.DEL_MAZO]
-		if len(self._juego.descarte[0]) > 0:
+		if len(self._juego._descarte[0]) > 0:
 			accionesPosibles.append(Acción.Robo.DEL_DESCARTE_0)
-		if len(self._juego.descarte[1]) > 0:
+		if len(self._juego._descarte[1]) > 0:
 			accionesPosibles.append(Acción.Robo.DEL_DESCARTE_1)
 		return choice(accionesPosibles)
 			
@@ -27,9 +27,9 @@ class RandyBot():
 		else:
 			indiceDeCartaARobar = choice([0,1])
 			indiceDePilaDondeDescartar = None
-			if len(self._juego.descarte[0]) > 0 and len(self._juego.descarte[1]) == 0:
+			if len(self._juego._descarte[0]) > 0 and len(self._juego._descarte[1]) == 0:
 				indiceDePilaDondeDescartar = 1
-			elif len(self._juego.descarte[1]) > 0 and len(self._juego.descarte[0]) == 0:
+			elif len(self._juego._descarte[1]) > 0 and len(self._juego._descarte[0]) == 0:
 				indiceDePilaDondeDescartar = 0
 			else:
 				indiceDePilaDondeDescartar = choice([0,1])			
@@ -49,7 +49,7 @@ class RandyBot():
 			accionesPosibles.append(Acción.Dúos.JUGAR_BARCOS)
 			
 		posibleDúoDeCangrejos = self._buscarDúoParaJugar(Carta.Tipo.CANGREJO)
-		if posibleDúoDeCangrejos != None and (len(self._juego.descarte[0]) > 0 or len(self._juego.descarte[1]) > 0):
+		if posibleDúoDeCangrejos != None and (len(self._juego._descarte[0]) > 0 or len(self._juego._descarte[1]) > 0):
 			accionesPosibles.append(Acción.Dúos.JUGAR_CANGREJOS)
 		
 		posibleDúoDeNadadorYTiburón = self._buscarDúoParaJugar(Carta.Tipo.NADADOR)
@@ -65,12 +65,12 @@ class RandyBot():
 		
 		elif acciónElegida == Acción.Dúos.JUGAR_CANGREJOS:
 			pilasPosibles = []
-			if (len(self._juego.descarte[0]) > 0):
+			if (len(self._juego._descarte[0]) > 0):
 				pilasPosibles.append(0)
-			if (len(self._juego.descarte[1]) > 0):
+			if (len(self._juego._descarte[1]) > 0):
 				pilasPosibles.append(1)
 			pilaElegida = choice(pilasPosibles)
-			indiceElegido = choice(list(range(len(self._juego.descarte[pilaElegida]))))
+			indiceElegido = choice(list(range(len(self._juego._descarte[pilaElegida]))))
 			return (acciónElegida, posibleDúoDeCangrejos, (pilaElegida, indiceElegido))
 		
 		elif acciónElegida == Acción.Dúos.JUGAR_NADADOR_Y_TIBURÓN:
@@ -85,7 +85,7 @@ class RandyBot():
 	def decidirAcciónDeFinDeRonda(self):
 		accionesDeFinDeRondaPosibles = [Acción.FinDeRonda.PASAR_TURNO]
 		
-		if self._juego.estadoDelJugador[self._númeroDeJugador].puntajeDeRonda() >= 7 and self._juego.ultimaChancePorJugador == None:
+		if self._juego._estadosDeJugadores[self._númeroDeJugador].puntajeDeRonda() >= 7 and self._juego._últimaChancePorJugador == None:
 			accionesDeFinDeRondaPosibles.append(Acción.FinDeRonda.DECIR_BASTA)
 			accionesDeFinDeRondaPosibles.append(Acción.FinDeRonda.DECIR_ÚLTIMA_CHANCE)
 		
@@ -96,7 +96,7 @@ class RandyBot():
 		cartasDelDúoEnMano = Multiset([])
 		nadadorEncontrado = False
 		tiburónEncontrado = False
-		for cartaEnMano in self._juego.estadoDelJugador[self._númeroDeJugador].mano.elements():
+		for cartaEnMano in self._juego._estadosDeJugadores[self._númeroDeJugador].mano.elements():
 			if tipo in [Carta.Tipo.NADADOR, Carta.Tipo.TIBURON]:
 				if (cartaEnMano.tipo == Carta.Tipo.NADADOR and not nadadorEncontrado) or (cartaEnMano.tipo == Carta.Tipo.TIBURON and not tiburónEncontrado):
 					cartasDelDúoEnMano[cartaEnMano] += 1

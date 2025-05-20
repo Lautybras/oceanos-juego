@@ -1,5 +1,5 @@
 from .enums import Acción
-from juego.juego import EstadoDelJuego
+from juego.juego import PartidaDeOcéanos
 from bots.randy import RandyBot
 
 class AdministradorDeJuego():
@@ -9,7 +9,7 @@ class AdministradorDeJuego():
 		self._verbose = verbose
 	
 	def jugarPartida(self):
-		self._juego = EstadoDelJuego(cantidadDeJugadores=len(self._jugadores))
+		self._juego = PartidaDeOcéanos(cantidadDeJugadores=len(self._jugadores))
 		
 		for j in range(len(self._jugadores)):
 			self._jugadores[j].configurarParaJuego(self._juego, j)
@@ -18,15 +18,15 @@ class AdministradorDeJuego():
 			self._juego.iniciarRonda()
 			if self._verbose:
 				print("~~~~~~~~~~~~~~~~~~~~~ Inicia Ronda ~~~~~~~~~~~~~~~~~~~~~~")
-				print(f"Jugador inicial: {self._juego.deQuienEsTurno}")
+				print(f"Jugador inicial: {self._juego._deQuiénEsTurno}")
 				print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
 
 			while self._juego.rondaEnCurso():
 				if self._verbose:
-					print(f"~~~~~~~~~~~~~~~~~~~ Turno del jugador {self._juego.deQuienEsTurno} ~~~~~~~~~~~~~~~~~~~~")
+					print(f"~~~~~~~~~~~~~~~~~~~ Turno del jugador {self._juego._deQuiénEsTurno} ~~~~~~~~~~~~~~~~~~~~")
 					print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
-					print(f"El descarte 0 es {(self._juego.descarte[0])}")
-					print(f"El descarte 1 es {(self._juego.descarte[1])}")
+					print(f"El descarte 0 es {(self._juego._descarte[0])}")
+					print(f"El descarte 1 es {(self._juego._descarte[1])}")
 				
 				self._faseDeRobo()
 				self._faseDeDúos()
@@ -35,22 +35,22 @@ class AdministradorDeJuego():
 			if self._verbose:
 				print("******************** Ronda terminada ********************")
 				for j in range(self._juego.cantidadDeJugadores):
-					print(f"Jugador {j}: +{self._juego.estadoDelJugador[j].puntajeDeRonda()} ({self._juego.puntajesDeJuego[j]}/{self._juego.puntajeParaGanar()})")
+					print(f"Jugador {j}: +{self._juego._estadosDeJugadores[j].puntajeDeRonda()} ({self._juego.puntajes[j]}/{self._juego.puntajeParaGanar()})")
 				print("*********************************************************")
 		
 		if self._verbose:
 			print("!!!!!!!!!!!!!!!!!!! Partida Terminada !!!!!!!!!!!!!!!!!!!")
-			print(f"Ganador: {self._juego.ganador}")
+			print(f"Ganador: {self._juego._jugadorGanador}")
 			print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
-		return self._juego.ganador
+		return self._juego._jugadorGanador
 	
 	def _faseDeRobo(self):
-		acciónDeRobo = self._jugadores[self._juego.deQuienEsTurno].decidirAcciónDeRobo()
+		acciónDeRobo = self._jugadores[self._juego._deQuiénEsTurno].decidirAcciónDeRobo()
 		
 		if acciónDeRobo == Acción.Robo.DEL_MAZO:
 			# Robar del mazo
 			opcionesDeRobo = self._juego.robarDelMazo()
-			(indiceDeCartaARobar, indiceDePilaDondeDescartar) = self._jugadores[self._juego.deQuienEsTurno].decidirCómoRobarDelMazo(opcionesDeRobo)
+			(indiceDeCartaARobar, indiceDePilaDondeDescartar) = self._jugadores[self._juego._deQuiénEsTurno].decidirCómoRobarDelMazo(opcionesDeRobo)
 			cartaRobada = self._juego.elegirRoboDelMazo(indiceDeCartaARobar, indiceDePilaDondeDescartar)
 			if self._verbose:
 				print(f"Roba del mazo una {cartaRobada}")
@@ -71,7 +71,7 @@ class AdministradorDeJuego():
 		noSeQuierenJugarMásDúos = False
 		
 		while not noSeQuierenJugarMásDúos and not self._juego.haTerminado():
-			(acciónDeDúos, cartasAJugar, parametrosDelDúo) = self._jugadores[self._juego.deQuienEsTurno].decidirAcciónDeDúos()
+			(acciónDeDúos, cartasAJugar, parametrosDelDúo) = self._jugadores[self._juego._deQuiénEsTurno].decidirAcciónDeDúos()
 			if acciónDeDúos == Acción.Dúos.JUGAR_PECES:
 				# Jugar dúo de peces
 				cartaRobada = self._juego.jugarDuoDePeces(cartasAJugar)
@@ -115,13 +115,13 @@ class AdministradorDeJuego():
 		if self._juego.haTerminado():
 			if self._verbose:
 				print("################### CUATRO SIRENAS ###################")
-				print(f"Ganador: {self._juego.ganador}")
-				for j in range(self._juego.cantidadDeJugadores):
-					print(f"Jugador {j}: +{self._juego.estadoDelJugador[j].puntajeDeRonda()} ({self._juego.puntajesDeJuego[j]}/{self._juego.puntajeParaGanar()})")
+				print(f"Ganador: {self._juego._jugadorGanador}")
+				for j in range(self._juego.cantidadDeJugadores()):
+					print(f"Jugador {j}: +{self._juego._estadosDeJugadores[j].puntajeDeRonda()} ({self._juego.puntajes[j]}/{self._juego.puntajeParaGanar()})")
 				print("######################################################")
 		else:
 		
-			acciónDeRobo = self._jugadores[self._juego.deQuienEsTurno].decidirAcciónDeFinDeRonda()
+			acciónDeRobo = self._jugadores[self._juego._deQuiénEsTurno].decidirAcciónDeFinDeRonda()
 
 			if acciónDeRobo == Acción.FinDeRonda.PASAR_TURNO:
 				# Pasar el turno normalmente
@@ -143,6 +143,6 @@ class AdministradorDeJuego():
 				raise Exception("Error")
 
 if __name__ == '__main__':
-	administrador = AdministradorDeJuego([RandyBot(), RandyBot()], verbose=False)
+	administrador = AdministradorDeJuego([RandyBot(), RandyBot()], verbose=True)
 	ganador = administrador.jugarPartida()
 	print(f"Ganador: {ganador}")
