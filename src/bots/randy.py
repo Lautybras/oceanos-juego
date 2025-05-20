@@ -20,7 +20,7 @@ class RandyBot():
 		if self._juego.cantidadDeCartasEnDescarte[1] > 0:
 			accionesPosibles.append(Acción.Robo.DEL_DESCARTE_1)
 		return choice(accionesPosibles)
-			
+	
 	def decidirCómoRobarDelMazo(self, opcionesDeRobo):
 		if len(opcionesDeRobo) == 1:
 			return (0, None)
@@ -81,7 +81,6 @@ class RandyBot():
 		
 		elif acciónElegida == Acción.Dúos.NO_JUGAR:
 			return (Acción.Dúos.NO_JUGAR, None, None)
-			
 	
 	def decidirAcciónDeFinDeRonda(self):
 		accionesDeFinDeRondaPosibles = [Acción.FinDeRonda.PASAR_TURNO]
@@ -91,7 +90,9 @@ class RandyBot():
 			accionesDeFinDeRondaPosibles.append(Acción.FinDeRonda.DECIR_ÚLTIMA_CHANCE)
 		
 		return choice(accionesDeFinDeRondaPosibles)
-		
+	
+	def configurarFinDeRonda(self, manos, puntajesDeRonda):
+		pass
 	
 	def _buscarDúoParaJugar(self, tipo):
 		cartasDelDúoEnMano = Multiset([])

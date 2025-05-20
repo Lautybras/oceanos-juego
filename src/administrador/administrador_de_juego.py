@@ -1,5 +1,6 @@
 from .enums import Acción
 from juego.juego import PartidaDeOcéanos
+from copy import deepcopy
 from bots.randy import RandyBot
 
 class AdministradorDeJuego():
@@ -32,11 +33,7 @@ class AdministradorDeJuego():
 				self._faseDeDúos()
 				self._faseDeFin()
 			
-			if self._verbose:
-				print("******************** Ronda terminada ********************")
-				for j in range(self._juego.cantidadDeJugadores):
-					print(f"Jugador {j}: +{self._juego._estadosDeJugadores[j].puntajeDeRonda()} ({self._juego.puntajes[j]}/{self._juego.puntajeParaGanar})")
-				print("*********************************************************")
+			self._finDeRonda()
 		
 		if self._verbose:
 			print("!!!!!!!!!!!!!!!!!!! Partida Terminada !!!!!!!!!!!!!!!!!!!")
@@ -142,7 +139,22 @@ class AdministradorDeJuego():
 			else:
 				#! ERROR
 				raise Exception("Error")
-
+	
+	def _finDeRonda(self):
+		if self._verbose:
+			print("******************** Ronda terminada ********************")
+			for j in range(self._juego.cantidadDeJugadores):
+				print(f"Jugador {j}: +{self._juego._estadosDeJugadores[j].puntajeDeRonda()} ({self._juego.puntajes[j]}/{self._juego.puntajeParaGanar})")
+			print("*********************************************************")
+		
+		quiénArranca = self._juego._deQuiénEsTurno
+		manos = [deepcopy(self._juego._estadosDeJugadores[j].mano) for j in range(len(self._jugadores))]
+		puntajesDeRonda = [ int(self._juego._estadosDeJugadores[j].puntajeDeRonda()) for j in range(len(self._jugadores))]
+		for j in range(len(self._jugadores)):
+			self._juego._deQuiénEsTurno = j
+			self._jugadores[j].configurarFinDeRonda(manos, puntajesDeRonda)
+		self._juego._deQuiénEsTurno = quiénArranca
+	
 if __name__ == '__main__':
 	administrador = AdministradorDeJuego([RandyBot(), RandyBot()], verbose=True)
 	ganador = administrador.jugarPartida()
