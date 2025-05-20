@@ -49,9 +49,9 @@ class AdministradorDeJuego():
 		
 		if acciónDeRobo == Acción.Robo.DEL_MAZO:
 			# Robar del mazo
-			opcionesDeRobo = self._juego.robarDelMazo()
+			opcionesDeRobo = self._juego.verCartasParaRobarDelMazo()
 			(indiceDeCartaARobar, indiceDePilaDondeDescartar) = self._jugadores[self._juego._deQuiénEsTurno].decidirCómoRobarDelMazo(opcionesDeRobo)
-			cartaRobada = self._juego.elegirRoboDelMazo(indiceDeCartaARobar, indiceDePilaDondeDescartar)
+			cartaRobada = self._juego.robarDelMazo(indiceDeCartaARobar, indiceDePilaDondeDescartar)
 			if self._verbose:
 				print(f"Roba del mazo una {cartaRobada}")
 			

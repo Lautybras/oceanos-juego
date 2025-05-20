@@ -7,8 +7,8 @@ def test_NoSePuedeJugarDúoDePecesConDúoDeOtroTipo():
 	juego = PartidaDeOcéanos(cantidadDeJugadores=2)
 	juego.iniciarRonda()
 	juego._estadosDeJugadores[0].mano[Carta(Carta.Tipo.BARCO, Carta.Color.AZUL)] += 2
-	juego.robarDelMazo()
-	juego.elegirRoboDelMazo(0,0)
+	juego.verCartasParaRobarDelMazo()
+	juego.robarDelMazo(0,0)
 	
 	with pytest.raises(JuegoException) as excepcion:
 	
@@ -24,13 +24,13 @@ def test_SiSePuedeJugarDúoDePecesYQuedanCartasEnElMazo_AlJugarDúoDePeces_SeRob
 	juego._mazo[-1] = Carta(Carta.Tipo.PEZ,Carta.Color.AZUL)
 	juego._mazo[-3] = Carta(Carta.Tipo.PEZ,Carta.Color.AMARILLO)
 	
-	juego.robarDelMazo()
-	juego.elegirRoboDelMazo(0,0)
+	juego.verCartasParaRobarDelMazo()
+	juego.robarDelMazo(0,0)
 	juego.pasarTurno()
 	juego.robarDelDescarte(0)
 	juego.pasarTurno()
-	juego.robarDelMazo()
-	juego.elegirRoboDelMazo(0,0)
+	juego.verCartasParaRobarDelMazo()
+	juego.robarDelMazo(0,0)
 	cartaSuperiorDelMazo = juego._mazo[-1]
 	
 	
@@ -49,13 +49,13 @@ def test_SiSePuedeJugarDúoDePecesYNoQuedanCartasEnElMazo_AlJugarDúoDePeces_NoS
 	juego._mazo[-1] = Carta(Carta.Tipo.PEZ,Carta.Color.AZUL)
 	juego._mazo[-3] = Carta(Carta.Tipo.PEZ,Carta.Color.AMARILLO)
 	
-	juego.robarDelMazo()
-	juego.elegirRoboDelMazo(0,0)
+	juego.verCartasParaRobarDelMazo()
+	juego.robarDelMazo(0,0)
 	juego.pasarTurno()
 	juego.robarDelDescarte(0)
 	juego.pasarTurno()
-	juego.robarDelMazo()
-	juego.elegirRoboDelMazo(0,0)
+	juego.verCartasParaRobarDelMazo()
+	juego.robarDelMazo(0,0)
 	juego._mazo = []
 	
 

@@ -7,8 +7,8 @@ def test_NoSePuedeJugarDúoDeNadadorYTiburónConDúoDeOtroTipo():
 	juego = PartidaDeOcéanos(cantidadDeJugadores=2)
 	juego.iniciarRonda()
 	juego._estadosDeJugadores[0].mano[Carta(Carta.Tipo.PEZ, Carta.Color.AZUL)] += 2
-	juego.robarDelMazo()
-	juego.elegirRoboDelMazo(0,0)
+	juego.verCartasParaRobarDelMazo()
+	juego.robarDelMazo(0,0)
 	
 	with pytest.raises(JuegoException) as excepcion:
 		juego.jugarDuoDeNadadorYTiburón(Multiset([
@@ -23,13 +23,13 @@ def test_NoSePuedeJugarDúoDeNadadorYTiburónConObjetivoFueraDeRangoDeJugadores(
 	juego._mazo[-1] = Carta(Carta.Tipo.NADADOR,Carta.Color.AZUL)
 	juego._mazo[-3] = Carta(Carta.Tipo.TIBURON,Carta.Color.AMARILLO)
 	
-	juego.robarDelMazo()
-	juego.elegirRoboDelMazo(0,0)
+	juego.verCartasParaRobarDelMazo()
+	juego.robarDelMazo(0,0)
 	juego.pasarTurno()
 	juego.robarDelDescarte(0)
 	juego.pasarTurno()
-	juego.robarDelMazo()
-	juego.elegirRoboDelMazo(0,0)
+	juego.verCartasParaRobarDelMazo()
+	juego.robarDelMazo(0,0)
 	
 	with pytest.raises(JuegoException) as excepcion:
 		juego.jugarDuoDeNadadorYTiburón(Multiset([
@@ -44,13 +44,13 @@ def test_NoSePuedeJugarDúoDeNadadorYTiburónConObjetivoElJugadorActual():
 	juego._mazo[-1] = Carta(Carta.Tipo.NADADOR,Carta.Color.AZUL)
 	juego._mazo[-3] = Carta(Carta.Tipo.TIBURON,Carta.Color.AMARILLO)
 	
-	juego.robarDelMazo()
-	juego.elegirRoboDelMazo(0,0)
+	juego.verCartasParaRobarDelMazo()
+	juego.robarDelMazo(0,0)
 	juego.pasarTurno()
 	juego.robarDelDescarte(0)
 	juego.pasarTurno()
-	juego.robarDelMazo()
-	juego.elegirRoboDelMazo(0,0)
+	juego.verCartasParaRobarDelMazo()
+	juego.robarDelMazo(0,0)
 	
 	with pytest.raises(JuegoException) as excepcion:
 		juego.jugarDuoDeNadadorYTiburón(Multiset([
@@ -66,13 +66,13 @@ def test_SiLaManoDelJugadorObjetivoEstáVacía_AlJugarDúoDeNadadorYTiburón_NoS
 	juego._mazo[-1] = Carta(Carta.Tipo.NADADOR,Carta.Color.AZUL)
 	juego._mazo[-3] = Carta(Carta.Tipo.TIBURON,Carta.Color.AMARILLO)
 	
-	juego.robarDelMazo()
-	juego.elegirRoboDelMazo(0,0)
+	juego.verCartasParaRobarDelMazo()
+	juego.robarDelMazo(0,0)
 	juego.pasarTurno()
 	juego.robarDelDescarte(0)
 	juego.pasarTurno()
-	juego.robarDelMazo()
-	juego.elegirRoboDelMazo(0,0)
+	juego.verCartasParaRobarDelMazo()
+	juego.robarDelMazo(0,0)
 	juego._estadosDeJugadores[1].mano = Multiset()
 	
 	cartaRobada = juego.jugarDuoDeNadadorYTiburón(Multiset([
@@ -91,13 +91,13 @@ def test_SiLaManoDelJugadorObjetivoNoEstáVacía_AlJugarDúoDeNadadorYTiburón_S
 	juego._mazo[-1] = Carta(Carta.Tipo.NADADOR,Carta.Color.AZUL)
 	juego._mazo[-3] = Carta(Carta.Tipo.TIBURON,Carta.Color.AMARILLO)
 	
-	juego.robarDelMazo()
-	juego.elegirRoboDelMazo(0,0)
+	juego.verCartasParaRobarDelMazo()
+	juego.robarDelMazo(0,0)
 	juego.pasarTurno()
 	juego.robarDelDescarte(0)
 	juego.pasarTurno()
-	juego.robarDelMazo()
-	juego.elegirRoboDelMazo(0,0)
+	juego.verCartasParaRobarDelMazo()
+	juego.robarDelMazo(0,0)
 	juego._estadosDeJugadores[1].mano = Multiset([
 		Carta(Carta.Tipo.ANCLA, Carta.Color.VIOLETA),
 		Carta(Carta.Tipo.COLONIA, Carta.Color.GRIS),

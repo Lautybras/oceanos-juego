@@ -1,6 +1,6 @@
 from random import shuffle, choice
 from enum import Enum, auto
-from copy import deepcopy
+from copy import copy
 from .carta import Carta
 from collections import Counter as Multiset
 
@@ -257,8 +257,11 @@ class PartidaDeOcéanos():
 		return int(self._últimaChancePorJugador) if self._últimaChancePorJugador != None else None
 	
 	@property
-	def descarte(self):
-		return deepcopy(self._descarte)
+	def topeDelDescarte(self):
+		return (
+			(copy(self._descarte[0][-1]) if len(self._descarte[0]) > 0 else None),
+			(copy(self._descarte[1][-1]) if len(self._descarte[1]) > 0 else None)
+		)
 	
 	
 	def __init__(self, cantidadDeJugadores=2):
@@ -300,7 +303,7 @@ class PartidaDeOcéanos():
 		
 		return cartaRobada
 	
-	def robarDelMazo(self):
+	def verCartasParaRobarDelMazo(self):
 		self._assertSePuedeElegirAcciónDeRobo()
 		if len(self._mazo) == 0:
 			raise JuegoException("No se puede robar de un mazo vacío")
@@ -311,7 +314,7 @@ class PartidaDeOcéanos():
 			return [self._mazo[-1]]
 		return [self._mazo[-1], self._mazo[-2]]
 	
-	def elegirRoboDelMazo(self, indiceDeCartaARobar, indiceDePilaDondeDescartar):
+	def robarDelMazo(self, indiceDeCartaARobar, indiceDePilaDondeDescartar):
 		self._assertSePuedeRobarDelMazo()
 		
 		self._assertObjetivoDeDescarteVálido(indiceDePilaDondeDescartar, indiceDeCartaARobar)

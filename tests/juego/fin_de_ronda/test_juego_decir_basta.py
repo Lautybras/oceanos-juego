@@ -56,7 +56,7 @@ def test_SiSeDijoBasta_NoSePuedeRobarDelMazo():
 	juego.decirBasta()
 	
 	with pytest.raises(JuegoException) as excepcion:
-		juego.robarDelMazo()
+		juego.verCartasParaRobarDelMazo()
 	
 	assert "No hay una ronda en curso" in str(excepcion.value)
 
@@ -68,7 +68,7 @@ def test_SiSeDijoBasta_NoSePuedeElegirRoboDelMazo():
 	juego.decirBasta()
 	
 	with pytest.raises(JuegoException) as excepcion:
-		juego.elegirRoboDelMazo(0,0)
+		juego.robarDelMazo(0,0)
 	
 	assert "No hay una ronda en curso" in str(excepcion.value)
 	

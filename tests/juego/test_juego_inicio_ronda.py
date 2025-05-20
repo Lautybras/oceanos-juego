@@ -82,7 +82,7 @@ def test_SiNoSeInicióLaPrimeraRonda_NoSePuedeRobarDelMazo():
 	juego = PartidaDeOcéanos(cantidadDeJugadores=2)
 	
 	with pytest.raises(JuegoException) as excepcion:
-		juego.robarDelMazo()
+		juego.verCartasParaRobarDelMazo()
 	
 	assert "No hay una ronda en curso" in str(excepcion.value)
 
@@ -91,7 +91,7 @@ def test_SiNoSeInicióLaPrimeraRonda_NoSePuedeElegirRoboDelMazo():
 	juego = PartidaDeOcéanos(cantidadDeJugadores=2)
 	
 	with pytest.raises(JuegoException) as excepcion:
-		juego.elegirRoboDelMazo(0,0)
+		juego.robarDelMazo(0,0)
 	
 	assert "No hay una ronda en curso" in str(excepcion.value)
 

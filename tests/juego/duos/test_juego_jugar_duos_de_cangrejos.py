@@ -7,8 +7,8 @@ def test_NoSePuedeJugarDúoDeCangrejosConDúoDeOtroTipo():
 	juego = PartidaDeOcéanos(cantidadDeJugadores=2)
 	juego.iniciarRonda()
 	juego._estadosDeJugadores[0].mano[Carta(Carta.Tipo.PEZ, Carta.Color.AZUL)] += 2
-	juego.robarDelMazo()
-	juego.elegirRoboDelMazo(0,0)
+	juego.verCartasParaRobarDelMazo()
+	juego.robarDelMazo(0,0)
 	
 	with pytest.raises(JuegoException) as excepcion:
 		juego.jugarDuoDeCangrejos(Multiset([
@@ -23,13 +23,13 @@ def test_SiElDescarteEstáVacío_AlJugarDúoDeCangrejos_NoSeRobaNingunaCarta():
 	juego._mazo[-1] = Carta(Carta.Tipo.CANGREJO,Carta.Color.AZUL)
 	juego._mazo[-3] = Carta(Carta.Tipo.CANGREJO,Carta.Color.AMARILLO)
 	
-	juego.robarDelMazo()
-	juego.elegirRoboDelMazo(0,0)
+	juego.verCartasParaRobarDelMazo()
+	juego.robarDelMazo(0,0)
 	juego.pasarTurno()
 	juego.robarDelDescarte(0)
 	juego.pasarTurno()
-	juego.robarDelMazo()
-	juego.elegirRoboDelMazo(0,0)
+	juego.verCartasParaRobarDelMazo()
+	juego.robarDelMazo(0,0)
 	juego._descarte = ([], [])
 	
 	cartaRobada = juego.jugarDuoDeCangrejos(Multiset([
@@ -47,13 +47,13 @@ def test_SiElDescarteNoEstáVacío_NoSePuedeJugarDúoDeCangrejosEnPilaDeDescarte
 	juego._mazo[-1] = Carta(Carta.Tipo.CANGREJO,Carta.Color.AZUL)
 	juego._mazo[-3] = Carta(Carta.Tipo.CANGREJO,Carta.Color.AMARILLO)
 	
-	juego.robarDelMazo()
-	juego.elegirRoboDelMazo(0,0)
+	juego.verCartasParaRobarDelMazo()
+	juego.robarDelMazo(0,0)
 	juego.pasarTurno()
 	juego.robarDelDescarte(0)
 	juego.pasarTurno()
-	juego.robarDelMazo()
-	juego.elegirRoboDelMazo(0,0)
+	juego.verCartasParaRobarDelMazo()
+	juego.robarDelMazo(0,0)
 	juego._descarte[1].pop()
 	
 	with pytest.raises(JuegoException) as excepcion:
@@ -69,13 +69,13 @@ def test_SiElDescarteNoEstáVacío_NoSePuedeJugarDúoDeCangrejosEnÍndiceInexist
 	juego._mazo[-1] = Carta(Carta.Tipo.CANGREJO,Carta.Color.AZUL)
 	juego._mazo[-3] = Carta(Carta.Tipo.CANGREJO,Carta.Color.AMARILLO)
 	
-	juego.robarDelMazo()
-	juego.elegirRoboDelMazo(0,0)
+	juego.verCartasParaRobarDelMazo()
+	juego.robarDelMazo(0,0)
 	juego.pasarTurno()
 	juego.robarDelDescarte(0)
 	juego.pasarTurno()
-	juego.robarDelMazo()
-	juego.elegirRoboDelMazo(0,0)
+	juego.verCartasParaRobarDelMazo()
+	juego.robarDelMazo(0,0)
 	
 	with pytest.raises(JuegoException) as excepcion:
 		juego.jugarDuoDeCangrejos(Multiset([
@@ -91,14 +91,14 @@ def test_SiElDescarteNoEstáVacío_AlJugarDúoDeCangrejos_SeRobaLaCartaSeleccion
 	juego._mazo[-5] = Carta(Carta.Tipo.CANGREJO,Carta.Color.AMARILLO)
 	cartaARobarConDúoDeCangrejo = juego._mazo[-2]
 	
-	juego.robarDelMazo()
-	juego.elegirRoboDelMazo(0,0)
+	juego.verCartasParaRobarDelMazo()
+	juego.robarDelMazo(0,0)
 	juego.pasarTurno()
-	juego.robarDelMazo()
-	juego.elegirRoboDelMazo(0,1)
+	juego.verCartasParaRobarDelMazo()
+	juego.robarDelMazo(0,1)
 	juego.pasarTurno()
-	juego.robarDelMazo()
-	juego.elegirRoboDelMazo(0,0)
+	juego.verCartasParaRobarDelMazo()
+	juego.robarDelMazo(0,0)
 	
 	descarteAntesDelDúo = (juego._descarte[0].copy(), juego._descarte[1].copy())
 	

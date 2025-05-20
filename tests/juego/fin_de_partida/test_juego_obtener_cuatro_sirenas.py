@@ -26,8 +26,8 @@ def test_SiAlRobarDelMazoSeConsiguenCuatroSirenas_ElJugadorConLasSirenasGanaLaPa
 	juego.iniciarRonda()
 	juego._estadosDeJugadores[0].mano[Carta(Carta.Tipo.SIRENA, Carta.Color.BLANCO)] += 3
 	juego._mazo[-1] = Carta(Carta.Tipo.SIRENA, Carta.Color.BLANCO)
-	juego.robarDelMazo()
-	juego.elegirRoboDelMazo(0,0)
+	juego.verCartasParaRobarDelMazo()
+	juego.robarDelMazo(0,0)
 	
 	assert juego.rondaEnCurso() == False
 	assert juego.haTerminado() == True
@@ -45,8 +45,8 @@ def test_SiAlJugarDúoDePecesSeConsiguenCuatroSirenas_ElJugadorConLasSirenasGana
 	juego._estadosDeJugadores[0].mano[Carta(Carta.Tipo.PEZ, Carta.Color.AZUL)] += 1
 	juego._mazo[-1] = Carta(Carta.Tipo.PEZ, Carta.Color.NARANJA)
 	juego._mazo[-3] = Carta(Carta.Tipo.SIRENA, Carta.Color.BLANCO)
-	juego.robarDelMazo()
-	juego.elegirRoboDelMazo(0,0)
+	juego.verCartasParaRobarDelMazo()
+	juego.robarDelMazo(0,0)
 	juego.jugarDuoDePeces(Multiset([
 		Carta(Carta.Tipo.PEZ, Carta.Color.AZUL),
 		Carta(Carta.Tipo.PEZ, Carta.Color.NARANJA)
@@ -69,8 +69,8 @@ def test_SiAlJugarDúoDeCangrejosSeConsiguenCuatroSirenas_ElJugadorConLasSirenas
 	juego._descarte[0].pop()
 	juego._descarte[0].append(Carta(Carta.Tipo.SIRENA, Carta.Color.BLANCO))
 	juego._mazo[-1] = Carta(Carta.Tipo.CANGREJO, Carta.Color.AMARILLO)
-	juego.robarDelMazo()
-	juego.elegirRoboDelMazo(0,0)
+	juego.verCartasParaRobarDelMazo()
+	juego.robarDelMazo(0,0)
 	juego.jugarDuoDeCangrejos(Multiset([
 		Carta(Carta.Tipo.CANGREJO, Carta.Color.AMARILLO),
 		Carta(Carta.Tipo.CANGREJO, Carta.Color.ROSA)
@@ -92,8 +92,8 @@ def test_SiAlJugarDúoDeNadadorYTiburónSeConsiguenCuatroSirenas_ElJugadorConLas
 	juego._estadosDeJugadores[0].mano[Carta(Carta.Tipo.TIBURON, Carta.Color.ROSA)] += 1
 	juego._estadosDeJugadores[1].mano[Carta(Carta.Tipo.SIRENA, Carta.Color.BLANCO)] += 1
 	juego._mazo[-1] = Carta(Carta.Tipo.NADADOR, Carta.Color.AMARILLO)
-	juego.robarDelMazo()
-	juego.elegirRoboDelMazo(0,0)
+	juego.verCartasParaRobarDelMazo()
+	juego.robarDelMazo(0,0)
 	juego.jugarDuoDeNadadorYTiburón(Multiset([
 		Carta(Carta.Tipo.TIBURON, Carta.Color.ROSA),
 		Carta(Carta.Tipo.NADADOR, Carta.Color.AMARILLO)

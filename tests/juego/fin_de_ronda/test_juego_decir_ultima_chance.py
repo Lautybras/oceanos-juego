@@ -56,14 +56,14 @@ def test_SiSeDijoÚltimaChance_SiJuegaElSiguienteJugador_LaManoDelJugadorOrigina
 	juego = PartidaDeOcéanos(cantidadDeJugadores=2)
 	juego.iniciarRonda()
 	
-	juego.robarDelMazo()
-	juego.elegirRoboDelMazo(0,0)
+	juego.verCartasParaRobarDelMazo()
+	juego.robarDelMazo(0,0)
 	juego._estadosDeJugadores[0].mano.clear()
 	juego._estadosDeJugadores[0].mano[Carta(Carta.Tipo.PULPO, Carta.Color.GRIS)] += 4
 	juego.decirÚltimaChance()
 	
-	juego.robarDelMazo()
-	juego.elegirRoboDelMazo(0,0)
+	juego.verCartasParaRobarDelMazo()
+	juego.robarDelMazo(0,0)
 	juego._estadosDeJugadores[1].mano[Carta(Carta.Tipo.TIBURON, Carta.Color.NARANJA_CLARO)] += 1
 	juego._estadosDeJugadores[1].mano[Carta(Carta.Tipo.NADADOR, Carta.Color.ROSA)] += 1
 	
@@ -83,17 +83,17 @@ def test_SiSeDijoÚltimaChance_AlJugarUnTurnoCompletoElSiguienteJugador_SuManoNo
 	juego = PartidaDeOcéanos(cantidadDeJugadores=3)
 	juego.iniciarRonda()
 	
-	juego.robarDelMazo()
-	juego.elegirRoboDelMazo(0,0)
+	juego.verCartasParaRobarDelMazo()
+	juego.robarDelMazo(0,0)
 	juego._estadosDeJugadores[0].mano[Carta(Carta.Tipo.PULPO, Carta.Color.GRIS)] += 4
 	juego.decirÚltimaChance()
 	
-	juego.robarDelMazo()
-	juego.elegirRoboDelMazo(0,0)
+	juego.verCartasParaRobarDelMazo()
+	juego.robarDelMazo(0,0)
 	juego.pasarTurno()
 	
-	juego.robarDelMazo()
-	juego.elegirRoboDelMazo(0,0)
+	juego.verCartasParaRobarDelMazo()
+	juego.robarDelMazo(0,0)
 	juego._estadosDeJugadores[2].mano[Carta(Carta.Tipo.TIBURON, Carta.Color.NARANJA_CLARO)] += 1
 	juego._estadosDeJugadores[2].mano[Carta(Carta.Tipo.NADADOR, Carta.Color.ROSA)] += 1
 	
@@ -228,7 +228,7 @@ def test_SiSeDijoÚltimaChance_AlVolverASerTurnoDelJugadorQueDijoÚltimaChance_N
 	juego.pasarTurno()
 	
 	with pytest.raises(JuegoException) as excepcion:
-		juego.robarDelMazo()
+		juego.verCartasParaRobarDelMazo()
 	
 	assert "No hay una ronda en curso" in str(excepcion.value)
 
@@ -242,7 +242,7 @@ def test_SiSeDijoÚltimaChance_AlVolverASerTurnoDelJugadorQueDijoÚltimaChance_N
 	juego.pasarTurno()
 	
 	with pytest.raises(JuegoException) as excepcion:
-		juego.elegirRoboDelMazo(0,0)
+		juego.robarDelMazo(0,0)
 	
 	assert "No hay una ronda en curso" in str(excepcion.value)
 	

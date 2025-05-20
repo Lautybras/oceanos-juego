@@ -36,8 +36,8 @@ def test_SiSeTerminóLaRondaPorNoQuedarCartasEnElMazo_AlIniciarRonda_ElJugadorIn
 	juego._mazo = [Carta(Carta.Tipo.SIRENA, Carta.Color.BLANCO)]
 	juego.robarDelDescarte(0)
 	juego.pasarTurno()
-	juego.robarDelMazo()
-	juego.elegirRoboDelMazo(0,0)
+	juego.verCartasParaRobarDelMazo()
+	juego.robarDelMazo(0,0)
 	juego.pasarTurno()
 	
 	juego.iniciarRonda()
