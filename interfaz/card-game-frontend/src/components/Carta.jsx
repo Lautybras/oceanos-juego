@@ -1,183 +1,211 @@
 import React, { useRef, useEffect, useState } from "react";
 import IMG from "../assets/cartas.png";
 
+const IMG_WIDTH = 7450
+const IMG_HEIGHT = 7280
+
 const margenX = 16;
 const margenY = 20;
-
-const offsetBlanco = 20
-
-const anchoCarta = 676 + offsetBlanco *2;
-const altoCarta = 967 + offsetBlanco *2
-// const altoCarta = 1000 + 20;
+const offsetBlanco = 20;
+const anchoCarta = 674 + offsetBlanco * 2;
+const altoCarta = 967 + offsetBlanco * 2;
 const radioBorde = 30;
+const espacioX = 31;
+const espacioY = 33;
+
+// Enums
+const Colores = Object.freeze({
+  AZUL: 0,
+  CELESTE: 1,
+  NEGRO: 2,
+  AMARILLO: 3,
+  VERDE: 4,
+  BLANCO: 5,
+  VIOLETA: 6,
+  GRIS: 7,
+  NARANJA_CLARO: 8,
+  ROSA: 9,
+  NARANJA: 10,
+});
+
+const Tipo = Object.freeze({
+  CANGREJO: 0,
+  BARCO: 1,
+  PEZ: 2,
+  NADADOR: 3,
+  TIBURON: 4,
+  CONCHA: 5,
+  PULPO: 6,
+  PINGUINO: 7,
+  ANCLA: 8,
+  COLONIA: 9,
+  FARO: 10,
+  CARDUMEN: 11,
+  CAPITAN: 12,
+  SIRENA: 13,
+});
+
+const cartas = {
+  BARCO: {
+    NEGRO: [0, 0],
+    AZUL: [0, 5],
+    AMARILLO: [1, 5],
+    CELESTE: [1, 8],
+    NEGRO_2: [2, 7],
+    CELESTE_2: [2, 3],
+    AZUL_2: [0, 8],
+  },
+  CANGREJO: {
+    AZUL: [0, 2],
+    GRIS: [0, 7],
+    CELESTE: [2, 4],
+  },
+  PEZ: {
+    NEGRO: [1, 6],
+    CELESTE: [2, 0],
+    AZUL: [2, 1],
+    NEGRO_2: [2, 2],
+    AZUL_2: [3, 1],
+  },
+  TIBURON: {
+    VIOLETA: [2, 5],
+    NEGRO: [2, 6],
+  },
+  NADADOR: {
+    AZUL: [0, 6],
+    AMARILLO: [1, 7],
+    NARANJA_CLARO: [1, 9],
+  },
+  CONCHA: {
+    VERDE: [0, 4],
+    AZUL: [0, 9],
+    AMARILLO: [2, 9],
+  },
+  PULPO: {
+    VERDE: [0, 3],
+    VIOLETA: [1, 4],
+    GRIS: [3, 0],
+  },
+  PINGUINO: {
+    NARANJA_CLARO: [1, 3],
+  },
+  ANCLA: {
+    ROSA: [2, 8],
+    NARANJA: [3, 2],
+  },
+  COLONIA: {
+    VERDE: [3, 1],
+  },
+  FARO: {
+    NEGRO: [2, 0],
+    BLANCO: [2, 1],
+  },
+  CARDUMEN: {
+    GRIS: [1, 1],
+  },
+  CAPITAN: {
+    NEGRO: [2, 0],
+    BLANCO: [2, 1],
+  },
+  SIRENA: {
+    BLANCO: [1, 2],
+  },
+  DECK: {
+    NULL: [6,9]
+  }
+};
 
 
-const espacioX = 30;
-// const espacioY = 20;
-const espacioY = 33
-
-
-
-function filaCarta(tipo, color) {
-  return 0
-}
-
-function colCarta(tipo, color) {
-  return 0
-}
-
-function Carta({ tipo, color }) {
-  const col = colCarta(tipo, color);
-  const fila = filaCarta(tipo, color);
+function Carta({ tipo, color, width, height, modo = "fija", contenedorRef }) {
+  const filaCol = cartas[tipo][color];
+  const fila = filaCol[0];
+  const col = filaCol[1];
 
   const offsetX = margenX + col * (anchoCarta + espacioX);
   const offsetY = margenY + fila * (altoCarta + espacioY);
 
-  const [pos, setPos] = useState({ x: 100, y: 100 });
-  const posRef = useRef({ x: 100, y: 100 });
+  const scaleX = width / anchoCarta;
+  const scaleY = height / altoCarta;
+  const scale = Math.min(scaleX, scaleY, 1) * 0.3;
 
-  const velocityRef = useRef({ x: 0, y: 0 });
+  const [pos, setPos] = useState({ x: 0, y: 0 });
   const draggingRef = useRef(false);
   const offsetRef = useRef({ x: 0, y: 0 });
 
-  const animationRef = useRef(null);
-
-  // Para escala responsiva opcional
-  const scale = Math.min(window.innerWidth / 3000, 1);
-
-  // Referencia al contenedor tablero
-  const contenedorRef = useRef(null);
-
-  // Función para limitar posición dentro del contenedor
+  // Limita la posición para que la carta no salga del contenedor
   const limitarPosicion = (x, y) => {
-    if (!contenedorRef.current) return { x, y };
+    if (!contenedorRef?.current) return { x: Math.max(0, x), y: Math.max(0, y) };
 
-    const contenedorRect = contenedorRef.current.getBoundingClientRect();
+    const rect = contenedorRef.current.getBoundingClientRect();
 
-    // Limites en base a contenedor y tamaño carta escalada
-    const maxX = contenedorRect.width - anchoCarta * scale;
-    const maxY = contenedorRect.height - altoCarta * scale;
+    // Tamaño visible del contenedor en "unidades carta sin escalar"
+    const maxX = Math.max(0, rect.width / scale - anchoCarta);
+    const maxY = Math.max(0, rect.height / scale - altoCarta);
 
-    let nx = x;
-    let ny = y;
-
-    if (nx < 0) nx = 0;
-    else if (nx > maxX) nx = maxX;
-
-    if (ny < 0) ny = 0;
-    else if (ny > maxY) ny = maxY;
-
-    return { x: nx, y: ny };
-  };
-
-  const updatePosition = (newPos) => {
-    // Limitar posición aquí
-    const limitedPos = limitarPosicion(newPos.x, newPos.y);
-    posRef.current = limitedPos;
-    setPos(limitedPos);
+    return {
+      x: Math.min(Math.max(0, x), maxX),
+      y: Math.min(Math.max(0, y), maxY),
+    };
   };
 
   const handleMouseDown = (e) => {
+    if (modo !== "movil") return;
     draggingRef.current = true;
     offsetRef.current = {
-      x: e.clientX - posRef.current.x,
-      y: e.clientY - posRef.current.y,
+      x: e.clientX - pos.x * scale,
+      y: e.clientY - pos.y * scale,
     };
-    cancelAnimationFrame(animationRef.current);
+    window.addEventListener("mousemove", handleMouseMove);
+    window.addEventListener("mouseup", handleMouseUp);
   };
 
   const handleMouseMove = (e) => {
     if (!draggingRef.current) return;
-
-    const newX = e.clientX - offsetRef.current.x;
-    const newY = e.clientY - offsetRef.current.y;
-
-    velocityRef.current = {
-      x: newX - posRef.current.x,
-      y: newY - posRef.current.y,
-    };
-
-    updatePosition({ x: newX, y: newY });
+    const newX = (e.clientX - offsetRef.current.x) / scale;
+    const newY = (e.clientY - offsetRef.current.y) / scale;
+    setPos(limitarPosicion(newX, newY));
   };
 
   const handleMouseUp = () => {
     draggingRef.current = false;
-    applyInertia();
+    window.removeEventListener("mousemove", handleMouseMove);
+    window.removeEventListener("mouseup", handleMouseUp);
   };
 
-  const applyInertia = () => {
-    const friction = 0.92;
-
-    const step = () => {
-      velocityRef.current.x *= friction;
-      velocityRef.current.y *= friction;
-
-      const speed =
-        Math.abs(velocityRef.current.x) + Math.abs(velocityRef.current.y);
-
-      if (speed < 0.5) return; // Detener cuando sea lento
-
-      let newX = posRef.current.x + velocityRef.current.x;
-      let newY = posRef.current.y + velocityRef.current.y;
-
-      // Limitar posición para que no salga
-      const limitedPos = limitarPosicion(newX, newY);
-      newX = limitedPos.x;
-      newY = limitedPos.y;
-
-      // Si tocamos bordes, invertir velocidad para "rebotar" (opcional)
-      if (newX === 0 || newX === (contenedorRef.current.getBoundingClientRect().width - anchoCarta * scale)) {
-        velocityRef.current.x *= -0.1;
-      }
-      if (newY === 0 || newY === (contenedorRef.current.getBoundingClientRect().height - altoCarta * scale)) {
-        velocityRef.current.y *= -0.2;
-      }
-
-      updatePosition({ x: newX, y: newY });
-      animationRef.current = requestAnimationFrame(step);
-    };
-
-    animationRef.current = requestAnimationFrame(step);
-  };
-
-  useEffect(() => {
-    window.addEventListener("mousemove", handleMouseMove);
-    window.addEventListener("mouseup", handleMouseUp);
-
-    return () => {
-      window.removeEventListener("mousemove", handleMouseMove);
-      window.removeEventListener("mouseup", handleMouseUp);
-      cancelAnimationFrame(animationRef.current);
-    };
-  }, []);
-
-  useEffect(() => {
-    contenedorRef.current = document.getElementById("tablero");
-  }, []);
+  const estiloPosicion =
+    modo === "movil"
+      ? {
+          position: "absolute",
+          top: `${pos.y * scale}px`,
+          left: `${pos.x * scale}px`,
+          cursor: draggingRef.current ? "grabbing" : "grab",
+          zIndex: 1000, // para que quede encima
+        }
+      : {
+          position: "relative",
+          cursor: "default",
+          margin: "auto",
+        };
 
   return (
     <div
+      className="carta"
       onMouseDown={handleMouseDown}
       style={{
-        position: "absolute",
-        top: `${pos.y}px`,
-        left: `${pos.x}px`,
-        width: `${anchoCarta}px`,
-        height: `${altoCarta}px`,
+        ...estiloPosicion,
+        width: `${anchoCarta * scale}px`,
+        height: `${altoCarta * scale}px`,
         backgroundImage: `url(${IMG})`,
-        backgroundPosition: `-${offsetX}px -${offsetY}px`,
+        backgroundPosition: `-${offsetX * scale}px -${offsetY * scale}px`,
+        backgroundSize: `${IMG_WIDTH * scale}px ${IMG_HEIGHT * scale}px`,
         backgroundRepeat: "no-repeat",
-        borderRadius: `${radioBorde}px`,
+        borderRadius: `${radioBorde * scale}px`,
         border: "1px solid black",
-        cursor: draggingRef.current ? "grabbing" : "grab",
-        userSelect: "none",
-        transform: `scale(${scale})`,
-        transformOrigin: "top left",
         boxShadow: "0 4px 12px rgba(0,0,0,0.3)",
-        transition: draggingRef.current ? "none" : "transform 0.1s",
+        userSelect: "none",
+        transition: modo === "fija" ? "transform 0.1s" : "none",
       }}
-      draggable={false}
-    ></div>
+    />
   );
 }
 
