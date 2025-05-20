@@ -71,7 +71,7 @@ class RandyBot():
 			if (self._juego.cantidadDeCartasEnDescarte[1] > 0):
 				pilasPosibles.append(1)
 			pilaElegida = choice(pilasPosibles)
-			indiceElegido = choice(list(range(len(self._juego._descarte[pilaElegida]))))
+			indiceElegido = choice(list(range(self._juego.cantidadDeCartasEnDescarte[pilaElegida])))
 			return (acciónElegida, posibleDúoDeCangrejos, (pilaElegida, indiceElegido))
 		
 		elif acciónElegida == Acción.Dúos.JUGAR_NADADOR_Y_TIBURÓN:
@@ -97,7 +97,7 @@ class RandyBot():
 		cartasDelDúoEnMano = Multiset([])
 		nadadorEncontrado = False
 		tiburónEncontrado = False
-		for cartaEnMano in self._juego._estadosDeJugadores[self._númeroDeJugador].mano.elements():
+		for cartaEnMano in self._juego.mano.elements():
 			if tipo in [Carta.Tipo.NADADOR, Carta.Tipo.TIBURÓN]:
 				if (cartaEnMano.tipo == Carta.Tipo.NADADOR and not nadadorEncontrado) or (cartaEnMano.tipo == Carta.Tipo.TIBURÓN and not tiburónEncontrado):
 					cartasDelDúoEnMano[cartaEnMano] += 1
