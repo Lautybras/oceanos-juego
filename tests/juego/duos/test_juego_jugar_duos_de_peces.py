@@ -12,7 +12,7 @@ def test_NoSePuedeJugarDúoDePecesConDúoDeOtroTipo():
 	
 	with pytest.raises(JuegoException) as excepcion:
 	
-		juego.jugarDuoDePeces(Multiset([
+		juego.jugarDúoDePeces(Multiset([
 			Carta(Carta.Tipo.BARCO, Carta.Color.AZUL), Carta(Carta.Tipo.BARCO, Carta.Color.AZUL)
 		]))
 	
@@ -34,7 +34,7 @@ def test_SiSePuedeJugarDúoDePecesYQuedanCartasEnElMazo_AlJugarDúoDePeces_SeRob
 	cartaSuperiorDelMazo = juego._mazo[-1]
 	
 	
-	cartaRobada = juego.jugarDuoDePeces(Multiset([
+	cartaRobada = juego.jugarDúoDePeces(Multiset([
 		Carta(Carta.Tipo.PEZ,Carta.Color.AZUL),
 		Carta(Carta.Tipo.PEZ,Carta.Color.AMARILLO)
 	]))
@@ -59,7 +59,7 @@ def test_SiSePuedeJugarDúoDePecesYNoQuedanCartasEnElMazo_AlJugarDúoDePeces_NoS
 	juego._mazo = []
 	
 
-	cartaRobada = juego.jugarDuoDePeces(Multiset([
+	cartaRobada = juego.jugarDúoDePeces(Multiset([
 		Carta(Carta.Tipo.PEZ,Carta.Color.AZUL),
 		Carta(Carta.Tipo.PEZ,Carta.Color.AMARILLO)
 	]))

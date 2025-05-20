@@ -80,7 +80,7 @@ def test_SiSeDijoBasta_NoSePuedeJugarDúoDePeces():
 	juego.decirBasta()
 	
 	with pytest.raises(JuegoException) as excepcion:
-		juego.jugarDuoDePeces(Multiset())
+		juego.jugarDúoDePeces(Multiset())
 	
 	assert "No hay una ronda en curso" in str(excepcion.value)
 
@@ -92,7 +92,7 @@ def test_SiSeDijoBasta_NoSePuedeJugarDúoDeBarcos():
 	juego.decirBasta()
 	
 	with pytest.raises(JuegoException) as excepcion:
-		juego.jugarDuoDeBarcos(Multiset())
+		juego.jugarDúoDeBarcos(Multiset())
 	
 	assert "No hay una ronda en curso" in str(excepcion.value)
 
@@ -104,11 +104,11 @@ def test_SiSeDijoBasta_NoSePuedeJugarDúoDeCangrejos():
 	juego.decirBasta()
 	
 	with pytest.raises(JuegoException) as excepcion:
-		juego.jugarDuoDeCangrejos(Multiset(), 0, 0)
+		juego.jugarDúoDeCangrejos(Multiset(), 0, 0)
 	
 	assert "No hay una ronda en curso" in str(excepcion.value)
 
-def test_SiSeDijoBasta_NoSePuedeJugarDuoDeNadadorYTiburón():
+def test_SiSeDijoBasta_NoSePuedeJugarDúoDeNadadorYTiburón():
 	juego = PartidaDeOcéanos(cantidadDeJugadores=2)
 	juego.iniciarRonda()
 	juego.robarDelDescarte(0)
@@ -116,7 +116,7 @@ def test_SiSeDijoBasta_NoSePuedeJugarDuoDeNadadorYTiburón():
 	juego.decirBasta()
 	
 	with pytest.raises(JuegoException) as excepcion:
-		juego.jugarDuoDeNadadorYTiburón(Multiset(), 0)
+		juego.jugarDúoDeNadadorYTiburón(Multiset(), 0)
 	
 	assert "No hay una ronda en curso" in str(excepcion.value)
 

@@ -11,7 +11,7 @@ def test_NoSePuedeJugarDúoDeNadadorYTiburónConDúoDeOtroTipo():
 	juego.robarDelMazo(0,0)
 	
 	with pytest.raises(JuegoException) as excepcion:
-		juego.jugarDuoDeNadadorYTiburón(Multiset([
+		juego.jugarDúoDeNadadorYTiburón(Multiset([
 			Carta(Carta.Tipo.PEZ, Carta.Color.AZUL), Carta(Carta.Tipo.PEZ, Carta.Color.AZUL)
 		]), 0)
 	
@@ -21,7 +21,7 @@ def test_NoSePuedeJugarDúoDeNadadorYTiburónConObjetivoFueraDeRangoDeJugadores(
 	juego = PartidaDeOcéanos(cantidadDeJugadores=2)
 	juego.iniciarRonda()
 	juego._mazo[-1] = Carta(Carta.Tipo.NADADOR,Carta.Color.AZUL)
-	juego._mazo[-3] = Carta(Carta.Tipo.TIBURON,Carta.Color.AMARILLO)
+	juego._mazo[-3] = Carta(Carta.Tipo.TIBURÓN,Carta.Color.AMARILLO)
 	
 	juego.verCartasParaRobarDelMazo()
 	juego.robarDelMazo(0,0)
@@ -32,8 +32,8 @@ def test_NoSePuedeJugarDúoDeNadadorYTiburónConObjetivoFueraDeRangoDeJugadores(
 	juego.robarDelMazo(0,0)
 	
 	with pytest.raises(JuegoException) as excepcion:
-		juego.jugarDuoDeNadadorYTiburón(Multiset([
-			Carta(Carta.Tipo.NADADOR, Carta.Color.AZUL), Carta(Carta.Tipo.TIBURON, Carta.Color.AMARILLO)
+		juego.jugarDúoDeNadadorYTiburón(Multiset([
+			Carta(Carta.Tipo.NADADOR, Carta.Color.AZUL), Carta(Carta.Tipo.TIBURÓN, Carta.Color.AMARILLO)
 		]), 2)
 		
 	assert "La selección de jugador a robar con el dúo de nadador y tiburón es inválida" in str(excepcion.value)
@@ -42,7 +42,7 @@ def test_NoSePuedeJugarDúoDeNadadorYTiburónConObjetivoElJugadorActual():
 	juego = PartidaDeOcéanos(cantidadDeJugadores=2)
 	juego.iniciarRonda()
 	juego._mazo[-1] = Carta(Carta.Tipo.NADADOR,Carta.Color.AZUL)
-	juego._mazo[-3] = Carta(Carta.Tipo.TIBURON,Carta.Color.AMARILLO)
+	juego._mazo[-3] = Carta(Carta.Tipo.TIBURÓN,Carta.Color.AMARILLO)
 	
 	juego.verCartasParaRobarDelMazo()
 	juego.robarDelMazo(0,0)
@@ -53,8 +53,8 @@ def test_NoSePuedeJugarDúoDeNadadorYTiburónConObjetivoElJugadorActual():
 	juego.robarDelMazo(0,0)
 	
 	with pytest.raises(JuegoException) as excepcion:
-		juego.jugarDuoDeNadadorYTiburón(Multiset([
-			Carta(Carta.Tipo.NADADOR, Carta.Color.AZUL), Carta(Carta.Tipo.TIBURON, Carta.Color.AMARILLO)
+		juego.jugarDúoDeNadadorYTiburón(Multiset([
+			Carta(Carta.Tipo.NADADOR, Carta.Color.AZUL), Carta(Carta.Tipo.TIBURÓN, Carta.Color.AMARILLO)
 		]), 0)
 		
 	assert "La selección de jugador a robar con el dúo de nadador y tiburón es inválida" in str(excepcion.value)
@@ -64,7 +64,7 @@ def test_SiLaManoDelJugadorObjetivoEstáVacía_AlJugarDúoDeNadadorYTiburón_NoS
 	juego = PartidaDeOcéanos(cantidadDeJugadores=2)
 	juego.iniciarRonda()
 	juego._mazo[-1] = Carta(Carta.Tipo.NADADOR,Carta.Color.AZUL)
-	juego._mazo[-3] = Carta(Carta.Tipo.TIBURON,Carta.Color.AMARILLO)
+	juego._mazo[-3] = Carta(Carta.Tipo.TIBURÓN,Carta.Color.AMARILLO)
 	
 	juego.verCartasParaRobarDelMazo()
 	juego.robarDelMazo(0,0)
@@ -75,21 +75,21 @@ def test_SiLaManoDelJugadorObjetivoEstáVacía_AlJugarDúoDeNadadorYTiburón_NoS
 	juego.robarDelMazo(0,0)
 	juego._estadosDeJugadores[1].mano = Multiset()
 	
-	cartaRobada = juego.jugarDuoDeNadadorYTiburón(Multiset([
-		Carta(Carta.Tipo.NADADOR, Carta.Color.AZUL), Carta(Carta.Tipo.TIBURON, Carta.Color.AMARILLO)
+	cartaRobada = juego.jugarDúoDeNadadorYTiburón(Multiset([
+		Carta(Carta.Tipo.NADADOR, Carta.Color.AZUL), Carta(Carta.Tipo.TIBURÓN, Carta.Color.AMARILLO)
 	]), 1)
 	
 	assert cartaRobada == None
 	assert juego._estadosDeJugadores[0].mano.total() == 0
 	assert juego._estadosDeJugadores[1].mano.total() == 0
-	assert juego._estadosDeJugadores[0].zonaDeDuos.total() == 1
+	assert juego._estadosDeJugadores[0].zonaDeDúos.total() == 1
 	assert juego._deQuiénEsTurno == 0
 
 def test_SiLaManoDelJugadorObjetivoNoEstáVacía_AlJugarDúoDeNadadorYTiburón_SeRobaUnaCartaDelJugadorObjetivo():
 	juego = PartidaDeOcéanos(cantidadDeJugadores=2)
 	juego.iniciarRonda()
 	juego._mazo[-1] = Carta(Carta.Tipo.NADADOR,Carta.Color.AZUL)
-	juego._mazo[-3] = Carta(Carta.Tipo.TIBURON,Carta.Color.AMARILLO)
+	juego._mazo[-3] = Carta(Carta.Tipo.TIBURÓN,Carta.Color.AMARILLO)
 	
 	juego.verCartasParaRobarDelMazo()
 	juego.robarDelMazo(0,0)
@@ -105,12 +105,12 @@ def test_SiLaManoDelJugadorObjetivoNoEstáVacía_AlJugarDúoDeNadadorYTiburón_S
 	])
 	manoOriginalJugadorObjetivo = juego._estadosDeJugadores[1].mano.copy()
 	
-	cartaRobada = juego.jugarDuoDeNadadorYTiburón(Multiset([
-		Carta(Carta.Tipo.NADADOR, Carta.Color.AZUL), Carta(Carta.Tipo.TIBURON, Carta.Color.AMARILLO)
+	cartaRobada = juego.jugarDúoDeNadadorYTiburón(Multiset([
+		Carta(Carta.Tipo.NADADOR, Carta.Color.AZUL), Carta(Carta.Tipo.TIBURÓN, Carta.Color.AMARILLO)
 	]), 1)
 	
 	assert cartaRobada in manoOriginalJugadorObjetivo
 	assert juego._estadosDeJugadores[0].mano == Multiset([cartaRobada])
 	assert juego._estadosDeJugadores[1].mano + Multiset([cartaRobada]) == manoOriginalJugadorObjetivo
-	assert juego._estadosDeJugadores[0].zonaDeDuos.total() == 1
+	assert juego._estadosDeJugadores[0].zonaDeDúos.total() == 1
 	assert juego._deQuiénEsTurno == 0

@@ -8,7 +8,7 @@ def test_SiSeInicióRonda_NoSePuedeJugarDúosAntesDeRobar():
 	juego.iniciarRonda()
 	
 	with pytest.raises(JuegoException) as excepcion:
-		juego.jugarDuoDeBarcos(Multiset())
+		juego.jugarDúoDeBarcos(Multiset())
 	
 	assert "No se puede jugar dúos sin antes haber robado" in str(excepcion.value)
 
@@ -20,7 +20,7 @@ def test_NoSePuedeJugarUnDúoDeCeroCartas():
 	juego.robarDelMazo(0,0)
 	
 	with pytest.raises(JuegoException) as excepcion:
-		juego.jugarDuoDeBarcos(Multiset())
+		juego.jugarDúoDeBarcos(Multiset())
 	
 	assert "Se necesitan dos cartas para jugar un dúo" in str(excepcion.value)
 
@@ -32,7 +32,7 @@ def test_NoSePuedeJugarUnDúoDeUnaCarta():
 	juego.robarDelMazo(0,0)
 	
 	with pytest.raises(JuegoException) as excepcion:
-		juego.jugarDuoDeBarcos(Multiset([Carta(Carta.Tipo.ANCLA, Carta.Color.BLANCO)]))
+		juego.jugarDúoDeBarcos(Multiset([Carta(Carta.Tipo.ANCLA, Carta.Color.BLANCO)]))
 	
 	assert "Se necesitan dos cartas para jugar un dúo" in str(excepcion.value)
 
@@ -44,7 +44,7 @@ def test_NoSePuedeJugarUnDúoDeMásDeDosCartas():
 	juego.robarDelMazo(0,0)
 	
 	with pytest.raises(JuegoException) as excepcion:
-		juego.jugarDuoDeBarcos(Multiset([
+		juego.jugarDúoDeBarcos(Multiset([
 			Carta(Carta.Tipo.ANCLA, Carta.Color.BLANCO),
 			Carta(Carta.Tipo.ANCLA, Carta.Color.BLANCO),
 			Carta(Carta.Tipo.ANCLA, Carta.Color.BLANCO)
@@ -60,7 +60,7 @@ def test_NoSePuedeJugarUnDúoDeCartasQueNoSeanDeTipoDúo():
 	juego.robarDelMazo(0,0)
 	
 	with pytest.raises(JuegoException) as excepcion:
-		juego.jugarDuoDeBarcos(Multiset([
+		juego.jugarDúoDeBarcos(Multiset([
 			Carta(Carta.Tipo.ANCLA, Carta.Color.BLANCO),
 			Carta(Carta.Tipo.ANCLA, Carta.Color.BLANCO)
 	]))
@@ -75,7 +75,7 @@ def test_NoSePuedeJugarUnDúoDeCartasQueNoSeanDelMismoTipo():
 	juego.robarDelMazo(0,0)
 	
 	with pytest.raises(JuegoException) as excepcion:
-		juego.jugarDuoDeBarcos(Multiset([
+		juego.jugarDúoDeBarcos(Multiset([
 			Carta(Carta.Tipo.BARCO, Carta.Color.BLANCO),
 			Carta(Carta.Tipo.PEZ, Carta.Color.BLANCO)
 	]))
@@ -90,7 +90,7 @@ def test_NoSePuedeJugarUnDúoDeCartasQueNoEsténEnLaManoDelJugador():
 	juego.robarDelMazo(0,0)
 	
 	with pytest.raises(JuegoException) as excepcion:
-		juego.jugarDuoDeBarcos(Multiset([
+		juego.jugarDúoDeBarcos(Multiset([
 			Carta(Carta.Tipo.BARCO, Carta.Color.BLANCO),
 			Carta(Carta.Tipo.BARCO, Carta.Color.AZUL)
 	]))
@@ -113,7 +113,7 @@ def test_SiSeTieneUnDúo_AlJugarDúo_LasCartasDelDúoNoEstánEnLaMano():
 	juego.robarDelMazo(0,0)
 	
 	
-	juego.jugarDuoDeBarcos(Multiset([
+	juego.jugarDúoDeBarcos(Multiset([
 		Carta(Carta.Tipo.BARCO,Carta.Color.AZUL),
 		Carta(Carta.Tipo.BARCO,Carta.Color.AMARILLO)
 	]))
@@ -141,7 +141,7 @@ def test_SiSeTieneUnDúo_AlJugarDúo_ElRestoDeLaManoQuedaIgual():
 	juego.pasarTurno()
 	juego.robarDelDescarte(1)
 	
-	juego.jugarDuoDeBarcos(Multiset([
+	juego.jugarDúoDeBarcos(Multiset([
 		Carta(Carta.Tipo.BARCO,Carta.Color.AZUL),
 		Carta(Carta.Tipo.BARCO,Carta.Color.AMARILLO)
 	]))
@@ -164,12 +164,12 @@ def test_SiSeTieneUnDúo_AlJugarDúo_LasCartasDelDúoEstánEnLaZonaDeDúos():
 	juego.robarDelMazo(0,0)
 	
 	
-	juego.jugarDuoDeBarcos(Multiset([
+	juego.jugarDúoDeBarcos(Multiset([
 		Carta(Carta.Tipo.BARCO,Carta.Color.AZUL),
 		Carta(Carta.Tipo.BARCO,Carta.Color.AMARILLO)
 	]))
 	
-	assert juego._estadosDeJugadores[0].zonaDeDuos == Multiset([(
+	assert juego._estadosDeJugadores[0].zonaDeDúos == Multiset([(
 		Carta(Carta.Tipo.BARCO,Carta.Color.AZUL),
 		Carta(Carta.Tipo.BARCO,Carta.Color.AMARILLO)
 	)])

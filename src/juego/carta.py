@@ -10,7 +10,7 @@ class Carta():
 		BARCO = auto()
 		PEZ = auto()
 		NADADOR = auto()
-		TIBURON = auto()
+		TIBURÓN = auto()
 		CONCHA = auto()
 		PULPO = auto()
 		PINGUINO = auto()
@@ -18,7 +18,7 @@ class Carta():
 		COLONIA = auto()
 		FARO = auto()
 		CARDUMEN = auto()
-		CAPITAN = auto()
+		CAPITÁN = auto()
 		SIRENA = auto()
 	
 	class Color(Enum):
@@ -42,13 +42,13 @@ class Carta():
 		self.tipo = tipo
 		self.color = color
 		
-	def esDuo(self):
+	def esDúo(self):
 		return self.tipo in [
 			Carta.Tipo.CANGREJO,
 			Carta.Tipo.BARCO,
 			Carta.Tipo.PEZ,
 			Carta.Tipo.NADADOR,
-			Carta.Tipo.TIBURON
+			Carta.Tipo.TIBURÓN
 		]
 	
 	def esColeccionable(self):
@@ -64,7 +64,7 @@ class Carta():
 			Carta.Tipo.COLONIA,
 			Carta.Tipo.FARO,
 			Carta.Tipo.CARDUMEN,
-			Carta.Tipo.CAPITAN
+			Carta.Tipo.CAPITÁN
 		]
 
 	def __str__(self):

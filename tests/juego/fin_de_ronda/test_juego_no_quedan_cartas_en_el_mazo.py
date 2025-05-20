@@ -41,7 +41,7 @@ def test_SiNoHayCartasEnElMazo_AlJugarDúoDeBarcos_LaRondaTerminaYNadieObtienePu
 	juego.robarDelDescarte(0)
 	juego._mazo = []
 	
-	juego.jugarDuoDeBarcos(Multiset([
+	juego.jugarDúoDeBarcos(Multiset([
 		Carta(Carta.Tipo.BARCO, Carta.Color.CELESTE), Carta(Carta.Tipo.BARCO, Carta.Color.CELESTE)
 	]))
 	

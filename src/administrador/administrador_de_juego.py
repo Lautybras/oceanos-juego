@@ -74,7 +74,7 @@ class AdministradorDeJuego():
 			(acciónDeDúos, cartasAJugar, parametrosDelDúo) = self._jugadores[self._juego.deQuiénEsTurno].decidirAcciónDeDúos()
 			if acciónDeDúos == Acción.Dúos.JUGAR_PECES:
 				# Jugar dúo de peces
-				cartaRobada = self._juego.jugarDuoDePeces(cartasAJugar)
+				cartaRobada = self._juego.jugarDúoDePeces(cartasAJugar)
 				if self._verbose:
 					print(f"Juega un dúo de {list(cartasAJugar.elements())[0]} y {list(cartasAJugar.elements())[1]} y roba una {cartaRobada}")
 				
@@ -82,7 +82,7 @@ class AdministradorDeJuego():
 				# Jugar dúo de barcos
 				if self._verbose:
 					print(f"Juega un dúo de {list(cartasAJugar.elements())[0]} y {list(cartasAJugar.elements())[1]}")
-				self._juego.jugarDuoDeBarcos(cartasAJugar)
+				self._juego.jugarDúoDeBarcos(cartasAJugar)
 				if self._juego.rondaEnCurso():
 					self._faseDeRobo()
 					self._faseDeDúos()
@@ -91,14 +91,14 @@ class AdministradorDeJuego():
 			elif acciónDeDúos == Acción.Dúos.JUGAR_CANGREJOS:
 				# Jugar dúo de cangrejos
 				(pilaDeDescarteARobar, indiceDeCartaARobar) = parametrosDelDúo
-				cartaRobada = self._juego.jugarDuoDeCangrejos(cartasAJugar, pilaDeDescarteARobar, indiceDeCartaARobar)
+				cartaRobada = self._juego.jugarDúoDeCangrejos(cartasAJugar, pilaDeDescarteARobar, indiceDeCartaARobar)
 				if self._verbose:
 					print(f"Juega un dúo de {list(cartasAJugar.elements())[0]} y {list(cartasAJugar.elements())[1]} para robar una {cartaRobada}")
 				
 			elif acciónDeDúos == Acción.Dúos.JUGAR_NADADOR_Y_TIBURÓN:
 				# Jugar dúo de nadador y tiburón
 				jugadorARobar = parametrosDelDúo[0]
-				cartaRobada = self._juego.jugarDuoDeNadadorYTiburón(cartasAJugar, jugadorARobar)
+				cartaRobada = self._juego.jugarDúoDeNadadorYTiburón(cartasAJugar, jugadorARobar)
 				if self._verbose:
 					print(f"Juega un dúo de {list(cartasAJugar.elements())[0]} y {list(cartasAJugar.elements())[1]} para robarle al jugador {jugadorARobar}, y roba una {cartaRobada}")
 				

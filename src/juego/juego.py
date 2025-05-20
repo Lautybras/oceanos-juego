@@ -41,11 +41,11 @@ def cartasDelJuego():
 		Carta(Carta.Tipo.NADADOR, Carta.Color.AMARILLO),
 		Carta(Carta.Tipo.NADADOR, Carta.Color.NARANJA_CLARO),
 		
-		Carta(Carta.Tipo.TIBURON, Carta.Color.AZUL),
-		Carta(Carta.Tipo.TIBURON, Carta.Color.CELESTE),
-		Carta(Carta.Tipo.TIBURON, Carta.Color.NEGRO),
-		Carta(Carta.Tipo.TIBURON, Carta.Color.VERDE),
-		Carta(Carta.Tipo.TIBURON, Carta.Color.VIOLETA),
+		Carta(Carta.Tipo.TIBURÓN, Carta.Color.AZUL),
+		Carta(Carta.Tipo.TIBURÓN, Carta.Color.CELESTE),
+		Carta(Carta.Tipo.TIBURÓN, Carta.Color.NEGRO),
+		Carta(Carta.Tipo.TIBURÓN, Carta.Color.VERDE),
+		Carta(Carta.Tipo.TIBURÓN, Carta.Color.VIOLETA),
 		
 		Carta(Carta.Tipo.CONCHA, Carta.Color.AZUL),
 		Carta(Carta.Tipo.CONCHA, Carta.Color.CELESTE),
@@ -70,7 +70,7 @@ def cartasDelJuego():
 		Carta(Carta.Tipo.COLONIA, Carta.Color.VERDE),
 		Carta(Carta.Tipo.FARO, Carta.Color.VIOLETA),
 		Carta(Carta.Tipo.CARDUMEN, Carta.Color.GRIS),
-		Carta(Carta.Tipo.CAPITAN, Carta.Color.NARANJA_CLARO),
+		Carta(Carta.Tipo.CAPITÁN, Carta.Color.NARANJA_CLARO),
 		
 		Carta(Carta.Tipo.SIRENA, Carta.Color.BLANCO),
 		Carta(Carta.Tipo.SIRENA, Carta.Color.BLANCO),
@@ -89,11 +89,11 @@ class JuegoException(Exception):
 class EstadoDeJugador():
 	def __init__(self):
 		self.mano = Multiset()
-		self.zonaDeDuos = Multiset()
+		self.zonaDeDúos = Multiset()
 		
 	def puntajeDeRonda(self):
 		cantidadDeCartasEnManoDeTipo = {tipo: 0 for tipo in Carta.Tipo}
-		cantidadDeDuosEnJuegoDeTipo = {
+		cantidadDeDúosEnJuegoDeTipo = {
 			Carta.Tipo.PEZ: 0,
 			Carta.Tipo.BARCO: 0,
 			Carta.Tipo.CANGREJO: 0,
@@ -105,29 +105,29 @@ class EstadoDeJugador():
 			cantidadDeCartasEnManoDeTipo[claveDeCarta.tipo] += self.mano[claveDeCarta]
 			cantidadDeCartasDeColor[claveDeCarta.color] += self.mano[claveDeCarta]
 		
-		for claveDeDuo in self.zonaDeDuos:
-			cantidadDeDuosEnJuegoDeTipo[claveDeDuo[0].tipo] += self.zonaDeDuos[claveDeDuo]
-			cantidadDeCartasDeColor[claveDeDuo[0].color] += self.zonaDeDuos[claveDeDuo]
-			cantidadDeCartasDeColor[claveDeDuo[1].color] += self.zonaDeDuos[claveDeDuo]
+		for claveDeDúo in self.zonaDeDúos:
+			cantidadDeDúosEnJuegoDeTipo[claveDeDúo[0].tipo] += self.zonaDeDúos[claveDeDúo]
+			cantidadDeCartasDeColor[claveDeDúo[0].color] += self.zonaDeDúos[claveDeDúo]
+			cantidadDeCartasDeColor[claveDeDúo[1].color] += self.zonaDeDúos[claveDeDúo]
 		
 		return (
-			self._puntajePorDuosEnMano(cantidadDeCartasEnManoDeTipo) +
-			self._puntajePorDuosJugados() + 
+			self._puntajePorDúosEnMano(cantidadDeCartasEnManoDeTipo) +
+			self._puntajePorDúosJugados() + 
 			self._puntajePorColeccionables(cantidadDeCartasEnManoDeTipo) +
-			self._puntajePorMultiplicadores(cantidadDeCartasEnManoDeTipo, cantidadDeDuosEnJuegoDeTipo) +
+			self._puntajePorMultiplicadores(cantidadDeCartasEnManoDeTipo, cantidadDeDúosEnJuegoDeTipo) +
 			self._puntajePorSirenas(cantidadDeCartasEnManoDeTipo[Carta.Tipo.SIRENA], cantidadDeCartasDeColor)
 		)
 	
-	def _puntajePorDuosEnMano(self, cantidadDeCartasDuos):
+	def _puntajePorDúosEnMano(self, cantidadDeCartasDúos):
 		return (
-			(cantidadDeCartasDuos[Carta.Tipo.PEZ] // 2) +  
-			(cantidadDeCartasDuos[Carta.Tipo.BARCO] // 2) +  
-			(cantidadDeCartasDuos[Carta.Tipo.CANGREJO] // 2) +  
-			min(cantidadDeCartasDuos[Carta.Tipo.NADADOR], cantidadDeCartasDuos[Carta.Tipo.TIBURON])
+			(cantidadDeCartasDúos[Carta.Tipo.PEZ] // 2) +  
+			(cantidadDeCartasDúos[Carta.Tipo.BARCO] // 2) +  
+			(cantidadDeCartasDúos[Carta.Tipo.CANGREJO] // 2) +  
+			min(cantidadDeCartasDúos[Carta.Tipo.NADADOR], cantidadDeCartasDúos[Carta.Tipo.TIBURÓN])
 		)
 	
-	def _puntajePorDuosJugados(self):
-		return self.zonaDeDuos.total()
+	def _puntajePorDúosJugados(self):
+		return self.zonaDeDúos.total()
 	
 	def _puntajePorColeccionables(self, cantidadDeColeccionables):
 		return (
@@ -137,17 +137,17 @@ class EstadoDeJugador():
 			self._puntajePorPulpos(cantidadDeColeccionables[Carta.Tipo.PULPO])
 		)
 	
-	def _puntajePorMultiplicadores(self, cantidadDeCartasEnManoDeTipo, cantidadDeDuosEnJuegoDeTipo):
+	def _puntajePorMultiplicadores(self, cantidadDeCartasEnManoDeTipo, cantidadDeDúosEnJuegoDeTipo):
 		return (
-			(cantidadDeCartasEnManoDeTipo[Carta.Tipo.CAPITAN] * 3 * cantidadDeCartasEnManoDeTipo[Carta.Tipo.ANCLA]) +
+			(cantidadDeCartasEnManoDeTipo[Carta.Tipo.CAPITÁN] * 3 * cantidadDeCartasEnManoDeTipo[Carta.Tipo.ANCLA]) +
 			(cantidadDeCartasEnManoDeTipo[Carta.Tipo.COLONIA] * 2 * cantidadDeCartasEnManoDeTipo[Carta.Tipo.PINGUINO]) +
 			(
 				cantidadDeCartasEnManoDeTipo[Carta.Tipo.CARDUMEN] * 1 *
-				(cantidadDeCartasEnManoDeTipo[Carta.Tipo.PEZ] + 2 * cantidadDeDuosEnJuegoDeTipo[Carta.Tipo.PEZ])
+				(cantidadDeCartasEnManoDeTipo[Carta.Tipo.PEZ] + 2 * cantidadDeDúosEnJuegoDeTipo[Carta.Tipo.PEZ])
 			) +
 			(
 				cantidadDeCartasEnManoDeTipo[Carta.Tipo.FARO] * 1 *
-				(cantidadDeCartasEnManoDeTipo[Carta.Tipo.BARCO] + 2 * cantidadDeDuosEnJuegoDeTipo[Carta.Tipo.BARCO])
+				(cantidadDeCartasEnManoDeTipo[Carta.Tipo.BARCO] + 2 * cantidadDeDúosEnJuegoDeTipo[Carta.Tipo.BARCO])
 			)
 		)
 	
@@ -194,9 +194,9 @@ class EstadoDeJugador():
 		for claveDeCarta in self.mano:
 			cantidadDeCartasDeColor[claveDeCarta.color] += self.mano[claveDeCarta]
 		
-		for claveDeDuo in self.zonaDeDuos:
-			cantidadDeCartasDeColor[claveDeDuo[0].color] += self.zonaDeDuos[claveDeDuo]
-			cantidadDeCartasDeColor[claveDeDuo[1].color] += self.zonaDeDuos[claveDeDuo]
+		for claveDeDúo in self.zonaDeDúos:
+			cantidadDeCartasDeColor[claveDeDúo[0].color] += self.zonaDeDúos[claveDeDúo]
+			cantidadDeCartasDeColor[claveDeDúo[1].color] += self.zonaDeDúos[claveDeDúo]
 		
 		return sum(
 			(sorted(list(cantidadDeCartasDeColor.values()), reverse=True))[0:1]
@@ -238,7 +238,7 @@ class PartidaDeOcéanos():
 	def zonaDeDúosDelJugador(self, jugador):
 		if not (0 <= jugador and jugador < self._cantidadDeJugadores):
 			raise JuegoException("El jugador seleccionado es inválido")
-		return deepcopy(self._estadosDeJugadores[jugador].zonaDeDuos)
+		return deepcopy(self._estadosDeJugadores[jugador].zonaDeDúos)
 	
 	@property
 	def zonaDeDúos(self):
@@ -365,8 +365,8 @@ class PartidaDeOcéanos():
 		return cartaRobada
 	
 	# ============================== FASE DE DÚOS ===============================
-	def jugarDuoDePeces(self, cartasAJugar):
-		self._assertSePuedeJugarDuo(cartasAJugar)
+	def jugarDúoDePeces(self, cartasAJugar):
+		self._assertSePuedeJugarDúo(cartasAJugar)
 		self._assertDúoEsDeTipo(cartasAJugar, Carta.Tipo.PEZ)
 		
 		self._moverDúoAZonaDeDúo(cartasAJugar)
@@ -379,8 +379,8 @@ class PartidaDeOcéanos():
 		
 		return cartaRobada
 	
-	def jugarDuoDeBarcos(self, cartasAJugar):
-		self._assertSePuedeJugarDuo(cartasAJugar)
+	def jugarDúoDeBarcos(self, cartasAJugar):
+		self._assertSePuedeJugarDúo(cartasAJugar)
 		self._assertDúoEsDeTipo(cartasAJugar, Carta.Tipo.BARCO)
 		
 		self._moverDúoAZonaDeDúo(cartasAJugar)
@@ -395,8 +395,8 @@ class PartidaDeOcéanos():
 		
 		self._estadoActual = self.Estado.FASE_ROBO
 	
-	def jugarDuoDeCangrejos(self, cartasAJugar, pilaDeDescarteARobar, indiceDeCartaARobar):
-		self._assertSePuedeJugarDuo(cartasAJugar)
+	def jugarDúoDeCangrejos(self, cartasAJugar, pilaDeDescarteARobar, indiceDeCartaARobar):
+		self._assertSePuedeJugarDúo(cartasAJugar)
 		self._assertDúoEsDeTipo(cartasAJugar, Carta.Tipo.CANGREJO)
 		
 		self._assertObjetivoDeDúoDeCangrejosVálido(pilaDeDescarteARobar, indiceDeCartaARobar)
@@ -413,10 +413,10 @@ class PartidaDeOcéanos():
 		
 		return cartaRobada
 	
-	def jugarDuoDeNadadorYTiburón(self, cartasAJugar, jugadorARobar):
-		self._assertSePuedeJugarDuo(cartasAJugar)
-		self._assertDúoEsDeTipo(cartasAJugar, Carta.Tipo.TIBURON)
-		self._assertSelecciónDeJugadorVálida(jugadorARobar)
+	def jugarDúoDeNadadorYTiburón(self, cartasAJugar, jugadorARobar):
+		self._assertSePuedeJugarDúo(cartasAJugar)
+		self._assertDúoEsDeTipo(cartasAJugar, Carta.Tipo.TIBURÓN)
+		self._assertObjetivoDeDúoDeNadadorYTiburónVálido(jugadorARobar)
 		
 		self._moverDúoAZonaDeDúo(cartasAJugar)
 		
@@ -533,7 +533,7 @@ class PartidaDeOcéanos():
 			if self._estadosDeJugadores[self._deQuiénEsTurno].mano[clave] == 0:
 				del self._estadosDeJugadores[self._deQuiénEsTurno].mano[clave]
 		
-		self._estadosDeJugadores[self._deQuiénEsTurno].zonaDeDuos[
+		self._estadosDeJugadores[self._deQuiénEsTurno].zonaDeDúos[
 			tuple(sorted((list(cartasAJugar.elements())[0], list(cartasAJugar.elements())[1])))
 		] += 1
 	
@@ -592,7 +592,7 @@ class PartidaDeOcéanos():
 		if len(self._descarte[indicePilaDeDescarte]) == 0:
 			raise JuegoException("No se puede robar de una pila de descarte vacía")
 	
-	def _assertSePuedeJugarDuo(self, cartasAJugar):
+	def _assertSePuedeJugarDúo(self, cartasAJugar):
 		if not self.rondaEnCurso():
 			raise JuegoException("No hay una ronda en curso")
 		if self.hayQueTomarDecisionesDeRoboDelMazo():
@@ -604,14 +604,14 @@ class PartidaDeOcéanos():
 			raise JuegoException("Se necesitan dos cartas para jugar un dúo")
 		
 		for carta in cartasAJugar.elements():
-			if not carta.esDuo():
+			if not carta.esDúo():
 				raise JuegoException("Se necesitan cartas dúo para jugar un dúo")
 		
 		tipos = [list(cartasAJugar.elements())[0].tipo, list(cartasAJugar.elements())[1].tipo] if (list(cartasAJugar.elements())[0].tipo.value < list(cartasAJugar.elements())[1].tipo.value) else [list(cartasAJugar.elements())[1].tipo, list(cartasAJugar.elements())[0].tipo]
 		
 		if not ((
 				tipos[0] == Carta.Tipo.NADADOR and
-				tipos[1] == Carta.Tipo.TIBURON
+				tipos[1] == Carta.Tipo.TIBURÓN
 			) or (
 				tipos[0] != Carta.Tipo.NADADOR and
 				tipos[1] == tipos[0]
@@ -622,9 +622,9 @@ class PartidaDeOcéanos():
 			raise JuegoException("Las cartas seleccionadas no están en la mano")
 	
 	def _assertDúoEsDeTipo(self, cartasAJugar, tipoObjetivo):
-		if tipoObjetivo in [Carta.Tipo.NADADOR, Carta.Tipo.TIBURON]:
+		if tipoObjetivo in [Carta.Tipo.NADADOR, Carta.Tipo.TIBURÓN]:
 			tipos = [list(cartasAJugar.elements())[0].tipo, list(cartasAJugar.elements())[1].tipo] if (list(cartasAJugar.elements())[0].tipo.value < list(cartasAJugar.elements())[1].tipo.value) else [list(cartasAJugar.elements())[1].tipo, list(cartasAJugar.elements())[0].tipo]
-			if tipos[0] != Carta.Tipo.NADADOR or tipos[1] != Carta.Tipo.TIBURON:
+			if tipos[0] != Carta.Tipo.NADADOR or tipos[1] != Carta.Tipo.TIBURÓN:
 				raise JuegoException("Ese tipo de dúo no es válido para esta acción")
 		else:
 			if next(iter(cartasAJugar)).tipo !=  tipoObjetivo:
@@ -639,7 +639,7 @@ class PartidaDeOcéanos():
 		):
 			raise JuegoException("La selección de robo con el dúo de cangrejos es inválida")
 	
-	def _assertSelecciónDeJugadorVálida(self, jugadorARobar):
+	def _assertObjetivoDeDúoDeNadadorYTiburónVálido(self, jugadorARobar):
 		if not (
 			0 <= jugadorARobar and jugadorARobar < self._cantidadDeJugadores and jugadorARobar != self._deQuiénEsTurno
 			and not self._jugadorMostróSuManoPorÚltimaChance(jugadorARobar)

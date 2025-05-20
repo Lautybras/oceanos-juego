@@ -42,7 +42,7 @@ def test_SiSeTienenAlMenosSietePuntosYSeRobó_AlDecirÚltimaChance_ElSiguienteJu
 	juego.decirÚltimaChance()
 	
 	juego.robarDelDescarte(1)
-	juego.jugarDuoDePeces(Multiset([
+	juego.jugarDúoDePeces(Multiset([
 		Carta(Carta.Tipo.PEZ, Carta.Color.AZUL),Carta(Carta.Tipo.PEZ, Carta.Color.AZUL)
 	]))
 	juego.pasarTurno()
@@ -50,7 +50,7 @@ def test_SiSeTienenAlMenosSietePuntosYSeRobó_AlDecirÚltimaChance_ElSiguienteJu
 	
 	assert juego._estadosDeJugadores[0].mano.total() == 5
 	assert juego._estadosDeJugadores[1].mano.total() == 2
-	assert juego._estadosDeJugadores[1].zonaDeDuos.total() == 1
+	assert juego._estadosDeJugadores[1].zonaDeDúos.total() == 1
 
 def test_SiSeDijoÚltimaChance_SiJuegaElSiguienteJugador_LaManoDelJugadorOriginalPuedeSerRobada():
 	juego = PartidaDeOcéanos(cantidadDeJugadores=2)
@@ -64,11 +64,11 @@ def test_SiSeDijoÚltimaChance_SiJuegaElSiguienteJugador_LaManoDelJugadorOrigina
 	
 	juego.verCartasParaRobarDelMazo()
 	juego.robarDelMazo(0,0)
-	juego._estadosDeJugadores[1].mano[Carta(Carta.Tipo.TIBURON, Carta.Color.NARANJA_CLARO)] += 1
+	juego._estadosDeJugadores[1].mano[Carta(Carta.Tipo.TIBURÓN, Carta.Color.NARANJA_CLARO)] += 1
 	juego._estadosDeJugadores[1].mano[Carta(Carta.Tipo.NADADOR, Carta.Color.ROSA)] += 1
 	
-	cartaRobada = juego.jugarDuoDeNadadorYTiburón(Multiset([
-		Carta(Carta.Tipo.TIBURON, Carta.Color.NARANJA_CLARO),
+	cartaRobada = juego.jugarDúoDeNadadorYTiburón(Multiset([
+		Carta(Carta.Tipo.TIBURÓN, Carta.Color.NARANJA_CLARO),
 		Carta(Carta.Tipo.NADADOR, Carta.Color.ROSA)
 	]), 0)
 	
@@ -76,7 +76,7 @@ def test_SiSeDijoÚltimaChance_SiJuegaElSiguienteJugador_LaManoDelJugadorOrigina
 	assert cartaRobada in juego._estadosDeJugadores[1].mano
 	assert juego._estadosDeJugadores[0].mano == Multiset([cartaRobada, cartaRobada, cartaRobada])
 	assert juego._estadosDeJugadores[1].mano.total() == 2
-	assert juego._estadosDeJugadores[1].zonaDeDuos.total() == 1
+	assert juego._estadosDeJugadores[1].zonaDeDúos.total() == 1
 	assert juego._deQuiénEsTurno == 1
 
 def test_SiSeDijoÚltimaChance_AlJugarUnTurnoCompletoElSiguienteJugador_SuManoNoPuedeSerRobada():
@@ -94,12 +94,12 @@ def test_SiSeDijoÚltimaChance_AlJugarUnTurnoCompletoElSiguienteJugador_SuManoNo
 	
 	juego.verCartasParaRobarDelMazo()
 	juego.robarDelMazo(0,0)
-	juego._estadosDeJugadores[2].mano[Carta(Carta.Tipo.TIBURON, Carta.Color.NARANJA_CLARO)] += 1
+	juego._estadosDeJugadores[2].mano[Carta(Carta.Tipo.TIBURÓN, Carta.Color.NARANJA_CLARO)] += 1
 	juego._estadosDeJugadores[2].mano[Carta(Carta.Tipo.NADADOR, Carta.Color.ROSA)] += 1
 	
 	with pytest.raises(JuegoException) as excepcion:
-		juego.jugarDuoDeNadadorYTiburón(Multiset([
-			Carta(Carta.Tipo.TIBURON, Carta.Color.NARANJA_CLARO),
+		juego.jugarDúoDeNadadorYTiburón(Multiset([
+			Carta(Carta.Tipo.TIBURÓN, Carta.Color.NARANJA_CLARO),
 			Carta(Carta.Tipo.NADADOR, Carta.Color.ROSA)
 		]), 1)
 	
@@ -256,7 +256,7 @@ def test_SiSeDijoÚltimaChance_AlVolverASerTurnoDelJugadorQueDijoÚltimaChance_N
 	juego.pasarTurno()
 	
 	with pytest.raises(JuegoException) as excepcion:
-		juego.jugarDuoDePeces(Multiset())
+		juego.jugarDúoDePeces(Multiset())
 	
 	assert "No hay una ronda en curso" in str(excepcion.value)
 
@@ -270,7 +270,7 @@ def test_SiSeDijoÚltimaChance_AlVolverASerTurnoDelJugadorQueDijoÚltimaChance_N
 	juego.pasarTurno()
 	
 	with pytest.raises(JuegoException) as excepcion:
-		juego.jugarDuoDeBarcos(Multiset())
+		juego.jugarDúoDeBarcos(Multiset())
 	
 	assert "No hay una ronda en curso" in str(excepcion.value)
 
@@ -284,11 +284,11 @@ def test_SiSeDijoÚltimaChance_AlVolverASerTurnoDelJugadorQueDijoÚltimaChance_N
 	juego.pasarTurno()
 	
 	with pytest.raises(JuegoException) as excepcion:
-		juego.jugarDuoDeCangrejos(Multiset(), 0, 0)
+		juego.jugarDúoDeCangrejos(Multiset(), 0, 0)
 	
 	assert "No hay una ronda en curso" in str(excepcion.value)
 
-def test_SiSeDijoÚltimaChance_AlVolverASerTurnoDelJugadorQueDijoÚltimaChance_NoSePuedeJugarDuoDeNadadorYTiburón():
+def test_SiSeDijoÚltimaChance_AlVolverASerTurnoDelJugadorQueDijoÚltimaChance_NoSePuedeJugarDúoDeNadadorYTiburón():
 	juego = PartidaDeOcéanos(cantidadDeJugadores=2)
 	juego.iniciarRonda()
 	juego.robarDelDescarte(0)
@@ -298,7 +298,7 @@ def test_SiSeDijoÚltimaChance_AlVolverASerTurnoDelJugadorQueDijoÚltimaChance_N
 	juego.pasarTurno()
 	
 	with pytest.raises(JuegoException) as excepcion:
-		juego.jugarDuoDeNadadorYTiburón(Multiset(), 0)
+		juego.jugarDúoDeNadadorYTiburón(Multiset(), 0)
 	
 	assert "No hay una ronda en curso" in str(excepcion.value)
 

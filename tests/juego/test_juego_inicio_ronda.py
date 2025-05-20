@@ -67,13 +67,13 @@ def test_SiSeCreóJuegoParaDosJugadores_AlIniciarRonda_LaManoDeCadaJugadorEstáV
 	assert juego._estadosDeJugadores[0].mano.total() == 0
 	assert juego._estadosDeJugadores[1].mano.total() == 0
 
-def test_SiSeCreóJuegoParaDosJugadores_AlIniciarRonda_LaZonaDeDuosDeCadaJugadorEstáVacía():
+def test_SiSeCreóJuegoParaDosJugadores_AlIniciarRonda_LaZonaDeDúosDeCadaJugadorEstáVacía():
 	juego = PartidaDeOcéanos(cantidadDeJugadores=2)
 
 	juego.iniciarRonda()
 
-	assert len(juego._estadosDeJugadores[0].zonaDeDuos) == 0
-	assert len(juego._estadosDeJugadores[1].zonaDeDuos) == 0
+	assert len(juego._estadosDeJugadores[0].zonaDeDúos) == 0
+	assert len(juego._estadosDeJugadores[1].zonaDeDúos) == 0
 
 
 
@@ -118,7 +118,7 @@ def test_SiNoSeInicióLaPrimeraRonda_NoSePuedeJugarUnDúo():
 	juego = PartidaDeOcéanos(cantidadDeJugadores=2)
 	
 	with pytest.raises(JuegoException) as excepcion:
-		juego.jugarDuoDeBarcos(Multiset([
+		juego.jugarDúoDeBarcos(Multiset([
 		Carta(Carta.Tipo.PEZ, Carta.Color.BLANCO),
 		Carta(Carta.Tipo.PEZ, Carta.Color.BLANCO)
 	]))

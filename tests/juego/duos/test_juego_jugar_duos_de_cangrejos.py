@@ -11,7 +11,7 @@ def test_NoSePuedeJugarDúoDeCangrejosConDúoDeOtroTipo():
 	juego.robarDelMazo(0,0)
 	
 	with pytest.raises(JuegoException) as excepcion:
-		juego.jugarDuoDeCangrejos(Multiset([
+		juego.jugarDúoDeCangrejos(Multiset([
 			Carta(Carta.Tipo.PEZ, Carta.Color.AZUL), Carta(Carta.Tipo.PEZ, Carta.Color.AZUL)
 		]), 0, 0)
 	
@@ -32,13 +32,13 @@ def test_SiElDescarteEstáVacío_AlJugarDúoDeCangrejos_NoSeRobaNingunaCarta():
 	juego.robarDelMazo(0,0)
 	juego._descarte = ([], [])
 	
-	cartaRobada = juego.jugarDuoDeCangrejos(Multiset([
+	cartaRobada = juego.jugarDúoDeCangrejos(Multiset([
 		Carta(Carta.Tipo.CANGREJO, Carta.Color.AZUL), Carta(Carta.Tipo.CANGREJO, Carta.Color.AMARILLO)
 	]), 0, 0)
 	
 	assert cartaRobada == None
 	assert juego._estadosDeJugadores[0].mano.total() == 0
-	assert juego._estadosDeJugadores[0].zonaDeDuos.total() == 1
+	assert juego._estadosDeJugadores[0].zonaDeDúos.total() == 1
 	assert juego._deQuiénEsTurno == 0
 
 def test_SiElDescarteNoEstáVacío_NoSePuedeJugarDúoDeCangrejosEnPilaDeDescarteVacía():
@@ -57,7 +57,7 @@ def test_SiElDescarteNoEstáVacío_NoSePuedeJugarDúoDeCangrejosEnPilaDeDescarte
 	juego._descarte[1].pop()
 	
 	with pytest.raises(JuegoException) as excepcion:
-		juego.jugarDuoDeCangrejos(Multiset([
+		juego.jugarDúoDeCangrejos(Multiset([
 			Carta(Carta.Tipo.CANGREJO, Carta.Color.AZUL), Carta(Carta.Tipo.CANGREJO, Carta.Color.AMARILLO)
 		]), 1, 0)
 	
@@ -78,7 +78,7 @@ def test_SiElDescarteNoEstáVacío_NoSePuedeJugarDúoDeCangrejosEnÍndiceInexist
 	juego.robarDelMazo(0,0)
 	
 	with pytest.raises(JuegoException) as excepcion:
-		juego.jugarDuoDeCangrejos(Multiset([
+		juego.jugarDúoDeCangrejos(Multiset([
 			Carta(Carta.Tipo.CANGREJO, Carta.Color.AZUL), Carta(Carta.Tipo.CANGREJO, Carta.Color.AMARILLO)
 		]), 0, 3)
 	
@@ -102,13 +102,13 @@ def test_SiElDescarteNoEstáVacío_AlJugarDúoDeCangrejos_SeRobaLaCartaSeleccion
 	
 	descarteAntesDelDúo = (juego._descarte[0].copy(), juego._descarte[1].copy())
 	
-	cartaRobada = juego.jugarDuoDeCangrejos(Multiset([
+	cartaRobada = juego.jugarDúoDeCangrejos(Multiset([
 		Carta(Carta.Tipo.CANGREJO, Carta.Color.AZUL), Carta(Carta.Tipo.CANGREJO, Carta.Color.AMARILLO)
 	]), 0, 1)
 	
 	assert cartaRobada == cartaARobarConDúoDeCangrejo
 	assert juego._estadosDeJugadores[0].mano == Multiset([cartaARobarConDúoDeCangrejo])
-	assert juego._estadosDeJugadores[0].zonaDeDuos.total() == 1
+	assert juego._estadosDeJugadores[0].zonaDeDúos.total() == 1
 	assert juego._deQuiénEsTurno == 0
 	assert juego._descarte[1] == descarteAntesDelDúo[1]
 	assert juego._descarte[0] == descarteAntesDelDúo[0][0:1] + descarteAntesDelDúo[0][2:]

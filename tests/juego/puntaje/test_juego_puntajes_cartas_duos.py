@@ -35,33 +35,33 @@ def test_SiSeTienenCuatroPecesEnLaMano_ElPuntajeEsDos():
 	assert juego._estadosDeJugadores[0].puntajeDeRonda() == 2
 	
 
-def test_SiSeTieneUnDuoDePeces_ElPuntajeEsUno():
+def test_SiSeTieneUnDúoDePeces_ElPuntajeEsUno():
 	juego = PartidaDeOcéanos(cantidadDeJugadores=2)
 	juego.iniciarRonda()
 	
-	juego._estadosDeJugadores[0].zonaDeDuos[
+	juego._estadosDeJugadores[0].zonaDeDúos[
 		tuple(sorted((Carta(Carta.Tipo.PEZ, Carta.Color.BLANCO), Carta(Carta.Tipo.PEZ, Carta.Color.BLANCO))))
 	] += 1
 	
 	assert juego._estadosDeJugadores[0].puntajeDeRonda() == 1
 	
-def test_SiSeTienenDosDuosDePeces_ElPuntajeEsDos():
+def test_SiSeTienenDosDúosDePeces_ElPuntajeEsDos():
 	juego = PartidaDeOcéanos(cantidadDeJugadores=2)
 	juego.iniciarRonda()
 	
-	juego._estadosDeJugadores[0].zonaDeDuos[
+	juego._estadosDeJugadores[0].zonaDeDúos[
 		tuple(sorted((Carta(Carta.Tipo.PEZ, Carta.Color.BLANCO), Carta(Carta.Tipo.PEZ, Carta.Color.BLANCO))))
 	] += 2
 	
 	assert juego._estadosDeJugadores[0].puntajeDeRonda() == 2
 
-def test_SiSeTienenDosPecesEnLaManoYUnDuoDePeces_ElPuntajeEsDos():
+def test_SiSeTienenDosPecesEnLaManoYUnDúoDePeces_ElPuntajeEsDos():
 	juego = PartidaDeOcéanos(cantidadDeJugadores=2)
 	juego.iniciarRonda()
 	
 	juego._estadosDeJugadores[0].mano[Carta(Carta.Tipo.PEZ, Carta.Color.BLANCO)] += 1
 	juego._estadosDeJugadores[0].mano[Carta(Carta.Tipo.PEZ, Carta.Color.BLANCO)] += 1
-	juego._estadosDeJugadores[0].zonaDeDuos[
+	juego._estadosDeJugadores[0].zonaDeDúos[
 		tuple(sorted((Carta(Carta.Tipo.PEZ, Carta.Color.BLANCO), Carta(Carta.Tipo.PEZ, Carta.Color.BLANCO))))
 	] += 1
 	
@@ -109,24 +109,24 @@ def test_SiSeTienenCuatroBarcosEnLaMano_ElPuntajeEsDos():
 	assert juego._estadosDeJugadores[0].puntajeDeRonda() == 2
 	
 
-def test_SiSeTieneUnDuoDeBarcos_ElPuntajeEsUno():
+def test_SiSeTieneUnDúoDeBarcos_ElPuntajeEsUno():
 	juego = PartidaDeOcéanos(cantidadDeJugadores=2)
 	juego.iniciarRonda()
 	
-	juego._estadosDeJugadores[0].zonaDeDuos[
+	juego._estadosDeJugadores[0].zonaDeDúos[
 		tuple(sorted((Carta(Carta.Tipo.BARCO, Carta.Color.BLANCO), Carta(Carta.Tipo.BARCO, Carta.Color.BLANCO))))
 	] += 1
 	
 	assert juego._estadosDeJugadores[0].puntajeDeRonda() == 1
 	
-def test_SiSeTienenDosDuosDeBarcos_ElPuntajeEsDos():
+def test_SiSeTienenDosDúosDeBarcos_ElPuntajeEsDos():
 	juego = PartidaDeOcéanos(cantidadDeJugadores=2)
 	juego.iniciarRonda()
 	
-	juego._estadosDeJugadores[0].zonaDeDuos[
+	juego._estadosDeJugadores[0].zonaDeDúos[
 		tuple(sorted((Carta(Carta.Tipo.BARCO, Carta.Color.BLANCO), Carta(Carta.Tipo.BARCO, Carta.Color.BLANCO))))
 	] += 1
-	juego._estadosDeJugadores[0].zonaDeDuos[
+	juego._estadosDeJugadores[0].zonaDeDúos[
 		tuple(sorted((Carta(Carta.Tipo.BARCO, Carta.Color.BLANCO), Carta(Carta.Tipo.BARCO, Carta.Color.BLANCO))))
 	] += 1
 	
@@ -134,13 +134,13 @@ def test_SiSeTienenDosDuosDeBarcos_ElPuntajeEsDos():
 
 
 
-def test_SiSeTienenDosPecesEnLaManoYUnDuoDePeces_ElPuntajeEsDos():
+def test_SiSeTienenDosPecesEnLaManoYUnDúoDePeces_ElPuntajeEsDos():
 	juego = PartidaDeOcéanos(cantidadDeJugadores=2)
 	juego.iniciarRonda()
 	
 	juego._estadosDeJugadores[0].mano[Carta(Carta.Tipo.BARCO, Carta.Color.BLANCO)] += 1
 	juego._estadosDeJugadores[0].mano[Carta(Carta.Tipo.BARCO, Carta.Color.BLANCO)] += 1
-	juego._estadosDeJugadores[0].zonaDeDuos[
+	juego._estadosDeJugadores[0].zonaDeDúos[
 		tuple(sorted((Carta(Carta.Tipo.BARCO, Carta.Color.BLANCO), Carta(Carta.Tipo.BARCO, Carta.Color.BLANCO))))
 	] += 1
 	
@@ -187,36 +187,36 @@ def test_SiSeTienenCuatroCangrejosEnLaMano_ElPuntajeEsDos():
 	assert juego._estadosDeJugadores[0].puntajeDeRonda() == 2
 	
 
-def test_SiSeTieneUnDuoDeCangrejos_ElPuntajeEsUno():
+def test_SiSeTieneUnDúoDeCangrejos_ElPuntajeEsUno():
 	juego = PartidaDeOcéanos(cantidadDeJugadores=2)
 	juego.iniciarRonda()
 	
-	juego._estadosDeJugadores[0].zonaDeDuos[
+	juego._estadosDeJugadores[0].zonaDeDúos[
 		tuple(sorted((Carta(Carta.Tipo.CANGREJO, Carta.Color.BLANCO), Carta(Carta.Tipo.CANGREJO, Carta.Color.BLANCO))))
 	] += 1
 	
 	assert juego._estadosDeJugadores[0].puntajeDeRonda() == 1
 	
-def test_SiSeTienenDosDuosDeCangrejos_ElPuntajeEsDos():
+def test_SiSeTienenDosDúosDeCangrejos_ElPuntajeEsDos():
 	juego = PartidaDeOcéanos(cantidadDeJugadores=2)
 	juego.iniciarRonda()
 	
-	juego._estadosDeJugadores[0].zonaDeDuos[
+	juego._estadosDeJugadores[0].zonaDeDúos[
 		tuple(sorted((Carta(Carta.Tipo.CANGREJO, Carta.Color.BLANCO), Carta(Carta.Tipo.CANGREJO, Carta.Color.BLANCO))))
 	] += 1
-	juego._estadosDeJugadores[0].zonaDeDuos[
+	juego._estadosDeJugadores[0].zonaDeDúos[
 		tuple(sorted((Carta(Carta.Tipo.CANGREJO, Carta.Color.BLANCO), Carta(Carta.Tipo.CANGREJO, Carta.Color.BLANCO))))
 	] += 1
 	
 	assert juego._estadosDeJugadores[0].puntajeDeRonda() == 2
 
-def test_SiSeTienenDosPecesEnLaManoYUnDuoDePeces_ElPuntajeEsDos():
+def test_SiSeTienenDosPecesEnLaManoYUnDúoDePeces_ElPuntajeEsDos():
 	juego = PartidaDeOcéanos(cantidadDeJugadores=2)
 	juego.iniciarRonda()
 	
 	juego._estadosDeJugadores[0].mano[Carta(Carta.Tipo.CANGREJO, Carta.Color.BLANCO)] += 1
 	juego._estadosDeJugadores[0].mano[Carta(Carta.Tipo.CANGREJO, Carta.Color.BLANCO)] += 1
-	juego._estadosDeJugadores[0].zonaDeDuos[
+	juego._estadosDeJugadores[0].zonaDeDúos[
 		tuple(sorted((Carta(Carta.Tipo.CANGREJO, Carta.Color.BLANCO), Carta(Carta.Tipo.CANGREJO, Carta.Color.BLANCO))))
 	] += 1
 	
@@ -237,7 +237,7 @@ def test_SiSeTieneUnTiburónEnLaMano_ElPuntajeEsCero():
 	juego = PartidaDeOcéanos(cantidadDeJugadores=2)
 	juego.iniciarRonda()
 	
-	juego._estadosDeJugadores[0].mano[Carta(Carta.Tipo.TIBURON, Carta.Color.BLANCO)] += 1
+	juego._estadosDeJugadores[0].mano[Carta(Carta.Tipo.TIBURÓN, Carta.Color.BLANCO)] += 1
 	
 	assert juego._estadosDeJugadores[0].puntajeDeRonda() == 0
 
@@ -246,7 +246,7 @@ def test_SiSeTieneUnNadadorYUnTiburónEnLaMano_ElPuntajeEsUno():
 	juego.iniciarRonda()
 	
 	juego._estadosDeJugadores[0].mano[Carta(Carta.Tipo.NADADOR, Carta.Color.BLANCO)] += 1
-	juego._estadosDeJugadores[0].mano[Carta(Carta.Tipo.TIBURON, Carta.Color.BLANCO)] += 1
+	juego._estadosDeJugadores[0].mano[Carta(Carta.Tipo.TIBURÓN, Carta.Color.BLANCO)] += 1
 	
 	assert juego._estadosDeJugadores[0].puntajeDeRonda() == 1
 
@@ -255,63 +255,63 @@ def test_SiSeTienenDosNadadoresYUnTiburónEnLaMano_ElPuntajeEsUno():
 	juego.iniciarRonda()
 	
 	juego._estadosDeJugadores[0].mano[Carta(Carta.Tipo.NADADOR, Carta.Color.BLANCO)] += 1
-	juego._estadosDeJugadores[0].mano[Carta(Carta.Tipo.TIBURON, Carta.Color.BLANCO)] += 1
+	juego._estadosDeJugadores[0].mano[Carta(Carta.Tipo.TIBURÓN, Carta.Color.BLANCO)] += 1
 	juego._estadosDeJugadores[0].mano[Carta(Carta.Tipo.NADADOR, Carta.Color.BLANCO)] += 1
 	
 	assert juego._estadosDeJugadores[0].puntajeDeRonda() == 1
 
-def test_SiSeTieneUnNadadorYDosTiburonesEnLaMano_ElPuntajeEsUno():
+def test_SiSeTieneUnNadadorYDosTiburónesEnLaMano_ElPuntajeEsUno():
 	juego = PartidaDeOcéanos(cantidadDeJugadores=2)
 	juego.iniciarRonda()
 	
 	juego._estadosDeJugadores[0].mano[Carta(Carta.Tipo.NADADOR, Carta.Color.BLANCO)] += 1
-	juego._estadosDeJugadores[0].mano[Carta(Carta.Tipo.TIBURON, Carta.Color.BLANCO)] += 1
-	juego._estadosDeJugadores[0].mano[Carta(Carta.Tipo.TIBURON, Carta.Color.BLANCO)] += 1
+	juego._estadosDeJugadores[0].mano[Carta(Carta.Tipo.TIBURÓN, Carta.Color.BLANCO)] += 1
+	juego._estadosDeJugadores[0].mano[Carta(Carta.Tipo.TIBURÓN, Carta.Color.BLANCO)] += 1
 	
 	assert juego._estadosDeJugadores[0].puntajeDeRonda() == 1
 
-def test_SiSeTienenDosNadadoresYDosTiburonesEnLaMano_ElPuntajeEsDos():
+def test_SiSeTienenDosNadadoresYDosTiburónesEnLaMano_ElPuntajeEsDos():
 	juego = PartidaDeOcéanos(cantidadDeJugadores=2)
 	juego.iniciarRonda()
 	
 	juego._estadosDeJugadores[0].mano[Carta(Carta.Tipo.NADADOR, Carta.Color.BLANCO)] += 1
-	juego._estadosDeJugadores[0].mano[Carta(Carta.Tipo.TIBURON, Carta.Color.BLANCO)] += 1
+	juego._estadosDeJugadores[0].mano[Carta(Carta.Tipo.TIBURÓN, Carta.Color.BLANCO)] += 1
 	juego._estadosDeJugadores[0].mano[Carta(Carta.Tipo.NADADOR, Carta.Color.BLANCO)] += 1
-	juego._estadosDeJugadores[0].mano[Carta(Carta.Tipo.TIBURON, Carta.Color.BLANCO)] += 1
+	juego._estadosDeJugadores[0].mano[Carta(Carta.Tipo.TIBURÓN, Carta.Color.BLANCO)] += 1
 	
 	assert juego._estadosDeJugadores[0].puntajeDeRonda() == 2
 
-def test_SiSeTieneUnDuoDeNadadorYTiburón_ElPuntajeEsUno():
+def test_SiSeTieneUnDúoDeNadadorYTiburón_ElPuntajeEsUno():
 	juego = PartidaDeOcéanos(cantidadDeJugadores=2)
 	juego.iniciarRonda()
 	
-	juego._estadosDeJugadores[0].zonaDeDuos[
-		tuple(sorted((Carta(Carta.Tipo.NADADOR, Carta.Color.BLANCO), Carta(Carta.Tipo.TIBURON, Carta.Color.BLANCO))))
+	juego._estadosDeJugadores[0].zonaDeDúos[
+		tuple(sorted((Carta(Carta.Tipo.NADADOR, Carta.Color.BLANCO), Carta(Carta.Tipo.TIBURÓN, Carta.Color.BLANCO))))
 	] += 1
 	
 	assert juego._estadosDeJugadores[0].puntajeDeRonda() == 1
 
-def test_SiSeTienenDosDuosDeNadadorYTiburón_ElPuntajeEsUno():
+def test_SiSeTienenDosDúosDeNadadorYTiburón_ElPuntajeEsUno():
 	juego = PartidaDeOcéanos(cantidadDeJugadores=2)
 	juego.iniciarRonda()
 	
-	juego._estadosDeJugadores[0].zonaDeDuos[
-		tuple(sorted((Carta(Carta.Tipo.NADADOR, Carta.Color.BLANCO), Carta(Carta.Tipo.TIBURON, Carta.Color.BLANCO))))
+	juego._estadosDeJugadores[0].zonaDeDúos[
+		tuple(sorted((Carta(Carta.Tipo.NADADOR, Carta.Color.BLANCO), Carta(Carta.Tipo.TIBURÓN, Carta.Color.BLANCO))))
 	] += 1
-	juego._estadosDeJugadores[0].zonaDeDuos[
-		tuple(sorted((Carta(Carta.Tipo.NADADOR, Carta.Color.BLANCO), Carta(Carta.Tipo.TIBURON, Carta.Color.BLANCO))))
+	juego._estadosDeJugadores[0].zonaDeDúos[
+		tuple(sorted((Carta(Carta.Tipo.NADADOR, Carta.Color.BLANCO), Carta(Carta.Tipo.TIBURÓN, Carta.Color.BLANCO))))
 	] += 1
 	
 	assert juego._estadosDeJugadores[0].puntajeDeRonda() == 2
 
-def test_SiSeTieneUnNadadorYUnTiburónEnLaManoYUnDuoDeNadadorYTiburón_ElPuntajeEsDos():
+def test_SiSeTieneUnNadadorYUnTiburónEnLaManoYUnDúoDeNadadorYTiburón_ElPuntajeEsDos():
 	juego = PartidaDeOcéanos(cantidadDeJugadores=2)
 	juego.iniciarRonda()
 	
 	juego._estadosDeJugadores[0].mano[Carta(Carta.Tipo.NADADOR, Carta.Color.BLANCO)] += 1
-	juego._estadosDeJugadores[0].mano[Carta(Carta.Tipo.TIBURON, Carta.Color.BLANCO)] += 1
-	juego._estadosDeJugadores[0].zonaDeDuos[
-		tuple(sorted((Carta(Carta.Tipo.NADADOR, Carta.Color.BLANCO), Carta(Carta.Tipo.TIBURON, Carta.Color.BLANCO))))
+	juego._estadosDeJugadores[0].mano[Carta(Carta.Tipo.TIBURÓN, Carta.Color.BLANCO)] += 1
+	juego._estadosDeJugadores[0].zonaDeDúos[
+		tuple(sorted((Carta(Carta.Tipo.NADADOR, Carta.Color.BLANCO), Carta(Carta.Tipo.TIBURÓN, Carta.Color.BLANCO))))
 	] += 1
 	
 	assert juego._estadosDeJugadores[0].puntajeDeRonda() == 2

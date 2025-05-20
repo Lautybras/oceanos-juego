@@ -86,7 +86,7 @@ class RandyBot():
 	def decidirAcciónDeFinDeRonda(self):
 		accionesDeFinDeRondaPosibles = [Acción.FinDeRonda.PASAR_TURNO]
 		
-		if False and self._juego.puntajeDeRonda >= 7 and (not self._juego.útlimaChanceEnCurso()):
+		if self._juego.puntajeDeRonda >= 7 and (not self._juego.útlimaChanceEnCurso()):
 			accionesDeFinDeRondaPosibles.append(Acción.FinDeRonda.DECIR_BASTA)
 			accionesDeFinDeRondaPosibles.append(Acción.FinDeRonda.DECIR_ÚLTIMA_CHANCE)
 		
@@ -98,8 +98,8 @@ class RandyBot():
 		nadadorEncontrado = False
 		tiburónEncontrado = False
 		for cartaEnMano in self._juego._estadosDeJugadores[self._númeroDeJugador].mano.elements():
-			if tipo in [Carta.Tipo.NADADOR, Carta.Tipo.TIBURON]:
-				if (cartaEnMano.tipo == Carta.Tipo.NADADOR and not nadadorEncontrado) or (cartaEnMano.tipo == Carta.Tipo.TIBURON and not tiburónEncontrado):
+			if tipo in [Carta.Tipo.NADADOR, Carta.Tipo.TIBURÓN]:
+				if (cartaEnMano.tipo == Carta.Tipo.NADADOR and not nadadorEncontrado) or (cartaEnMano.tipo == Carta.Tipo.TIBURÓN and not tiburónEncontrado):
 					cartasDelDúoEnMano[cartaEnMano] += 1
 					if cartaEnMano.tipo == Carta.Tipo.NADADOR:
 						nadadorEncontrado = True

@@ -47,7 +47,7 @@ def test_SiAlJugarDúoDePecesSeConsiguenCuatroSirenas_ElJugadorConLasSirenasGana
 	juego._mazo[-3] = Carta(Carta.Tipo.SIRENA, Carta.Color.BLANCO)
 	juego.verCartasParaRobarDelMazo()
 	juego.robarDelMazo(0,0)
-	juego.jugarDuoDePeces(Multiset([
+	juego.jugarDúoDePeces(Multiset([
 		Carta(Carta.Tipo.PEZ, Carta.Color.AZUL),
 		Carta(Carta.Tipo.PEZ, Carta.Color.NARANJA)
 	]))
@@ -71,7 +71,7 @@ def test_SiAlJugarDúoDeCangrejosSeConsiguenCuatroSirenas_ElJugadorConLasSirenas
 	juego._mazo[-1] = Carta(Carta.Tipo.CANGREJO, Carta.Color.AMARILLO)
 	juego.verCartasParaRobarDelMazo()
 	juego.robarDelMazo(0,0)
-	juego.jugarDuoDeCangrejos(Multiset([
+	juego.jugarDúoDeCangrejos(Multiset([
 		Carta(Carta.Tipo.CANGREJO, Carta.Color.AMARILLO),
 		Carta(Carta.Tipo.CANGREJO, Carta.Color.ROSA)
 	]), 0, 0)
@@ -89,13 +89,13 @@ def test_SiAlJugarDúoDeNadadorYTiburónSeConsiguenCuatroSirenas_ElJugadorConLas
 	juego = PartidaDeOcéanos(cantidadDeJugadores=2)
 	juego.iniciarRonda()
 	juego._estadosDeJugadores[0].mano[Carta(Carta.Tipo.SIRENA, Carta.Color.BLANCO)] += 3
-	juego._estadosDeJugadores[0].mano[Carta(Carta.Tipo.TIBURON, Carta.Color.ROSA)] += 1
+	juego._estadosDeJugadores[0].mano[Carta(Carta.Tipo.TIBURÓN, Carta.Color.ROSA)] += 1
 	juego._estadosDeJugadores[1].mano[Carta(Carta.Tipo.SIRENA, Carta.Color.BLANCO)] += 1
 	juego._mazo[-1] = Carta(Carta.Tipo.NADADOR, Carta.Color.AMARILLO)
 	juego.verCartasParaRobarDelMazo()
 	juego.robarDelMazo(0,0)
-	juego.jugarDuoDeNadadorYTiburón(Multiset([
-		Carta(Carta.Tipo.TIBURON, Carta.Color.ROSA),
+	juego.jugarDúoDeNadadorYTiburón(Multiset([
+		Carta(Carta.Tipo.TIBURÓN, Carta.Color.ROSA),
 		Carta(Carta.Tipo.NADADOR, Carta.Color.AMARILLO)
 	]), 1)
 	
