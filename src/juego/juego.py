@@ -1,6 +1,6 @@
 from random import shuffle, choice
 from enum import Enum, auto
-from copy import copy
+from copy import copy, deepcopy
 from .carta import Carta
 from collections import Counter as Multiset
 
@@ -156,7 +156,6 @@ class EstadoDeJugador():
 			(sorted(list(cantidadDeCartasDeColor.values()), reverse=True))[0:cantidadDeSirenas]
 		)
 	
-	
 	def _puntajePorAnclas(self, cantidadDeAnclas):
 		if cantidadDeAnclas == 0:
 			return 0
@@ -213,6 +212,46 @@ class PartidaDeOcéanos():
 		PARTIDA_TERMINADA = auto()
 	
 	# ============================ ESTADO PÚBLICO ============================
+	@property
+	def topeDelDescarte(self):
+		return (
+			(copy(self._descarte[0][-1]) if len(self._descarte[0]) > 0 else None),
+			(copy(self._descarte[1][-1]) if len(self._descarte[1]) > 0 else None)
+		)
+	
+	@property
+	def cantidadDeCartasEnDescarte(self):
+		return (
+			len(self._descarte[0]),
+			len(self._descarte[1])
+		)
+	
+	def cantidadDeCartasEnManoDelJugador(self, jugador):
+		if not (0 <= jugador and jugador < self._cantidadDeJugadores):
+			raise JuegoException("El jugador seleccionado es inválido")
+		return self._estadosDeJugadores[jugador].mano.total()
+	
+	@property
+	def cantidadDeCartasEnMazo(self):
+		return len(self._mazo)
+	
+	def zonaDeDúosDelJugador(self, jugador):
+		if not (0 <= jugador and jugador < self._cantidadDeJugadores):
+			raise JuegoException("El jugador seleccionado es inválido")
+		return deepcopy(self._estadosDeJugadores[jugador].zonaDeDuos)
+	
+	@property
+	def zonaDeDúos(self):
+		return self.zonaDeDúosDelJugador(self._deQuiénEsTurno)
+	
+	@property
+	def mano(self):
+		return deepcopy(self._estadosDeJugadores[self._deQuiénEsTurno].mano)
+	
+	@property
+	def puntajeDeRonda(self):
+		return self._estadosDeJugadores[self._deQuiénEsTurno].puntajeDeRonda()
+	
 	def rondaEnCurso(self):
 		return self._estadoActual in [
 			self.Estado.FASE_ROBO,
@@ -256,14 +295,8 @@ class PartidaDeOcéanos():
 	def jugadorQueDijoÚltimaChance(self):
 		return int(self._últimaChancePorJugador) if self._últimaChancePorJugador != None else None
 	
-	@property
-	def topeDelDescarte(self):
-		return (
-			(copy(self._descarte[0][-1]) if len(self._descarte[0]) > 0 else None),
-			(copy(self._descarte[1][-1]) if len(self._descarte[1]) > 0 else None)
-		)
 	
-	
+	# ============================ FLUJO DE PARTIDA ============================
 	def __init__(self, cantidadDeJugadores=2):
 		if(not (2 <= cantidadDeJugadores and cantidadDeJugadores <= 4)):
 			raise JuegoInvalidoException("La cantidad de jugadores es inválida")
@@ -278,7 +311,6 @@ class PartidaDeOcéanos():
 		self._mazo = None
 		self._estadoActual = self.Estado.PARTIDA_NO_INICIADA
 	
-	# ============================ FLUJO DE PARTIDA ============================
 	def iniciarRonda(self):
 		if self.rondaEnCurso():
 			raise JuegoException("Ya hay una ronda en curso!")
