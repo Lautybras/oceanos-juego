@@ -349,10 +349,10 @@ class PartidaDeOcéanos():
 	def robarDelMazo(self, indiceDeCartaARobar, indiceDePilaDondeDescartar):
 		self._assertSePuedeRobarDelMazo()
 		
-		self._assertObjetivoDeDescarteVálido(indiceDePilaDondeDescartar, indiceDeCartaARobar)
+		self._assertObjetivoDeRoboDelMazoYDescarteVálido(indiceDePilaDondeDescartar, indiceDeCartaARobar)
 		
 		cartasRobadasDelMazo = [self._mazo.pop()]
-		if len(self._mazo) > 1:
+		if len(self._mazo) > 0:
 			cartasRobadasDelMazo.append(self._mazo.pop())
 			self._descarte[indiceDePilaDondeDescartar].append(cartasRobadasDelMazo[1 - indiceDeCartaARobar])
 		cartaRobada = cartasRobadasDelMazo[indiceDeCartaARobar]
@@ -575,12 +575,15 @@ class PartidaDeOcéanos():
 		if self.seHaRobadoEsteTurno():
 			raise JuegoException("Ya se ha robado en este turno")
 	
-	def _assertObjetivoDeDescarteVálido(self, indiceDePilaDondeDescartar, indiceDeCartaARobar):
+	def _assertObjetivoDeRoboDelMazoYDescarteVálido(self, indiceDePilaDondeDescartar, indiceDeCartaARobar):
+		if not len(self._mazo) > 1:
+			if not (0 <= indiceDeCartaARobar and indiceDeCartaARobar < len(self._mazo)):
+				raise JuegoException("No se puede elegir una carta para robar fuera del rango")
 		if not (0 <= indiceDePilaDondeDescartar and indiceDePilaDondeDescartar <= 1):
 			raise JuegoException("Pila de descarte no existente")
 		elif len(self._descarte[indiceDePilaDondeDescartar]) > 0 and len(self._descarte[1 - indiceDePilaDondeDescartar]) == 0:
 			raise JuegoException("No se puede descartar en una pila no vacía mientras la otra se encuentre vacía")
-		elif not (0 <= indiceDeCartaARobar and indiceDeCartaARobar < min(2, len(self._mazo))):
+		elif not (0 <= indiceDeCartaARobar and indiceDeCartaARobar < 2):
 			raise JuegoException("No se puede elegir una carta para robar fuera del rango")
 	
 	def _assertÍndicePilaDeDescarteVálidoParaRobar(self, indicePilaDeDescarte):

@@ -15,9 +15,9 @@ class RandyBot():
 	
 	def decidirAcciónDeRobo(self):
 		accionesPosibles = [Acción.Robo.DEL_MAZO]
-		if len(self._juego._descarte[0]) > 0:
+		if self._juego.cantidadDeCartasEnDescarte[0] > 0:
 			accionesPosibles.append(Acción.Robo.DEL_DESCARTE_0)
-		if len(self._juego._descarte[1]) > 0:
+		if self._juego.cantidadDeCartasEnDescarte[1] > 0:
 			accionesPosibles.append(Acción.Robo.DEL_DESCARTE_1)
 		return choice(accionesPosibles)
 			
@@ -27,12 +27,13 @@ class RandyBot():
 		else:
 			indiceDeCartaARobar = choice([0,1])
 			indiceDePilaDondeDescartar = None
-			if len(self._juego._descarte[0]) > 0 and len(self._juego._descarte[1]) == 0:
+			
+			if self._juego.cantidadDeCartasEnDescarte[0] > 0 and self._juego.cantidadDeCartasEnDescarte[1] == 0:
 				indiceDePilaDondeDescartar = 1
-			elif len(self._juego._descarte[1]) > 0 and len(self._juego._descarte[0]) == 0:
+			elif self._juego.cantidadDeCartasEnDescarte[1] > 0 and self._juego.cantidadDeCartasEnDescarte[0] == 0:
 				indiceDePilaDondeDescartar = 0
 			else:
-				indiceDePilaDondeDescartar = choice([0,1])			
+				indiceDePilaDondeDescartar = choice([0,1])
 			return (indiceDeCartaARobar, indiceDePilaDondeDescartar)
 	
 	def decidirAcciónDeDúos(self):
@@ -49,7 +50,7 @@ class RandyBot():
 			accionesPosibles.append(Acción.Dúos.JUGAR_BARCOS)
 			
 		posibleDúoDeCangrejos = self._buscarDúoParaJugar(Carta.Tipo.CANGREJO)
-		if posibleDúoDeCangrejos != None and (len(self._juego._descarte[0]) > 0 or len(self._juego._descarte[1]) > 0):
+		if posibleDúoDeCangrejos != None and (self._juego.cantidadDeCartasEnDescarte[0] > 0 or self._juego.cantidadDeCartasEnDescarte[1] > 0):
 			accionesPosibles.append(Acción.Dúos.JUGAR_CANGREJOS)
 		
 		posibleDúoDeNadadorYTiburón = self._buscarDúoParaJugar(Carta.Tipo.NADADOR)
@@ -65,9 +66,9 @@ class RandyBot():
 		
 		elif acciónElegida == Acción.Dúos.JUGAR_CANGREJOS:
 			pilasPosibles = []
-			if (len(self._juego._descarte[0]) > 0):
+			if (self._juego.cantidadDeCartasEnDescarte[0] > 0):
 				pilasPosibles.append(0)
-			if (len(self._juego._descarte[1]) > 0):
+			if (self._juego.cantidadDeCartasEnDescarte[1] > 0):
 				pilasPosibles.append(1)
 			pilaElegida = choice(pilasPosibles)
 			indiceElegido = choice(list(range(len(self._juego._descarte[pilaElegida]))))
@@ -85,7 +86,7 @@ class RandyBot():
 	def decidirAcciónDeFinDeRonda(self):
 		accionesDeFinDeRondaPosibles = [Acción.FinDeRonda.PASAR_TURNO]
 		
-		if self._juego._estadosDeJugadores[self._númeroDeJugador].puntajeDeRonda() >= 7 and self._juego._últimaChancePorJugador == None:
+		if False and self._juego.puntajeDeRonda >= 7 and (not self._juego.útlimaChanceEnCurso()):
 			accionesDeFinDeRondaPosibles.append(Acción.FinDeRonda.DECIR_BASTA)
 			accionesDeFinDeRondaPosibles.append(Acción.FinDeRonda.DECIR_ÚLTIMA_CHANCE)
 		
