@@ -1,21 +1,48 @@
 from .enums import Acción
 from juego.juego import PartidaDeOcéanos
-from copy import deepcopy
+from copy import copy, deepcopy
 from bots.randy import RandyBot
+
+class Evento:
+	def __init__(self, jugador, acción, parámetros):
+		self._jugador = jugador
+		self._acción = acción
+		self._parámetros = parámetros
+	
+	@property
+	def jugador(self):
+		return int(self._jugador)
+	
+	@property
+	def acción(self):
+		return deepcopy(self._acción)
+	
+	@property
+	def parámetros(self):
+		return deepcopy(self._parámetros)
+	
+	def __str__(self):
+		return f"({self._jugador}, {self._acción}, {self._parámetros})"
+	
+	def __repr__(self):
+		return f"({self._jugador}, {self._acción}, {self._parámetros})"
 
 class AdministradorDeJuego():
 	def __init__(self, jugadoresDePartida, verbose=False):
 		self._jugadores = jugadoresDePartida
 		self._juego = None
 		self._verbose = verbose
+		self._eventos = []
 	
 	def jugarPartida(self):
 		self._juego = PartidaDeOcéanos(cantidadDeJugadores=len(self._jugadores))
 		
 		for j in range(len(self._jugadores)):
-			self._jugadores[j].configurarParaJuego(self._juego, j)
+			self._jugadores[j].configurarParaJuego(self._juego, j, self._eventos)
 		
 		while not self._juego.haTerminado():
+			self._eventos.clear()
+			
 			self._juego.iniciarRonda()
 			if self._verbose:
 				print("~~~~~~~~~~~~~~~~~~~~~ Inicia Ronda ~~~~~~~~~~~~~~~~~~~~~~")
@@ -49,15 +76,34 @@ class AdministradorDeJuego():
 			opcionesDeRobo = self._juego.verCartasParaRobarDelMazo()
 			(indiceDeCartaARobar, indiceDePilaDondeDescartar) = self._jugadores[self._juego.deQuiénEsTurno].decidirCómoRobarDelMazo(opcionesDeRobo)
 			cartaRobada = self._juego.robarDelMazo(indiceDeCartaARobar, indiceDePilaDondeDescartar)
+			
+			self._eventos.append(Evento(self._juego.deQuiénEsTurno, Acción.Robo.DEL_MAZO,
+				{
+					"cartaDescartada": copy(self._juego.topeDelDescarte[indiceDePilaDondeDescartar]),
+					"pilaDondeDescartó": indiceDePilaDondeDescartar
+				}
+			))
 			if self._verbose:
 				print(f"Roba del mazo una {cartaRobada}")
 			
 		elif acciónDeRobo == Acción.Robo.DEL_DESCARTE_0:
 			cartaRobada = self._juego.robarDelDescarte(0)
+			
+			self._eventos.append(Evento(self._juego.deQuiénEsTurno, Acción.Robo.DEL_DESCARTE_0,
+				{
+					"cartaRobada": copy(cartaRobada)
+				}
+			))
 			if self._verbose:
 				print(f"Roba del descarte 0 una {cartaRobada}")
 		elif acciónDeRobo == Acción.Robo.DEL_DESCARTE_1:
 			cartaRobada = self._juego.robarDelDescarte(1)
+			
+			self._eventos.append(Evento(self._juego.deQuiénEsTurno, Acción.Robo.DEL_DESCARTE_1,
+				{
+					"cartaRobada": copy(cartaRobada)
+				}
+			))
 			if self._verbose:
 				print(f"Roba del descarte 1 una {cartaRobada}")
 		else:
@@ -71,12 +117,24 @@ class AdministradorDeJuego():
 			(acciónDeDúos, cartasAJugar, parametrosDelDúo) = self._jugadores[self._juego.deQuiénEsTurno].decidirAcciónDeDúos()
 			if acciónDeDúos == Acción.Dúos.JUGAR_PECES:
 				# Jugar dúo de peces
+				self._eventos.append(Evento(self._juego.deQuiénEsTurno, acciónDeDúos,
+					{
+						"cartasJugadas": deepcopy(sorted(cartasAJugar.elements()))
+					}
+				))
+				
 				cartaRobada = self._juego.jugarDúoDePeces(cartasAJugar)
 				if self._verbose:
 					print(f"Juega un dúo de {list(cartasAJugar.elements())[0]} y {list(cartasAJugar.elements())[1]} y roba una {cartaRobada}")
 				
 			elif acciónDeDúos == Acción.Dúos.JUGAR_BARCOS:
 				# Jugar dúo de barcos
+				self._eventos.append(Evento(self._juego.deQuiénEsTurno, acciónDeDúos,
+					{
+						"cartasJugadas": deepcopy(sorted(cartasAJugar.elements()))
+					}
+				))
+				
 				if self._verbose:
 					print(f"Juega un dúo de {list(cartasAJugar.elements())[0]} y {list(cartasAJugar.elements())[1]}")
 				self._juego.jugarDúoDeBarcos(cartasAJugar)
@@ -88,6 +146,14 @@ class AdministradorDeJuego():
 			elif acciónDeDúos == Acción.Dúos.JUGAR_CANGREJOS:
 				# Jugar dúo de cangrejos
 				(pilaDeDescarteARobar, indiceDeCartaARobar) = parametrosDelDúo
+				
+				self._eventos.append(Evento(self._juego.deQuiénEsTurno, acciónDeDúos,
+					{
+						"cartasJugadas": deepcopy(sorted(cartasAJugar.elements())),
+						"pilaDondeRobó": pilaDeDescarteARobar
+					}
+				))
+				
 				cartaRobada = self._juego.jugarDúoDeCangrejos(cartasAJugar, pilaDeDescarteARobar, indiceDeCartaARobar)
 				if self._verbose:
 					print(f"Juega un dúo de {list(cartasAJugar.elements())[0]} y {list(cartasAJugar.elements())[1]} para robar una {cartaRobada}")
@@ -96,6 +162,14 @@ class AdministradorDeJuego():
 				# Jugar dúo de nadador y tiburón
 				jugadorARobar = parametrosDelDúo[0]
 				cartaRobada = self._juego.jugarDúoDeNadadorYTiburón(cartasAJugar, jugadorARobar)
+				
+				self._eventos.append(Evento(self._juego.deQuiénEsTurno, acciónDeDúos,
+					{
+						"cartasJugadas": deepcopy(sorted(cartasAJugar.elements())),
+						"jugadorRobado": jugadorARobar,
+						"cartaRobada": cartaRobada # ! SOLO VER SI FUISTE EL JUGADOR ROBADO!!!
+					}
+				))
 				if self._verbose:
 					print(f"Juega un dúo de {list(cartasAJugar.elements())[0]} y {list(cartasAJugar.elements())[1]} para robarle al jugador {jugadorARobar}, y roba una {cartaRobada}")
 				
@@ -118,20 +192,20 @@ class AdministradorDeJuego():
 					print(f"Jugador {j}: +{self._juego._estadosDeJugadores[j].puntajeDeRonda()} ({self._juego.puntajes[j]}/{self._juego.puntajeParaGanar})")
 				print("######################################################")
 		elif self._juego.rondaEnCurso():
-		
-			acciónDeRobo = self._jugadores[self._juego.deQuiénEsTurno].decidirAcciónDeFinDeRonda()
-
-			if acciónDeRobo == Acción.FinDeRonda.PASAR_TURNO:
-				# Pasar el turno normalmente
+			acciónDeFinDeRonda = self._jugadores[self._juego.deQuiénEsTurno].decidirAcciónDeFinDeRonda()
+			self._eventos.append(Evento(self._juego.deQuiénEsTurno, acciónDeFinDeRonda, None))
+			
+			if acciónDeFinDeRonda == Acción.FinDeRonda.PASAR_TURNO:
+				# Pasar el turno normalmente				
 				self._juego.pasarTurno()
 				if self._verbose:
 					print("Pasa de turno")
-			elif acciónDeRobo == Acción.FinDeRonda.DECIR_BASTA:
+			elif acciónDeFinDeRonda == Acción.FinDeRonda.DECIR_BASTA:
 				# Decir basta y terminar la ronda
 				self._juego.decirBasta()
 				if self._verbose:
 					print("¡¡¡Basta!!!")
-			elif acciónDeRobo == Acción.FinDeRonda.DECIR_ÚLTIMA_CHANCE:
+			elif acciónDeFinDeRonda == Acción.FinDeRonda.DECIR_ÚLTIMA_CHANCE:
 				# Decir última chance y pasar el turno
 				self._juego.decirÚltimaChance()
 				if self._verbose:
@@ -154,6 +228,8 @@ class AdministradorDeJuego():
 			self._juego._deQuiénEsTurno = j
 			self._jugadores[j].configurarFinDeRonda(manos, puntajesDeRonda)
 		self._juego._deQuiénEsTurno = quiénArranca
+		
+		self._eventos = []
 	
 if __name__ == '__main__':
 	administrador = AdministradorDeJuego([RandyBot(), RandyBot()], verbose=True)

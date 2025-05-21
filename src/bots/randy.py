@@ -9,9 +9,10 @@ class RandyBot():
 		self._juego = None
 		self._númeroDeJugador = None
 	
-	def configurarParaJuego(self, juego, númeroDeJugador):
+	def configurarParaJuego(self, juego, númeroDeJugador, listaDeEventos):
 		self._juego = juego
 		self._númeroDeJugador = númeroDeJugador
+		self._listaDeEventos = listaDeEventos
 	
 	def decidirAcciónDeRobo(self):
 		accionesPosibles = [Acción.Robo.DEL_MAZO]
