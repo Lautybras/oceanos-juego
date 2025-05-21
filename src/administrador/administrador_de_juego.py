@@ -1,7 +1,7 @@
 from .enums import Acción
 from juego.juego import PartidaDeOcéanos
 from copy import copy, deepcopy
-from bots.randy import RandyBot
+from jugador.randy import RandyBot
 
 class Evento:
 	def __init__(self, jugador, acción, parámetros):
