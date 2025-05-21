@@ -1,6 +1,6 @@
 import pytest
 from juego.carta import Carta
-from juego.juego import PartidaDeOcéanos, JuegoException
+from juego.partida import PartidaDeOcéanos, JuegoException
 from collections import Counter as Multiset
 
 def test_SiSeInicióRonda_NoSePuedeJugarDúosAntesDeRobar():

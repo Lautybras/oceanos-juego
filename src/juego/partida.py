@@ -1,8 +1,8 @@
 from random import shuffle, choice
+from collections import Counter as Multiset
 from enum import Enum, auto
 from copy import copy, deepcopy
 from .carta import Carta
-from collections import Counter as Multiset
 
 SIRENAS_INF = 999
 
@@ -203,7 +203,7 @@ class EstadoDeJugador():
 		)
 
 class PartidaDeOcéanos():
-	class Estado():
+	class Estado(Enum):
 		PARTIDA_NO_INICIADA = auto()
 		FASE_ROBO = auto()
 		FASE_ROBO_DEL_MAZO = auto()

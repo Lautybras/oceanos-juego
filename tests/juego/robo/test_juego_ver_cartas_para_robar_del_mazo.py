@@ -1,6 +1,6 @@
 import pytest
 from collections import Counter as Multiset
-from juego.juego import PartidaDeOcéanos, JuegoException
+from juego.partida import PartidaDeOcéanos, JuegoException
 
 def test_SiSeInicióRonda_AlRobarDelMazo_SeDevuelvenDosCartas():
 	juego = PartidaDeOcéanos(cantidadDeJugadores=2)

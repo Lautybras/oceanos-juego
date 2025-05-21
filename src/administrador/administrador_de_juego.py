@@ -1,31 +1,8 @@
-from .enums import Acción
-from juego.juego import PartidaDeOcéanos
 from copy import copy, deepcopy
+from .acción import Acción
+from .evento import Evento
+from juego.partida import PartidaDeOcéanos
 from jugador.randy import RandyBot
-
-class Evento:
-	def __init__(self, jugador, acción, parámetros):
-		self._jugador = jugador
-		self._acción = acción
-		self._parámetros = parámetros
-	
-	@property
-	def jugador(self):
-		return int(self._jugador)
-	
-	@property
-	def acción(self):
-		return deepcopy(self._acción)
-	
-	@property
-	def parámetros(self):
-		return deepcopy(self._parámetros)
-	
-	def __str__(self):
-		return f"({self._jugador}, {self._acción}, {self._parámetros})"
-	
-	def __repr__(self):
-		return f"({self._jugador}, {self._acción}, {self._parámetros})"
 
 class AdministradorDeJuego():
 	def __init__(self, jugadoresDePartida, verbose=False):

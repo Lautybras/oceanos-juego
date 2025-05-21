@@ -1,8 +1,8 @@
 from random import choice
 from collections import Counter as Multiset
-from administrador.enums import Acción
+from administrador.acción import Acción
 from juego.carta import Carta
-from juego.juego import PartidaDeOcéanos
+from juego.partida import PartidaDeOcéanos
 from .base import JugadorBase
 
 class RandyBot(JugadorBase):

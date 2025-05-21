@@ -1,5 +1,5 @@
 import pytest
-from juego.juego import PartidaDeOcéanos, JuegoException
+from juego.partida import PartidaDeOcéanos, JuegoException
 
 def test_SiSeInicióRondaYSeRobóDelDescarte_AlPasarDeTurno_EsTurnoDelJugadorUno():
 	juego = PartidaDeOcéanos(cantidadDeJugadores=2)

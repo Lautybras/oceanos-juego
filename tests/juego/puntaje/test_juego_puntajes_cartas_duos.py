@@ -1,6 +1,6 @@
 import pytest
 from juego.carta import Carta
-from juego.juego import PartidaDeOcéanos
+from juego.partida import PartidaDeOcéanos
 
 def test_SiSeTieneUnPezEnLaMano_ElPuntajeEsCero():
 	juego = PartidaDeOcéanos(cantidadDeJugadores=2)

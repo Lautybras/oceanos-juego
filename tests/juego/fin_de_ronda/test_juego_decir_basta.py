@@ -1,7 +1,7 @@
 import pytest
 from collections import Counter as Multiset
 from juego.carta import Carta
-from juego.juego import PartidaDeOcéanos, JuegoException
+from juego.partida import PartidaDeOcéanos, JuegoException
 
 def test_SiNoSeRobó_NoSePuedeDecirBasta():
 	juego = PartidaDeOcéanos(cantidadDeJugadores=2)

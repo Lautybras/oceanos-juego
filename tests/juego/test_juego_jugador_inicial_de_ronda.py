@@ -1,7 +1,7 @@
 import pytest
 from collections import Counter as Multiset
 from juego.carta import Carta
-from juego.juego import PartidaDeOcéanos, cartasDelJuego, JuegoException
+from juego.partida import PartidaDeOcéanos, cartasDelJuego, JuegoException
 
 def test_SiSeDijoBastaYNoSeAlcanzóElPuntajeRequerido_AlIniciarRonda_ElJugadorInicialEsElSiguienteAlQueDijoBasta():
 	juego = PartidaDeOcéanos(cantidadDeJugadores=2)

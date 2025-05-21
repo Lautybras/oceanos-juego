@@ -1,7 +1,7 @@
 import pytest
 from collections import Counter as Multiset
 from juego.carta import Carta
-from juego.juego import PartidaDeOcéanos, JuegoException, SIRENAS_INF
+from juego.partida import PartidaDeOcéanos, JuegoException, SIRENAS_INF
 
 def test_SiAlRobarDelDescarteSeConsiguenCuatroSirenas_ElJugadorConLasSirenasGanaLaPartida():
 	juego = PartidaDeOcéanos(cantidadDeJugadores=2)

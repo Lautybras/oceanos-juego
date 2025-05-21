@@ -1,5 +1,5 @@
 import pytest
-from juego.juego import PartidaDeOcéanos, JuegoInvalidoException
+from juego.partida import PartidaDeOcéanos, JuegoInvalidoException
 
 def test_AlCrearJuegoParaDosJugadores_JuegoNoHaTerminado():
 	juego = PartidaDeOcéanos(cantidadDeJugadores=2)

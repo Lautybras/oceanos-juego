@@ -1,5 +1,5 @@
 import pytest
-from juego.juego import PartidaDeOcéanos, JuegoException
+from juego.partida import PartidaDeOcéanos, JuegoException
 
 def test_SiSeInicióRonda_AlRobarDelDescarte_LaPilaDeDescarteRobadaEstáVacía():
 	juego = PartidaDeOcéanos(cantidadDeJugadores=2)
