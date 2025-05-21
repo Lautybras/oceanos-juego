@@ -2,6 +2,9 @@ import React, { useRef, useEffect, useState } from "react";
 import styles from "./ZonaJugador.module.css";
 import Carta from './Carta';
 
+
+
+
 function ZonaJugador({ posicion, jugador, children, turno}) {
   const zonaRef = useRef(null);
   const [zonaSize, setZonaSize] = useState({ width: 600, height: 300 }); // valores por defecto
@@ -13,6 +16,14 @@ function ZonaJugador({ posicion, jugador, children, turno}) {
       setZonaSize({ width, height });
     }
   }, []);
+  
+    const rotacion = {
+  arriba: 'rotate-0',
+  abajo: 'rotate-180',
+  izquierda: 'rotate-90',
+  derecha: '-rotate-90',
+  }[posicion];
+
   if (turno == jugador){
     return esMiTurno(zonaRef,posicion,children,zonaSize)
   }else{

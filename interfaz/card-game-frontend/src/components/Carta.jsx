@@ -126,7 +126,7 @@ function Carta({ tipo, color, width, height, modo = "fija", contenedorRef }) {
 
   const scaleX = width / anchoCarta;
   const scaleY = height / altoCarta;
-  const scale = Math.min(scaleX, scaleY, 1) * 0.3;
+  const scale = Math.min(scaleX, scaleY, 1) * 0.4;
 
   const [pos, setPos] = useState({ x: 0, y: 0 });
   const draggingRef = useRef(false);
