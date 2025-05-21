@@ -149,6 +149,12 @@ class PartidaDeOcéanos():
 	def útlimaChanceEnCurso(self):
 		return self._últimaChancePorJugador != None
 	
+	def últimaChanceGanada(self):
+		return bool(self._últimaChanceGanada) if self._últimaChanceGanada != None else None
+	
+	def rondaAnulada(self):
+		return bool(self._rondaAnulada)
+	
 	@property
 	def cantidadDeJugadores(self):
 		return int(self._cantidadDeJugadores)
@@ -184,10 +190,12 @@ class PartidaDeOcéanos():
 		self._puntajes = [0] * cantidadDeJugadores
 		self._jugadorGanador = None
 		self._últimaChancePorJugador = None
+		self._últimaChanceGanada = None
 		self._descarte = None
 		self._estadosDeJugadores = None
 		self._mazo = None
 		self._estadoActual = self.Estado.PARTIDA_NO_INICIADA
+		self._rondaAnulada = None
 	
 	def iniciarRonda(self):
 		if self.rondaEnCurso():
@@ -199,6 +207,8 @@ class PartidaDeOcéanos():
 		self._descarte = ([self._mazo.pop(0)], [self._mazo.pop(0)])
 		self._estadoActual = self.Estado.FASE_ROBO
 		self._últimaChancePorJugador = None
+		self._últimaChanceGanada = None
+		self._rondaAnulada = False
 	
 	# ============================== FASE DE ROBO ==============================
 	def robarDelDescarte(self, indicePilaDeDescarte):
@@ -267,6 +277,7 @@ class PartidaDeOcéanos():
 			# ronda anulada por mazo vacío
 			
 			self._estadoActual = self.Estado.RONDA_TERMINADA
+			self._rondaAnulada = True
 			
 			self._deQuiénEsTurno = (self._deQuiénEsTurno + 1) % self._cantidadDeJugadores
 			return
@@ -330,11 +341,13 @@ class PartidaDeOcéanos():
 			#calcular fin de ronda por apuesta de última chance
 			if self._estadosDeJugadores[self._últimaChancePorJugador].puntajeDeRonda() == max([self._estadosDeJugadores[j].puntajeDeRonda() for j in range(self._cantidadDeJugadores)]):
 				# apuesta ganada
+				self._últimaChanceGanada = True
 				for jugador in range(self._cantidadDeJugadores):
 					self._puntajes[jugador] += self._estadosDeJugadores[jugador]._bonificacionPorColor()
 				self._puntajes[self._últimaChancePorJugador] += self._estadosDeJugadores[self._últimaChancePorJugador].puntajeDeRonda()
 			else: 
 				# apuesta perdida
+				self._últimaChanceGanada = False
 				for jugador in range(self._cantidadDeJugadores):
 					if jugador != self._últimaChancePorJugador:
 						self._puntajes[jugador] += self._estadosDeJugadores[jugador].puntajeDeRonda()
