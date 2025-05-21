@@ -5,16 +5,17 @@ from juego.partida import PartidaDeOcéanos
 from jugador.randy import RandyBot
 
 class AdministradorDeJuego():
-	def __init__(self, jugadoresDePartida, verbose=False):
-		self._jugadores = jugadoresDePartida
+	def __init__(self, clasesDeJugadores, verbose=False):
+		self._clasesDeJugadores = clasesDeJugadores
+		self._jugadores = [None] * len(clasesDeJugadores)
 		self._juego = None
 		self._verbose = verbose
 		self._eventos = []
 	
 	def jugarPartida(self):
 		self._juego = PartidaDeOcéanos(cantidadDeJugadores=len(self._jugadores))
-		
-		for j in range(len(self._jugadores)):
+		for j in range(len(self._clasesDeJugadores)):
+			self._jugadores[j] = (self._clasesDeJugadores[j])()
 			self._jugadores[j].configurarParaJuego(self._juego, j, self._eventos)
 		
 		while not self._juego.haTerminado():
@@ -209,6 +210,6 @@ class AdministradorDeJuego():
 		self._eventos = []
 	
 if __name__ == '__main__':
-	administrador = AdministradorDeJuego([RandyBot(), RandyBot()], verbose=True)
+	administrador = AdministradorDeJuego([RandyBot, RandyBot], verbose=True)
 	ganador = administrador.jugarPartida()
 	print(f"Ganador: {ganador}")
