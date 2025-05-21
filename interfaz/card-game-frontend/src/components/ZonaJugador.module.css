@@ -1,0 +1,16 @@
+.zona {
+  border: 2px solid rgb(12, 40, 253);
+  background-color: #f0f8ff;
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.arriba {
+  background-color: #cce5ff;
+}
+
+.abajo {
+  background-color: #cce5ff;
+}
