@@ -331,6 +331,7 @@ class PartidaDeOcéanos():
 			# ronda anulada por mazo vacío
 			
 			self._estadoActual = self.Estado.RONDA_TERMINADA
+			self._rondaAnulada = True
 			
 			self._deQuiénEsTurno = (self._deQuiénEsTurno + 1) % self._cantidadDeJugadores
 			return
@@ -383,6 +384,7 @@ class PartidaDeOcéanos():
 			# ronda anulada por mazo vacío
 			
 			self._estadoActual = self.Estado.RONDA_TERMINADA
+			self._rondaAnulada = True
 			
 			self._deQuiénEsTurno = (self._deQuiénEsTurno + 1) % self._cantidadDeJugadores
 			return
@@ -470,6 +472,7 @@ class PartidaDeOcéanos():
 		if not len(self._mazo) > 1:
 			if not (0 <= indiceDeCartaARobar and indiceDeCartaARobar < len(self._mazo)):
 				raise JuegoException("No se puede elegir una carta para robar fuera del rango")
+			return
 		if not (0 <= indiceDePilaDondeDescartar and indiceDePilaDondeDescartar <= 1):
 			raise JuegoException("Pila de descarte no existente")
 		elif len(self._descarte[indiceDePilaDondeDescartar]) > 0 and len(self._descarte[1 - indiceDePilaDondeDescartar]) == 0:
