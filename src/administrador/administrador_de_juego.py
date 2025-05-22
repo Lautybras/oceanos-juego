@@ -94,8 +94,8 @@ class AdministradorDeJuego():
 			
 			self._eventos.append(Evento(self._juego.deQuiénEsTurno, Acción.Robo.DEL_MAZO,
 				{
-					"cartaDescartada": copy(self._juego.topeDelDescarte[indiceDePilaDondeDescartar]),
-					"pilaDondeDescartó": indiceDePilaDondeDescartar
+					"cartaDescartada": copy(self._juego.topeDelDescarte[indiceDePilaDondeDescartar]) if len(opcionesDeRobo) > 1 else None,
+					"pilaDondeDescartó": indiceDePilaDondeDescartar if len(opcionesDeRobo) > 1 else None
 				}
 			))
 			if self._verbose:
