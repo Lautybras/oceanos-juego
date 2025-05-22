@@ -13,27 +13,32 @@ class AdministradorDeJuego():
 		self._verbose = verbose
 		self._eventos = []
 		
-		self._cantidadDeCartasPorTipoPorJugador = {tipo: [0] * len(self._jugadores) for tipo in Carta.Tipo}
+		self._rondasTerminadas = 0
+		self._rondasTerminadasSinFinPorSirenas = 0
 		
-		self._dúosJugadosPorTipoPorJugador = {
-			Carta.Tipo.PEZ: [0] * len(self._jugadores),
-			Carta.Tipo.BARCO: [0] * len(self._jugadores),
-			Carta.Tipo.CANGREJO: [0] * len(self._jugadores),
-			Carta.Tipo.NADADOR: [0] * len(self._jugadores)
-		}
+		self._cantidadDeCartasPorJugadorPorTipo = [{tipo: 0 for tipo in Carta.Tipo} for _ in range(len(self._jugadores))]
+		self._partidasGanadasPorJugador = [0 for _ in range(len(self._jugadores))]
+		self._puntosPorJugadorPorRonda = [ [] for _ in range(len(self._jugadores)) ]
 		
-		self._dúosEnManoPorTipoPorJugador = {
-			Carta.Tipo.PEZ: [0] * len(self._jugadores),
-			Carta.Tipo.BARCO: [0] * len(self._jugadores),
-			Carta.Tipo.CANGREJO: [0] * len(self._jugadores),
-			Carta.Tipo.NADADOR: [0] * len(self._jugadores)
-		}
+		self._dúosJugadosPorJugadorPorTipo = [{
+			Carta.Tipo.PEZ: 0,
+			Carta.Tipo.BARCO: 0,
+			Carta.Tipo.CANGREJO: 0,
+			Carta.Tipo.NADADOR: 0
+		} for _ in range(len(self._jugadores))]
+		
+		self._dúosEnManoPorJugadorPorTipo = [{
+			Carta.Tipo.PEZ: 0,
+			Carta.Tipo.BARCO: 0,
+			Carta.Tipo.CANGREJO: 0,
+			Carta.Tipo.NADADOR: 0
+		} for _ in range(len(self._jugadores))]
 		
 		self._motivosFinDeRonda = {
 			"0_CARTAS": 0,
 			"BASTA": 0,
-			"ÚLTIMA_CHANCE": 0,
 			"4_SIRENAS": 0,
+			"ÚLTIMA_CHANCE": 0
 		}
 		
 		self._motivosFinDeRondaPorJugador = [{
@@ -71,6 +76,7 @@ class AdministradorDeJuego():
 			
 			self._finDeRonda()
 		
+		self._partidasGanadasPorJugador[self._juego.jugadorGanador] += 1
 		if self._verbose:
 			print("!!!!!!!!!!!!!!!!!!! Partida Terminada !!!!!!!!!!!!!!!!!!!")
 			print(f"Ganador: {self._juego.jugadorGanador}")
@@ -217,6 +223,7 @@ class AdministradorDeJuego():
 				raise Exception("Error")
 	
 	def _finDeRonda(self):
+		self._rondasTerminadas += 1
 		if max(self._juego.puntajes) == SIRENAS_INF:
 			self._motivosFinDeRonda["4_SIRENAS"] += 1
 			self._motivosFinDeRondaPorJugador[self._juego.jugadorGanador]["4_SIRENAS"] += 1
@@ -230,18 +237,33 @@ class AdministradorDeJuego():
 						print(f"Jugador {j}: +0 ({self._juego.puntajes[j]}/{self._juego.puntajeParaGanar})")
 				print("######################################################")
 		elif self._juego.rondaAnulada():
+			self._rondasTerminadasSinFinPorSirenas += 1
 			self._motivosFinDeRonda["0_CARTAS"] += 1
+			for j in range(len(self._jugadores)):
+				self._puntosPorJugadorPorRonda[j].append(0)
 			if self._verbose:
 				print("********* Ronda anulada por cero cartas en mazo *********")
 				for j in range(self._juego.cantidadDeJugadores):
 					print(f"Jugador {j}: +0 ({self._juego.puntajes[j]}/{self._juego.puntajeParaGanar})")
 				print("*********************************************************")
 		elif self._juego.útlimaChanceEnCurso():
+			self._rondasTerminadasSinFinPorSirenas += 1
 			self._motivosFinDeRonda["ÚLTIMA_CHANCE"] += 1
 			if self._juego.últimaChanceGanada():
 				self._motivosFinDeRondaPorJugador[self._juego.jugadorQueDijoÚltimaChance]["ÚLTIMA_CHANCE_GANADA"] += 1
 			else:
 				self._motivosFinDeRondaPorJugador[self._juego.jugadorQueDijoÚltimaChance]["ÚLTIMA_CHANCE_PERDIDA"] += 1
+			for j in range(len(self._jugadores)):
+				if self._juego.últimaChanceGanada():
+					if j == self._juego.jugadorQueDijoÚltimaChance:
+						self._puntosPorJugadorPorRonda[j].append(self._juego._estadosDeJugadores[j].puntajeDeRonda() + self._juego._estadosDeJugadores[j]._bonificacionPorColor())
+					else:
+						self._puntosPorJugadorPorRonda[j].append(self._juego._estadosDeJugadores[j]._bonificacionPorColor())
+				else:
+					if j == self._juego.jugadorQueDijoÚltimaChance:
+						self._puntosPorJugadorPorRonda[j].append(self._juego._estadosDeJugadores[j]._bonificacionPorColor())
+					else:
+						self._puntosPorJugadorPorRonda[j].append(self._juego._estadosDeJugadores[j].puntajeDeRonda())
 			if self._verbose:
 				print("*********** Ronda terminada por última chance ***********")
 				if self._juego.últimaChanceGanada():
@@ -260,8 +282,11 @@ class AdministradorDeJuego():
 							print(f"Jugador {j}: +{self._juego._estadosDeJugadores[j].puntajeDeRonda()} ({self._juego.puntajes[j]}/{self._juego.puntajeParaGanar})")
 				print("*********************************************************")
 		else:
+			self._rondasTerminadasSinFinPorSirenas += 1
 			self._motivosFinDeRonda["BASTA"] += 1
 			self._motivosFinDeRondaPorJugador[(self._juego.deQuiénEsTurno - 1) % self._juego.cantidadDeJugadores]["BASTA"] += 1
+			for j in range(len(self._jugadores)):
+				self._puntosPorJugadorPorRonda[j].append(self._juego._estadosDeJugadores[j].puntajeDeRonda())
 			if self._verbose:
 				print("*************** Ronda terminada por basta ***************")
 				for j in range(self._juego.cantidadDeJugadores):
@@ -303,17 +328,17 @@ class AdministradorDeJuego():
 			
 			# Calcular dúos en juego del jugador en esta ronda
 			for tipoDúo in [Carta.Tipo.PEZ, Carta.Tipo.BARCO, Carta.Tipo.CANGREJO, Carta.Tipo.NADADOR]:
-				self._dúosJugadosPorTipoPorJugador[tipoDúo][j] += cantidadDeDúosEnJuegoDeTipo[tipoDúo]
+				self._dúosJugadosPorJugadorPorTipo[j][tipoDúo] += cantidadDeDúosEnJuegoDeTipo[tipoDúo]
 			
 			# Calcular dúos en mano del jugador en esta ronda
-			self._dúosEnManoPorTipoPorJugador[Carta.Tipo.PEZ][j] += cantidadDeCartasEnManoDeTipo[Carta.Tipo.PEZ] // 2
-			self._dúosEnManoPorTipoPorJugador[Carta.Tipo.BARCO][j] += cantidadDeCartasEnManoDeTipo[Carta.Tipo.BARCO] // 2
-			self._dúosEnManoPorTipoPorJugador[Carta.Tipo.CANGREJO][j] += cantidadDeCartasEnManoDeTipo[Carta.Tipo.CANGREJO] // 2
-			self._dúosEnManoPorTipoPorJugador[Carta.Tipo.NADADOR][j] += min(cantidadDeCartasEnManoDeTipo[Carta.Tipo.NADADOR], cantidadDeCartasEnManoDeTipo[Carta.Tipo.TIBURÓN])
+			self._dúosEnManoPorJugadorPorTipo[j][Carta.Tipo.PEZ] += cantidadDeCartasEnManoDeTipo[Carta.Tipo.PEZ] // 2
+			self._dúosEnManoPorJugadorPorTipo[j][Carta.Tipo.BARCO] += cantidadDeCartasEnManoDeTipo[Carta.Tipo.BARCO] // 2
+			self._dúosEnManoPorJugadorPorTipo[j][Carta.Tipo.CANGREJO] += cantidadDeCartasEnManoDeTipo[Carta.Tipo.CANGREJO] // 2
+			self._dúosEnManoPorJugadorPorTipo[j][Carta.Tipo.NADADOR] += min(cantidadDeCartasEnManoDeTipo[Carta.Tipo.NADADOR], cantidadDeCartasEnManoDeTipo[Carta.Tipo.TIBURÓN])
 			
 			# Calcular cartas poseídas de cada tipo en esta ronda
 			for tipo in Carta.Tipo:
-				self._cantidadDeCartasPorTipoPorJugador[tipo][j] += cantidadDeCartasEnManoDeTipo[tipo] + cantidadDeCartasEnZonaDeDúosDeTipo[tipo]
+				self._cantidadDeCartasPorJugadorPorTipo[j][tipo] += cantidadDeCartasEnManoDeTipo[tipo] + cantidadDeCartasEnZonaDeDúosDeTipo[tipo]
 	
 if __name__ == '__main__':
 	administrador = AdministradorDeJuego([RandyBot, RandyBot], verbose=True)

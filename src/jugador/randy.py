@@ -56,7 +56,7 @@ class RandyBot(JugadorBase):
 			accionesPosibles.append(Acción.Dúos.JUGAR_CANGREJOS)
 		
 		posibleDúoDeNadadorYTiburón = self._buscarDúoParaJugar(Carta.Tipo.NADADOR)
-		if posibleDúoDeNadadorYTiburón != None:
+		if posibleDúoDeNadadorYTiburón != None and not self._juego.útlimaChanceEnCurso():
 			accionesPosibles.append(Acción.Dúos.JUGAR_NADADOR_Y_TIBURÓN)
 		
 		acciónElegida = choice(accionesPosibles)

@@ -83,3 +83,20 @@ class Carta():
 	
 	def __hash__(self):
 		return hash((self.tipo, self.color))
+
+apodosCartas = {
+	Carta.Tipo.CANGREJO: "Cjo",
+	Carta.Tipo.BARCO: "Bco",
+	Carta.Tipo.PEZ: "Pez",
+	Carta.Tipo.NADADOR: "Ndr",
+	Carta.Tipo.TIBURÓN: "Tbn",
+	Carta.Tipo.CONCHA: "Con",
+	Carta.Tipo.PULPO: "Plp",
+	Carta.Tipo.PINGUINO: "Pgo",
+	Carta.Tipo.ANCLA: "Anc",
+	Carta.Tipo.COLONIA: "Col",
+	Carta.Tipo.FARO: "Far",
+	Carta.Tipo.CARDUMEN: "Cdm",
+	Carta.Tipo.CAPITÁN: "Cpt",
+	Carta.Tipo.SIRENA: "Sna"
+}
