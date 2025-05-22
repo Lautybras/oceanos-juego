@@ -2,6 +2,8 @@ import matplotlib.pyplot as plt
 import numpy as np
 from juego.carta import Carta, apodosCartas
 from jugador.randy import RandyBot
+from jugador.sirenateam.sirena_enjoyer import SirenaEnjoyer
+from jugador.sirenateam.sirena_hater import SirenaHater
 from administrador.administrador_de_juego import AdministradorDeJuego
 
 #* vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
@@ -10,14 +12,18 @@ from administrador.administrador_de_juego import AdministradorDeJuego
 #* vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
 #* vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
 jugadoresDelMatchup = [
+	SirenaHater,
 	RandyBot,
-	RandyBot
+	RandyBot,
+	SirenaEnjoyer
 ]
 nombres = [
-	"MiRandyBot",
-	"TuRandyBot"
+	"Sirena Hater",
+	"Randy Bot I",
+	"Randy Bot II",
+	"Sirena Enjoyer"
 ]
-cantidadDePartidasAJugar = 1000
+cantidadDePartidasAJugar = 10000
 #* ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 #* ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 #* ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
