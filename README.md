@@ -1,5 +1,19 @@
 # oceanos-juego
 
+![](assets/cover.png)
+
+## Tutorial: ¿cómo hago mi bot?
+
+1. Copiar el archivo `src/jugador/base.py` en el mismo directorio con otro nombre, como `BotFachero.py`.
+2. Modificar el nombre de la clase `JugadorBase` por otro, como `BotFachero`.
+3. Hacer que `BotFachero` herede de la clase `JugadorBase` (la sintaxis es `class BotFachero(JugadorBase)`).
+4. Implementar los métodos de la interfaz de `BotFacero` que dicen "implementame".
+5. ¡Bot implementado! Probarlo usando el archivo `matchup/matchup.py`, cambiando los parámetros que aparecen al principio del archivo para que se use el `BotFachero`.
+
+Para entender qué deberían hacer los métodos a implementar y cómo, revisar la documentación (archivos README.md en las subcarpetas de `src/`)
+
+¡Que las Cuatro Sirenas guíen tu camino!
+
 ## Componentes
 
 ### Partida
