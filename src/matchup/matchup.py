@@ -23,7 +23,7 @@ nombres = [
 	"Randy Bot II",
 	"Sirena Enjoyer"
 ]
-cantidadDePartidasAJugar = 10000
+cantidadDePartidasAJugar = 1000
 #* ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 #* ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 #* ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -32,7 +32,7 @@ cantidadDePartidasAJugar = 10000
 
 # =================================================== ¡¡¡¡¡MATCHUP!!!!! ===================================================
 cantidadJugadores = len(jugadoresDelMatchup)
-administrador = AdministradorDeJuego(jugadoresDelMatchup, verbose=False)
+administrador = AdministradorDeJuego(jugadoresDelMatchup, verbosidad=AdministradorDeJuego.Verbosidad.NADA)
 
 
 for decimo in range(1, 11):

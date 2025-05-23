@@ -44,7 +44,7 @@ La clase `AdministradorDeJuego` actúa como puente entre instancias de `PartidaD
 Para más información sobre cómo el administrador traduce entre `PartidaDeOcéanos` y Bots, ver [el README de administrador/](src\administrador\README.md).
 
 ```python
->>> administrador = AdministradorDeJuego([RandyBot, BotFachero], verbose=False)
+>>> administrador = AdministradorDeJuego([RandyBot, BotFachero])
 >>> ganador = administrador.jugarPartida()
 0
 >>> ganador = administrador.jugarPartida()

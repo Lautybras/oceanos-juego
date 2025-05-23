@@ -1,4 +1,5 @@
 from copy import copy, deepcopy
+from enum import Enum, auto
 from .acción import Acción
 from .evento import Evento
 from juego.carta import Carta
@@ -6,11 +7,19 @@ from juego.partida import PartidaDeOcéanos, SIRENAS_INF
 from jugador.randy import RandyBot
 
 class AdministradorDeJuego():
-	def __init__(self, clasesDeJugadores, verbose=False):
+	class Verbosidad(Enum):
+		NADA = auto()
+		JUGADOR = auto()
+		OMNISCIENTE = auto()
+	
+	def __init__(self, clasesDeJugadores, verbosidad=Verbosidad.NADA):
+		if not verbosidad in AdministradorDeJuego.Verbosidad:
+			raise Exception("Usar el enum AdministradorDeJuego.Verbosidad")
+		
 		self._clasesDeJugadores = clasesDeJugadores
 		self._jugadores = [None] * len(clasesDeJugadores)
 		self._juego = None
-		self._verbose = verbose
+		self._verbosidad = verbosidad
 		self._eventos = []
 		
 		self._rondasTerminadas = 0
@@ -58,17 +67,21 @@ class AdministradorDeJuego():
 			self._eventos.clear()
 			
 			self._juego.iniciarRonda()
-			if self._verbose:
+			if self._verbosidad != AdministradorDeJuego.Verbosidad.NADA:
 				print("~~~~~~~~~~~~~~~~~~~~~ Inicia Ronda ~~~~~~~~~~~~~~~~~~~~~~")
 				print(f"Jugador inicial: {self._juego.deQuiénEsTurno}")
 				print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
 
 			while self._juego.rondaEnCurso():
-				if self._verbose:
+				if self._verbosidad != AdministradorDeJuego.Verbosidad.NADA:
 					print(f"~~~~~~~~~~~~~~~~~~~ Turno del jugador {self._juego.deQuiénEsTurno} ~~~~~~~~~~~~~~~~~~~~")
 					print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
-					print(f"El descarte 0 es {(self._juego._descarte[0])}")
-					print(f"El descarte 1 es {(self._juego._descarte[1])}")
+					if self._verbosidad == AdministradorDeJuego.Verbosidad.OMNISCIENTE:
+						print(f"El descarte 0 es {(self._juego._descarte[0])}")
+						print(f"El descarte 1 es {(self._juego._descarte[1])}")
+					elif self._verbosidad == AdministradorDeJuego.Verbosidad.JUGADOR:
+						print(f"El tope del descarte 0 es {(self._juego.topeDelDescarte[0])}")
+						print(f"El tope del descarte 1 es {(self._juego.topeDelDescarte[1])}")
 				
 				self._faseDeRobo()
 				self._faseDeDúos()
@@ -77,7 +90,7 @@ class AdministradorDeJuego():
 			self._finDeRonda()
 		
 		self._partidasGanadasPorJugador[self._juego.jugadorGanador] += 1
-		if self._verbose:
+		if self._verbosidad != AdministradorDeJuego.Verbosidad.NADA:
 			print("!!!!!!!!!!!!!!!!!!! Partida Terminada !!!!!!!!!!!!!!!!!!!")
 			print(f"Ganador: {self._juego.jugadorGanador}")
 			print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
@@ -98,8 +111,16 @@ class AdministradorDeJuego():
 					"pilaDondeDescartó": indiceDePilaDondeDescartar if len(opcionesDeRobo) > 1 else None
 				}
 			))
-			if self._verbose:
-				print(f"Roba del mazo una {cartaRobada}")
+			if self._verbosidad == AdministradorDeJuego.Verbosidad.OMNISCIENTE:
+				if len(opcionesDeRobo) > 1:
+					print(f"Roba del mazo una {cartaRobada}, descarta una {self._juego.topeDelDescarte[indiceDePilaDondeDescartar]} en la pila {indiceDePilaDondeDescartar}")
+				else:
+					print(f"Roba del mazo una {cartaRobada}, la última carta del mazo")
+			elif self._verbosidad == AdministradorDeJuego.Verbosidad.JUGADOR:
+				if len(opcionesDeRobo) > 1:
+					print(f"Roba del mazo, descarta una {self._juego.topeDelDescarte[indiceDePilaDondeDescartar]} en la pila {indiceDePilaDondeDescartar}")
+				else:
+					print(f"Roba la última carta del mazo")
 			
 		elif acciónDeRobo == Acción.Robo.DEL_DESCARTE_0:
 			cartaRobada = self._juego.robarDelDescarte(0)
@@ -109,7 +130,7 @@ class AdministradorDeJuego():
 					"cartaRobada": copy(cartaRobada)
 				}
 			))
-			if self._verbose:
+			if self._verbosidad != AdministradorDeJuego.Verbosidad.NADA:
 				print(f"Roba del descarte 0 una {cartaRobada}")
 		elif acciónDeRobo == Acción.Robo.DEL_DESCARTE_1:
 			cartaRobada = self._juego.robarDelDescarte(1)
@@ -119,7 +140,7 @@ class AdministradorDeJuego():
 					"cartaRobada": copy(cartaRobada)
 				}
 			))
-			if self._verbose:
+			if self._verbosidad != AdministradorDeJuego.Verbosidad.NADA:
 				print(f"Roba del descarte 1 una {cartaRobada}")
 		else:
 			#! ERROR
@@ -139,8 +160,10 @@ class AdministradorDeJuego():
 				))
 				
 				cartaRobada = self._juego.jugarDúoDePeces(cartasAJugar)
-				if self._verbose:
-					print(f"Juega un dúo de {list(cartasAJugar.elements())[0]} y {list(cartasAJugar.elements())[1]} y roba una {cartaRobada}")
+				if self._verbosidad == AdministradorDeJuego.Verbosidad.OMNISCIENTE:
+					print(f"Juega un dúo de {list(cartasAJugar.elements())[0]} y {list(cartasAJugar.elements())[1]} y roba una {cartaRobada} del mazo")
+				elif self._verbosidad == AdministradorDeJuego.Verbosidad.JUGADOR:
+					print(f"Juega un dúo de {list(cartasAJugar.elements())[0]} y {list(cartasAJugar.elements())[1]} y roba una carta del mazo")
 				
 			elif acciónDeDúos == Acción.Dúos.JUGAR_BARCOS:
 				# Jugar dúo de barcos
@@ -150,8 +173,8 @@ class AdministradorDeJuego():
 					}
 				))
 				
-				if self._verbose:
-					print(f"Juega un dúo de {list(cartasAJugar.elements())[0]} y {list(cartasAJugar.elements())[1]}")
+				if self._verbosidad != AdministradorDeJuego.Verbosidad.NADA:
+					print(f"Juega un dúo de {list(cartasAJugar.elements())[0]} y {list(cartasAJugar.elements())[1]}; consigue otro turno")
 				self._juego.jugarDúoDeBarcos(cartasAJugar)
 				if self._juego.rondaEnCurso():
 					self._faseDeRobo()
@@ -170,8 +193,10 @@ class AdministradorDeJuego():
 				))
 				
 				cartaRobada = self._juego.jugarDúoDeCangrejos(cartasAJugar, pilaDeDescarteARobar, indiceDeCartaARobar)
-				if self._verbose:
-					print(f"Juega un dúo de {list(cartasAJugar.elements())[0]} y {list(cartasAJugar.elements())[1]} para robar una {cartaRobada}")
+				if self._verbosidad == AdministradorDeJuego.Verbosidad.OMNISCIENTE:
+					print(f"Juega un dúo de {list(cartasAJugar.elements())[0]} y {list(cartasAJugar.elements())[1]} para robar una {cartaRobada} de la pila {pilaDeDescarteARobar}")
+				elif self._verbosidad == AdministradorDeJuego.Verbosidad.JUGADOR:
+					print(f"Juega un dúo de {list(cartasAJugar.elements())[0]} y {list(cartasAJugar.elements())[1]} para robar una carta de la pila {pilaDeDescarteARobar}")
 				
 			elif acciónDeDúos == Acción.Dúos.JUGAR_NADADOR_Y_TIBURÓN:
 				# Jugar dúo de nadador y tiburón
@@ -185,14 +210,14 @@ class AdministradorDeJuego():
 						"cartaRobada": cartaRobada # ! SOLO VER SI FUISTE EL JUGADOR ROBADO!!!
 					}
 				))
-				if self._verbose:
+				if self._verbosidad == AdministradorDeJuego.Verbosidad.OMNISCIENTE:
 					print(f"Juega un dúo de {list(cartasAJugar.elements())[0]} y {list(cartasAJugar.elements())[1]} para robarle al jugador {jugadorARobar}, y roba una {cartaRobada}")
+				elif self._verbosidad == AdministradorDeJuego.Verbosidad.JUGADOR:
+					print(f"Juega un dúo de {list(cartasAJugar.elements())[0]} y {list(cartasAJugar.elements())[1]} para robarle al jugador {jugadorARobar}")
 				
 			elif acciónDeDúos == Acción.Dúos.NO_JUGAR:
 				# No jugar dúos
 				noSeQuierenJugarMásDúos = True
-				if self._verbose:
-					print("No juega ningún dúo")
 				
 			else:
 				#! ERROR
@@ -206,17 +231,17 @@ class AdministradorDeJuego():
 			if acciónDeFinDeRonda == Acción.FinDeRonda.PASAR_TURNO:
 				# Pasar el turno normalmente				
 				self._juego.pasarTurno()
-				if self._verbose:
+				if self._verbosidad != AdministradorDeJuego.Verbosidad.NADA:
 					print("Pasa de turno")
 			elif acciónDeFinDeRonda == Acción.FinDeRonda.DECIR_BASTA:
 				# Decir basta y terminar la ronda
 				self._juego.decirBasta()
-				if self._verbose:
+				if self._verbosidad != AdministradorDeJuego.Verbosidad.NADA:
 					print("¡¡¡Basta!!!")
 			elif acciónDeFinDeRonda == Acción.FinDeRonda.DECIR_ÚLTIMA_CHANCE:
 				# Decir última chance y pasar el turno
 				self._juego.decirÚltimaChance()
-				if self._verbose:
+				if self._verbosidad != AdministradorDeJuego.Verbosidad.NADA:
 					print("¡¡¡Última Chance!!!")
 			else:
 				#! ERROR
@@ -227,7 +252,7 @@ class AdministradorDeJuego():
 		if max(self._juego.puntajes) == SIRENAS_INF:
 			self._motivosFinDeRonda["4_SIRENAS"] += 1
 			self._motivosFinDeRondaPorJugador[self._juego.jugadorGanador]["4_SIRENAS"] += 1
-			if self._verbose:
+			if self._verbosidad != AdministradorDeJuego.Verbosidad.NADA:
 				print("################### CUATRO SIRENAS ###################")
 				print(f"Ganador: {self._juego.jugadorGanador}")
 				for j in range(self._juego.cantidadDeJugadores):
@@ -241,7 +266,7 @@ class AdministradorDeJuego():
 			self._motivosFinDeRonda["0_CARTAS"] += 1
 			for j in range(len(self._jugadores)):
 				self._puntosPorJugadorPorRonda[j].append(0)
-			if self._verbose:
+			if self._verbosidad != AdministradorDeJuego.Verbosidad.NADA:
 				print("********* Ronda anulada por cero cartas en mazo *********")
 				for j in range(self._juego.cantidadDeJugadores):
 					print(f"Jugador {j}: +0 ({self._juego.puntajes[j]}/{self._juego.puntajeParaGanar})")
@@ -264,7 +289,7 @@ class AdministradorDeJuego():
 						self._puntosPorJugadorPorRonda[j].append(self._juego._estadosDeJugadores[j]._bonificacionPorColor())
 					else:
 						self._puntosPorJugadorPorRonda[j].append(self._juego._estadosDeJugadores[j].puntajeDeRonda())
-			if self._verbose:
+			if self._verbosidad != AdministradorDeJuego.Verbosidad.NADA:
 				print("*********** Ronda terminada por última chance ***********")
 				if self._juego.últimaChanceGanada():
 					print("¡Apuesta ganada!")
@@ -287,7 +312,7 @@ class AdministradorDeJuego():
 			self._motivosFinDeRondaPorJugador[(self._juego.deQuiénEsTurno - 1) % self._juego.cantidadDeJugadores]["BASTA"] += 1
 			for j in range(len(self._jugadores)):
 				self._puntosPorJugadorPorRonda[j].append(self._juego._estadosDeJugadores[j].puntajeDeRonda())
-			if self._verbose:
+			if self._verbosidad != AdministradorDeJuego.Verbosidad.NADA:
 				print("*************** Ronda terminada por basta ***************")
 				for j in range(self._juego.cantidadDeJugadores):
 					print(f"Jugador {j}: +{self._juego._estadosDeJugadores[j].puntajeDeRonda()} ({self._juego.puntajes[j]}/{self._juego.puntajeParaGanar})")					
@@ -341,6 +366,6 @@ class AdministradorDeJuego():
 				self._cantidadDeCartasPorJugadorPorTipo[j][tipo] += cantidadDeCartasEnManoDeTipo[tipo] + cantidadDeCartasEnZonaDeDúosDeTipo[tipo]
 	
 if __name__ == '__main__':
-	administrador = AdministradorDeJuego([RandyBot, RandyBot], verbose=True)
+	administrador = AdministradorDeJuego([RandyBot, RandyBot], verbosidad=AdministradorDeJuego.Verbosidad.OMNISCIENTE)
 	ganador = administrador.jugarPartida()
 	print(f"Ganador: {ganador}")

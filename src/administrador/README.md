@@ -5,7 +5,7 @@ La clase `AdministradorDeJuego` actúa como puente entre instancias de `PartidaD
 
 Esta clase espera ser creada con un arreglo de las CLASES de los Bots que van a jugar (es decir, se invoca como `AdministradorDeJuego(clasesDeJugadores=[RandyBot, SirenaEnjoyer])`), y expone un método `jugarPartida()`. Cuando este método es llamado, el administrador se encarga de simular una partida de principio a fin entre instancias de las clases de Bots, y retorna el número de jugador del Bot ganador. `jugarPartida()` puede ser llamada múltiples veces para jugar muchas partidas.
 
-El parámetro `verbose` en el constructor de la clase controla si se imprime en pantalla texto sobre cada acción ocurrida en la partida.
+El parámetro `verbosidad` en el constructor de la clase controla si se imprime en pantalla texto sobre cada acción ocurrida en la partida.
 
 El administrador también recolecta diversas estadísticas de la partida, como cantidad de rondas jugadas, dúos por jugador, etc. Esta información puede ser accedida en cualquier momento a través de los atributos privados de la clase.
 
