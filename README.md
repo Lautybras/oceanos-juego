@@ -43,11 +43,34 @@ La clase `AdministradorDeJuego` actúa como puente entre instancias de `PartidaD
 
 Para más información sobre cómo el administrador traduce entre `PartidaDeOcéanos` y Bots, ver [el README de administrador/](src\administrador\README.md).
 
+```python
+>>> administrador = AdministradorDeJuego([RandyBot, BotFachero], verbose=False)
+>>> ganador = administrador.jugarPartida()
+0
+>>> ganador = administrador.jugarPartida()
+1
+```
+
 ### Jugadores
 
 Para que un jugador pueda entenderse con el `AdministradorDeJuego`, se necesita que [subclasifique](https://www.w3schools.com/python/python_inheritance.asp) la clase `JugadorBase`. Esta clase define los cinco métodos que `AdministradorDeJuego` invoca sobre cada jugador para resolver las acciones de juego (cómo se quiere robar, si se quieren jugar dúos, cómo se pasa de ronda, etc.). Por supuesto, además de implementar estos métodos necesarios, un jugador puede definir tantas variables internas y métodos auxiliares como sean necesarios.
 
 Para más información sobre cómo implementar un Bot y ejemplos, ver [el README de jugador/](src\jugador\README.md).
+
+```python
+>>> juego = PartidaDeOcéanos(cantidadDeJugaodres=2)
+>>> miBot = RandyBot()
+>>> otroBot = SirenaEnjoyer()
+>>> miBot.configurarParaJuego(juego, númeroDeJugador=0, listaDeEventos=None)
+>>> otroBot.configurarParaJuego(juego, númeroDeJugador=1, listaDeEventos=None)
+>>> juego.iniciarRonda()
+>>> miBot.decidirAcciónDeRobo()
+Acción.Robo.DEL_MAZO
+>>> cartas = juego.robarDelMazo()
+[Carta de Pulpo verde, Carta de Pez negro]
+>>> miBot.decidirCómoRobarDelMazo(cartas)
+(0, 1)
+```
 
 ### Matchups
 
