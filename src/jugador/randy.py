@@ -56,7 +56,7 @@ class RandyBot(JugadorBase):
 			accionesPosibles.append(Acción.Dúos.JUGAR_CANGREJOS)
 		
 		posibleDúoDeNadadorYTiburón = self._buscarDúoParaJugar(Carta.Tipo.NADADOR)
-		if posibleDúoDeNadadorYTiburón != None and not self._juego.útlimaChanceEnCurso():
+		if posibleDúoDeNadadorYTiburón != None and not self._juego.últimaChanceEnCurso():
 			accionesPosibles.append(Acción.Dúos.JUGAR_NADADOR_Y_TIBURÓN)
 		
 		acciónElegida = choice(accionesPosibles)
@@ -84,14 +84,14 @@ class RandyBot(JugadorBase):
 		elif acciónElegida == Acción.Dúos.NO_JUGAR:
 			return (Acción.Dúos.NO_JUGAR, None, None)
 	
-	def decidirAcciónDeFinDeRonda(self):
-		accionesDeFinDeRondaPosibles = [Acción.FinDeRonda.PASAR_TURNO]
+	def decidirAcciónDeFinDeTurno(self):
+		accionesDeFinDeTurnoPosibles = [Acción.FinDeTurno.PASAR_TURNO]
 		
-		if self._juego.puntajeDeRonda >= 7 and (not self._juego.útlimaChanceEnCurso()):
-			accionesDeFinDeRondaPosibles.append(Acción.FinDeRonda.DECIR_BASTA)
-			accionesDeFinDeRondaPosibles.append(Acción.FinDeRonda.DECIR_ÚLTIMA_CHANCE)
+		if self._juego.puntajeDeRonda >= 7 and (not self._juego.últimaChanceEnCurso()):
+			accionesDeFinDeTurnoPosibles.append(Acción.FinDeTurno.DECIR_BASTA)
+			accionesDeFinDeTurnoPosibles.append(Acción.FinDeTurno.DECIR_ÚLTIMA_CHANCE)
 		
-		return choice(accionesDeFinDeRondaPosibles)
+		return choice(accionesDeFinDeTurnoPosibles)
 	
 	def configurarFinDeRonda(self, manos, puntajesDeRonda):
 		pass

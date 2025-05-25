@@ -20,9 +20,9 @@ Para que los Bots puedan comunicarle al administrador qué tipo de acción desea
 * `Acción.Dúos.JUGAR_BARCOS`: representa la acción de jugar un dúo de barcos de la mano
 * `Acción.Dúos.JUGAR_CANGREJOS`: representa la acción de jugar un dúo de cangrejos de la mano
 * `Acción.Dúos.JUGAR_NADADOR_Y_TIBURÓN`: representa la acción de jugar un dúo de nadador y tiburón de la mano
-* `Acción.FinDeRonda.PASAR_TURNO`: representa la intención de pasar el turno de manera convencional
-* `Acción.FinDeRonda.DECIR_BASTA`: representa la acción de decir ¡Basta!
-* `Acción.FinDeRonda.ÚLTIMA_CHANCE`:  representa la acción de decir ¡Última Chance!
+* `Acción.FinDeTurno.PASAR_TURNO`: representa la intención de pasar el turno de manera convencional
+* `Acción.FinDeTurno.DECIR_BASTA`: representa la acción de decir ¡Basta!
+* `Acción.FinDeTurno.ÚLTIMA_CHANCE`:  representa la acción de decir ¡Última Chance!
 
 Los métodos de los Bots que el administrador invoca durante el juego usualmente devuelven alguna `Acción` que tenga sentido para ese método (por ejemplo, `decidirAcciónDeRobo` debe devolver algún valor de `Acción.Robo`).
 

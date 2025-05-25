@@ -146,7 +146,7 @@ class PartidaDeOcéanos():
 	def hayQueTomarDecisionesDeRoboDelMazo(self):
 		return self._estadoActual == self.Estado.FASE_ROBO_DEL_MAZO
 	
-	def útlimaChanceEnCurso(self):
+	def últimaChanceEnCurso(self):
 		return self._últimaChancePorJugador != None
 	
 	def últimaChanceGanada(self):
@@ -441,7 +441,7 @@ class PartidaDeOcéanos():
 			raise JuegoException("La cantidad de jugadores no es válida")
 	
 	def _jugadorMostróSuManoPorÚltimaChance(self, jugador):
-		if not self.útlimaChanceEnCurso():
+		if not self.últimaChanceEnCurso():
 			return False
 		else:
 			for orden in range(self._últimaChancePorJugador + 1, self._últimaChancePorJugador + 1 + self._cantidadDeJugadores):
@@ -551,6 +551,6 @@ class PartidaDeOcéanos():
 	def _assertSePuedeTerminarLaRonda(self):
 		if not (self._estadosDeJugadores[self._deQuiénEsTurno].puntajeDeRonda() >= 7):
 			raise JuegoException("No se puede terminar la ronda si no se tienen al menos siete puntos")
-		if self.útlimaChanceEnCurso():
+		if self.últimaChanceEnCurso():
 			raise JuegoException("Ya se está jugando una ronda de última chance")
 	

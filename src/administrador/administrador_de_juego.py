@@ -5,6 +5,7 @@ from .evento import Evento
 from juego.carta import Carta
 from juego.partida import PartidaDeOcéanos, SIRENAS_INF
 from jugador.randy import RandyBot
+from jugador.cli import JugadorCLI
 
 class AdministradorDeJuego():
 	class Verbosidad(Enum):
@@ -225,20 +226,20 @@ class AdministradorDeJuego():
 
 	def _faseDeFin(self):
 		if not self._juego.haTerminado() and self._juego.rondaEnCurso():
-			acciónDeFinDeRonda = self._jugadores[self._juego.deQuiénEsTurno].decidirAcciónDeFinDeRonda()
-			self._eventos.append(Evento(self._juego.deQuiénEsTurno, acciónDeFinDeRonda, None))
+			acciónDeFinDeTurno = self._jugadores[self._juego.deQuiénEsTurno].decidirAcciónDeFinDeTurno()
+			self._eventos.append(Evento(self._juego.deQuiénEsTurno, acciónDeFinDeTurno, None))
 			
-			if acciónDeFinDeRonda == Acción.FinDeRonda.PASAR_TURNO:
+			if acciónDeFinDeTurno == Acción.FinDeTurno.PASAR_TURNO:
 				# Pasar el turno normalmente				
 				self._juego.pasarTurno()
 				if self._verbosidad != AdministradorDeJuego.Verbosidad.NADA:
 					print("Pasa de turno")
-			elif acciónDeFinDeRonda == Acción.FinDeRonda.DECIR_BASTA:
+			elif acciónDeFinDeTurno == Acción.FinDeTurno.DECIR_BASTA:
 				# Decir basta y terminar la ronda
 				self._juego.decirBasta()
 				if self._verbosidad != AdministradorDeJuego.Verbosidad.NADA:
 					print("¡¡¡Basta!!!")
-			elif acciónDeFinDeRonda == Acción.FinDeRonda.DECIR_ÚLTIMA_CHANCE:
+			elif acciónDeFinDeTurno == Acción.FinDeTurno.DECIR_ÚLTIMA_CHANCE:
 				# Decir última chance y pasar el turno
 				self._juego.decirÚltimaChance()
 				if self._verbosidad != AdministradorDeJuego.Verbosidad.NADA:
@@ -271,7 +272,7 @@ class AdministradorDeJuego():
 				for j in range(self._juego.cantidadDeJugadores):
 					print(f"Jugador {j}: +0 ({self._juego.puntajes[j]}/{self._juego.puntajeParaGanar})")
 				print("*********************************************************")
-		elif self._juego.útlimaChanceEnCurso():
+		elif self._juego.últimaChanceEnCurso():
 			self._rondasTerminadasSinFinPorSirenas += 1
 			self._motivosFinDeRonda["ÚLTIMA_CHANCE"] += 1
 			if self._juego.últimaChanceGanada():
@@ -366,6 +367,6 @@ class AdministradorDeJuego():
 				self._cantidadDeCartasPorJugadorPorTipo[j][tipo] += cantidadDeCartasEnManoDeTipo[tipo] + cantidadDeCartasEnZonaDeDúosDeTipo[tipo]
 	
 if __name__ == '__main__':
-	administrador = AdministradorDeJuego([RandyBot, RandyBot], verbosidad=AdministradorDeJuego.Verbosidad.OMNISCIENTE)
+	administrador = AdministradorDeJuego([RandyBot, RandyBot], verbosidad=AdministradorDeJuego.Verbosidad.JUGADOR)
 	ganador = administrador.jugarPartida()
 	print(f"Ganador: {ganador}")

@@ -13,7 +13,7 @@ class Acción():
 		JUGAR_NADADOR_Y_TIBURÓN = auto()
 		NO_JUGAR = auto()
 	
-	class FinDeRonda(Enum):
+	class FinDeTurno(Enum):
 		PASAR_TURNO = auto()
 		DECIR_BASTA = auto()
 		DECIR_ÚLTIMA_CHANCE = auto()

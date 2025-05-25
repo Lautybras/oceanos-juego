@@ -158,21 +158,21 @@ class JugadorCLI(JugadorBase):
 			print("\nOpciones:\n- pasar:         pasar de turno normalmente\n- basta:         cantar ¡Basta!\n- ultimachance:  cantar ¡Última Chance!\n\nPara ver información del juego, juego.<método/atributo de PartidaDeOcéanos>\nEjemplos:\n- juego.topeDelDescarte[0]\n- juego.cantidadDeCartasEnMazo\n- juego.mano\n- juego.zonaDeDúos")
 		
 		def do_pasar(self, arg):
-			self.resultado = Acción.FinDeRonda.PASAR_TURNO
+			self.resultado = Acción.FinDeTurno.PASAR_TURNO
 			return True
 		
 		def do_basta(self, arg):
 			if not self.jugador._juego.puntajeDeRonda >= 7:
 				print("No se tienen suficientes puntos para cantar ¡Basta!")
 				return False
-			self.resultado = Acción.FinDeRonda.DECIR_BASTA
+			self.resultado = Acción.FinDeTurno.DECIR_BASTA
 			return True
 		
 		def do_ultimachance(self, arg):
 			if not self.jugador._juego.puntajeDeRonda >= 7:
 				print("No se tienen suficientes puntos para cantar ¡Última Chance!")
 				return False
-			self.resultado = Acción.FinDeRonda.DECIR_ÚLTIMA_CHANCE
+			self.resultado = Acción.FinDeTurno.DECIR_ÚLTIMA_CHANCE
 			return True
 	
 	
@@ -196,9 +196,9 @@ class JugadorCLI(JugadorBase):
 		print("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^")
 		return interfaz.resultado
 	
-	def decidirAcciónDeFinDeRonda(self):
+	def decidirAcciónDeFinDeTurno(self):
 		interfaz = JugadorCLI.AcciónDeFinDeTurnoPrompt(self)
-		interfaz.cmdloop(intro=self._mensajeIntroParaAcciónFinDeRondaPrompt())
+		interfaz.cmdloop(intro=self._mensajeIntroParaAcciónFinDeTurnoPrompt())
 		print("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^")
 		return interfaz.resultado
 	
@@ -215,7 +215,7 @@ class JugadorCLI(JugadorBase):
 	def _mensajeIntroParaAcciónDúosPrompt(self):
 		return f"vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv\nJugador {self._númeroDeJugador}, decidir si se quieren jugar dúos. Para ver cómo, escribir '?'."
 	
-	def _mensajeIntroParaAcciónFinDeRondaPrompt(self):
+	def _mensajeIntroParaAcciónFinDeTurnoPrompt(self):
 		return f"vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv\nJugador {self._númeroDeJugador}, decidir cómo terminar el turno. Para ver cómo, escribir '?'."
 	
 	

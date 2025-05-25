@@ -35,10 +35,10 @@ class SirenaEnjoyer(JugadorBase):
 	def decidirAcciónDeDúos(self):
 		return (Acción.Dúos.NO_JUGAR, None, None)
 	
-	def decidirAcciónDeFinDeRonda(self):
+	def decidirAcciónDeFinDeTurno(self):
 		#if self._juego.cantidadDeCartasEnMazo < 2 and self._juego.puntajeDeRonda >= 7:
-		#	return Acción.FinDeRonda.DECIR_BASTA
-		return Acción.FinDeRonda.PASAR_TURNO
+		#	return Acción.FinDeTurno.DECIR_BASTA
+		return Acción.FinDeTurno.PASAR_TURNO
 	
 	def configurarFinDeRonda(self, manos, puntajesDeRonda):
 		pass

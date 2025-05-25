@@ -23,7 +23,7 @@ class JugadorBase():
 		# !Implementar!
 		raise Exception("¡Implementame!")
 	
-	def decidirAcciónDeFinDeRonda(self):
+	def decidirAcciónDeFinDeTurno(self):
 		# !Implementar!
 		raise Exception("¡Implementame!")
 	

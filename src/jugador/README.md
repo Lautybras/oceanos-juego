@@ -31,9 +31,9 @@ Esta fase es la más compleja por la cantidad de cosas que pueden hacerse, y es 
 
 El método se invoca reiteradas veces sobre el Bot hasta que el Bot responde `Acción.Dúos.NO_JUGAR`, y entonces se pasa a la fase de fin de ronda.
 
-### Método `decidirAcciónDeFinDeRonda()`
+### Método `decidirAcciónDeFinDeTurno()`
 
-Este método se invoca al final de cada turno para que el Bot elija cuál de las tres acciones para terminar su turno quiere realizar (`Acción.FinDeRonda.PASAR_TURNO`, `Acción.FinDeRonda.DECIR_BASTA` o `Acción.FinDeRonda.DECIR_ÚLTIMA_CHANCE`). Recordar que:
+Este método se invoca al final de cada turno para que el Bot elija cuál de las tres acciones para terminar su turno quiere realizar (`Acción.FinDeTurno.PASAR_TURNO`, `Acción.FinDeTurno.DECIR_BASTA` o `Acción.FinDeTurno.DECIR_ÚLTIMA_CHANCE`). Recordar que:
 * Para poder decir ¡Basta! o ¡Última Chance!, es necesario tener al menos siete puntos. Se puede revisar la cantidad de puntos con `_juego.puntajeDeRonda`. Además, tiene que no haber un ¡Última chance! en curso, lo cual se puede revisar con `_juego.últimaChanceEnCurso()`.
 
 ### Método `configurarFinDeRonda(manos, puntajesDeRonda)`

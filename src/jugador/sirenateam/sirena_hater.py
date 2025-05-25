@@ -35,10 +35,10 @@ class SirenaHater(JugadorBase):
 	def decidirAcciónDeDúos(self):
 		return (Acción.Dúos.NO_JUGAR, None, None)
 	
-	def decidirAcciónDeFinDeRonda(self):
-		if self._juego.cantidadDeCartasEnMazo < 2 and self._juego.puntajeDeRonda >= 7 and (not self._juego.útlimaChanceEnCurso()):
-			return Acción.FinDeRonda.DECIR_BASTA
-		return Acción.FinDeRonda.PASAR_TURNO
+	def decidirAcciónDeFinDeTurno(self):
+		if self._juego.cantidadDeCartasEnMazo < 2 and self._juego.puntajeDeRonda >= 7 and (not self._juego.últimaChanceEnCurso()):
+			return Acción.FinDeTurno.DECIR_BASTA
+		return Acción.FinDeTurno.PASAR_TURNO
 	
 	def configurarFinDeRonda(self, manos, puntajesDeRonda):
 		pass
