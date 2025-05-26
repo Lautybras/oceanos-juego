@@ -2,14 +2,21 @@ from collections import Counter as Multiset
 from administrador.acción import Acción
 from juego.carta import Carta
 from juego.partida import PartidaDeOcéanos
+from administrador.evento import Evento
 
 class JugadorBase():
 	# ========================= INTERFAZ DE JUEGO =========================
 	def __init__(self):
-		self._juego = None
-		self._númeroDeJugador = None
+		self._juego: PartidaDeOcéanos = None
+		self._númeroDeJugador: int = None
+		self._listaDeEventos: list[Evento]
 		
 		# * Se pueden definir más variables de instancia acá! *
+	
+	def configurarParaJuego(self, juego, númeroDeJugador, listaDeEventos):
+		self._juego = juego
+		self._númeroDeJugador = númeroDeJugador
+		self._listaDeEventos = listaDeEventos
 	
 	def decidirAcciónDeRobo(self):
 		# !Implementar!

@@ -98,6 +98,10 @@ class PartidaDeOcéanos():
 		)
 	
 	@property
+	def cartasInicialesDelDescarte(self):
+		return deepcopy(self._cartasInicialesDelDescarte)
+	
+	@property
 	def cantidadDeCartasEnDescarte(self):
 		return (
 			len(self._descarte[0]),
@@ -192,6 +196,7 @@ class PartidaDeOcéanos():
 		self._últimaChancePorJugador = None
 		self._últimaChanceGanada = None
 		self._descarte = None
+		self._cartasInicialesDelDescarte = (None, None)
 		self._estadosDeJugadores = None
 		self._mazo = None
 		self._estadoActual = self.Estado.PARTIDA_NO_INICIADA
@@ -205,6 +210,7 @@ class PartidaDeOcéanos():
 		self._mazo = list(cartasDelJuego())
 		shuffle(self._mazo)
 		self._descarte = ([self._mazo.pop(0)], [self._mazo.pop(0)])
+		self._cartasInicialesDelDescarte = deepcopy(self.topeDelDescarte)
 		self._estadoActual = self.Estado.FASE_ROBO
 		self._últimaChancePorJugador = None
 		self._últimaChanceGanada = None

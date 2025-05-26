@@ -329,7 +329,7 @@ class AdministradorDeJuego():
 			self._jugadores[j].configurarFinDeRonda(manos, puntajesDeRonda)
 		self._juego._deQuiénEsTurno = quiénArranca
 		
-		self._eventos = []
+		self._eventos.clear()
 	
 	def _calcularEstadísticasDeRonda(self):
 		for j in range(len(self._jugadores)):
