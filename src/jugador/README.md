@@ -1,7 +1,7 @@
 # Módulo Jugador
 
 ## JugadorBase
-Para que un jugador pueda entenderse con el `AdministradorDeJuego`, se necesita que [subclasifique](https://www.w3schools.com/python/python_inheritance.asp) la clase `JugadorBase`. Esta clase define los cinco métodos que `AdministradorDeJuego` invoca sobre cada jugador para resolver las acciones de juego (cómo se quiere robar, si se quieren jugar dúos, cómo se pasa de ronda, etc.). Por supuesto, además de implementar estos métodos necesarios, un jugador puede definir tantas variables internas y métodos auxiliares como sean necesarios.
+Para que un jugador pueda entenderse con el `AdministradorDeJuego`, se necesita que [subclasifique](https://www.w3schools.com/python/python_inheritance.asp) la clase `JugadorBase`. Esta clase define los métodos que `AdministradorDeJuego` invoca sobre cada jugador para resolver las acciones de juego (cómo se quiere robar, si se quieren jugar dúos, cómo se pasa de ronda, etc.). Por supuesto, además de implementar estos métodos necesarios, un jugador puede definir tantas variables internas y métodos auxiliares como sean necesarios.
 
 ### Método `decidirAcciónDeRobo()`
 
@@ -36,10 +36,23 @@ El método se invoca reiteradas veces sobre el Bot hasta que el Bot responde `Ac
 Este método se invoca al final de cada turno para que el Bot elija cuál de las tres acciones para terminar su turno quiere realizar (`Acción.FinDeTurno.PASAR_TURNO`, `Acción.FinDeTurno.DECIR_BASTA` o `Acción.FinDeTurno.DECIR_ÚLTIMA_CHANCE`). Recordar que:
 * Para poder decir ¡Basta! o ¡Última Chance!, es necesario tener al menos siete puntos. Se puede revisar la cantidad de puntos con `_juego.puntajeDeRonda`. Además, tiene que no haber un ¡Última chance! en curso, lo cual se puede revisar con `_juego.últimaChanceEnCurso()`.
 
+### Método `configurarInicioDeRonda(cartasInicialesDelDescarte)`
+
+Este método se invoca al principio de cada ronda para que el Bot pueda realizar los cálculos que quiera de acuerdo al estado de la partida al principio de la ronda. Se hace pública la información de qué dos cartas hay en el descarte al iniciar la ronda. No se necesita devolver nada en particular.
+
 ### Método `configurarFinDeRonda(manos, puntajesDeRonda)`
 
 Este método se invoca al final de cada ronda para que el Bot pueda realizar los cálculos que quiera de acuerdo al estado de la partida luego de jugar la ronda. Además, como en esta fase los jugadores tienen que revelar sus manos y contar sus puntajes de ronda, esta información se hace pública para todos los Bots a través de los parámetros pasados. No se necesita devolver nada en particular.
 
+### Método `configurarInicioDeTurno()`
+
+Este método se invoca al principio del turno del Bot. Puede ser un buen momento para revisar el listado de eventos. No se necesita devolver nada en particular.
+
+
 ### Auxiliares
 
 La clase de `JugadorBase` ya implementa algunos métodos auxiliares para facilitar tareas comunes, como `_buscarDúoParaJugar`.
+
+## Jugadores Implementados
+
+Ya están implementados varios Bots con distintas ideas. Podés probarlos con el [administrador de juego](../administrador/README.md) o el [sistema de matchups](../matchup/README.md)!

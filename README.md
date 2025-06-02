@@ -4,11 +4,14 @@
 
 ## Tutorial: ¿cómo hago mi bot?
 
-1. Copiar el archivo `src/jugador/base.py` en el mismo directorio con otro nombre, como `BotFachero.py`.
+1. Copiar la carpeta `src/jugador/Ejemplo` en el mismo directorio y cambiar el nombre del archivo, como `src/jugador/MiBot/bot_fachero.py`.
 2. Modificar el nombre de la clase `JugadorBase` por otro, como `BotFachero`.
-3. Hacer que `BotFachero` herede de la clase `JugadorBase` (la sintaxis es `class BotFachero(JugadorBase)`).
-4. Implementar los métodos de la interfaz de `BotFacero` que dicen "implementame".
-5. ¡Bot implementado! Probarlo usando el archivo `matchup/matchup.py`, cambiando los parámetros que aparecen al principio del archivo para que se use el `BotFachero`.
+3. Implementar los métodos de la interfaz de `BotFachero` según los comentarios
+4. ¡Bot implementado! Probarlo usando el archivo `src/matchup/matchup.py`, agregando esta línea al principio:
+   ```python
+   from jugador.MiBot.bot_fachero import BotFachero
+   ```
+   Y cambiando los parámetros que aparecen al principio del archivo para que se use el `BotFachero`. Luego correr el matchup con `python -m matchup.matchup` desde `src/`.
 
 Para entender qué deberían hacer los métodos a implementar y cómo, revisar la documentación (archivos README.md en las subcarpetas de `src/`)
 
@@ -75,3 +78,5 @@ Acción.Robo.DEL_MAZO
 ### Matchups
 
 `src/matchup/matchup.py` utiliza los parámetros definidos al principio del archivo para disputar una serie de partidas entre Bots. Para ello, utiliza el `AdministradorDeJuego` y las métricas que éste recolecta para generar estadísticas del duelo. Para usarlo, simplemente modificar los parámetros `jugadoresDelMatchup`, `nombres` y `cantidadDePartidasAJugar`, y luego iniciar el duelo con `cd src/ && python -m matchup.matchup`.
+
+![](assets/matchup.png)

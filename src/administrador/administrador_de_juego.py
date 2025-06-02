@@ -4,8 +4,10 @@ from .acción import Acción
 from .evento import Evento
 from juego.carta import Carta
 from juego.partida import PartidaDeOcéanos, SIRENAS_INF
-from jugador.randy import RandyBot
-from jugador.cli import JugadorCLI
+from jugador.RandyBot.randy import RandyBot
+from jugador.CLI.cli import JugadorCLI
+from jugador.base import JugadorBase
+from jugador.PuntosBot.puntosbot_mk1 import PuntosBotMk1
 
 class AdministradorDeJuego():
 	class Verbosidad(Enum):
@@ -18,7 +20,7 @@ class AdministradorDeJuego():
 			raise Exception("Usar el enum AdministradorDeJuego.Verbosidad")
 		
 		self._clasesDeJugadores = clasesDeJugadores
-		self._jugadores = [None] * len(clasesDeJugadores)
+		self._jugadores: list[JugadorBase] = [None] * len(clasesDeJugadores)
 		self._juego = None
 		self._verbosidad = verbosidad
 		self._eventos = []
@@ -72,6 +74,9 @@ class AdministradorDeJuego():
 				print("~~~~~~~~~~~~~~~~~~~~~ Inicia Ronda ~~~~~~~~~~~~~~~~~~~~~~")
 				print(f"Jugador inicial: {self._juego.deQuiénEsTurno}")
 				print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
+			
+			for j in range(len(self._jugadores)):
+				self._jugadores[j].configurarInicioDeRonda(self._juego.topeDelDescarte)
 
 			while self._juego.rondaEnCurso():
 				if self._verbosidad != AdministradorDeJuego.Verbosidad.NADA:
@@ -83,6 +88,8 @@ class AdministradorDeJuego():
 					elif self._verbosidad == AdministradorDeJuego.Verbosidad.JUGADOR:
 						print(f"El tope del descarte 0 es {(self._juego.topeDelDescarte[0])}")
 						print(f"El tope del descarte 1 es {(self._juego.topeDelDescarte[1])}")
+				
+				self._jugadores[self._juego.deQuiénEsTurno].configurarInicioDeTurno()
 				
 				self._faseDeRobo()
 				self._faseDeDúos()
@@ -367,6 +374,6 @@ class AdministradorDeJuego():
 				self._cantidadDeCartasPorJugadorPorTipo[j][tipo] += cantidadDeCartasEnManoDeTipo[tipo] + cantidadDeCartasEnZonaDeDúosDeTipo[tipo]
 	
 if __name__ == '__main__':
-	administrador = AdministradorDeJuego([RandyBot, RandyBot], verbosidad=AdministradorDeJuego.Verbosidad.JUGADOR)
+	administrador = AdministradorDeJuego([JugadorCLI, PuntosBotMk1], verbosidad=AdministradorDeJuego.Verbosidad.JUGADOR)
 	ganador = administrador.jugarPartida()
 	print(f"Ganador: {ganador}")

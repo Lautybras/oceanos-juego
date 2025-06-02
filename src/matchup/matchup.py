@@ -1,34 +1,35 @@
 import matplotlib.pyplot as plt
 import numpy as np
 from juego.carta import Carta, apodosCartas
-from jugador.randy import RandyBot
-from jugador.sirenateam.sirena_enjoyer import SirenaEnjoyer
-from jugador.sirenateam.sirena_hater import SirenaHater
+from jugador.RandyBot.randy import RandyBot
+from jugador.PuntosBot.puntosbot_mk1 import PuntosBotMk1
+from jugador.SirenaTeam.sirena_enjoyer import SirenaEnjoyer
+from jugador.SirenaTeam.sirena_hater import SirenaHater
 from administrador.administrador_de_juego import AdministradorDeJuego
 
-#* vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
-#* vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
-#* vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
-#* vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
-#* vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+#* vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+#* vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+#* vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+#* vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+#* vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
 jugadoresDelMatchup = [
+	PuntosBotMk1,
 	SirenaHater,
-	RandyBot,
-	RandyBot,
-	SirenaEnjoyer
+	SirenaEnjoyer,
+	RandyBot
 ]
 nombres = [
-	"Sirena Hater",
-	"Randy Bot I",
-	"Randy Bot II",
-	"Sirena Enjoyer"
+	"PuntosBotMk1",
+	"SirenaHater",
+	"SirenaEnjoyer",
+	"RandyBot"
 ]
-cantidadDePartidasAJugar = 1000
-#* ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-#* ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-#* ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-#* ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-#* ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+cantidadDePartidasAJugar = 100
+#* ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+#* ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+#* ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+#* ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+#* ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 # =================================================== ¡¡¡¡¡MATCHUP!!!!! ===================================================
 cantidadJugadores = len(jugadoresDelMatchup)
@@ -111,10 +112,22 @@ ax_puntosPorJugador.title.set_text("Distribución de Puntos por Ronda")
 ax_motivosFinDeRondaJugadorCero.pie(administrador._motivosFinDeRondaPorJugador[0].values(), labels=labelsMotivosFinDeRondaPorJugador, autopct='%1.1f%%', colors=coloresMotivosFinDeRondaPorJugador)
 ax_motivosFinDeRondaJugadorCero.title.set_text(f"Motivos Fin de Ronda ({nombres[0]})")
 
-ax_motivosFinDeRondaJugadorUno.pie(administrador._motivosFinDeRondaPorJugador[1].values(), labels=labelsMotivosFinDeRondaPorJugador, autopct='%1.1f%%', colors=coloresMotivosFinDeRondaPorJugador)
-ax_motivosFinDeRondaJugadorUno.title.set_text(f"Motivos Fin de Ronda ({nombres[1]})")
 
-if cantidadJugadores >= 3:
+if max(administrador._motivosFinDeRondaPorJugador[1].values()) > 0:
+	ax_motivosFinDeRondaJugadorUno.pie(administrador._motivosFinDeRondaPorJugador[1].values(), labels=labelsMotivosFinDeRondaPorJugador, autopct='%1.1f%%', colors=coloresMotivosFinDeRondaPorJugador)
+	ax_motivosFinDeRondaJugadorUno.title.set_text(f"Motivos Fin de Ronda ({nombres[1]})")
+else:
+	ax_motivosFinDeRondaJugadorUno.text(0.5, 0.5, "No disponible", ha="center", va="center", transform=ax_motivosFinDeRondaJugadorUno.transAxes)
+	ax_motivosFinDeRondaJugadorUno.set_xticks([])
+	ax_motivosFinDeRondaJugadorUno.set_yticks([])
+	ax_motivosFinDeRondaJugadorUno.spines['top'].set_visible(False)
+	ax_motivosFinDeRondaJugadorUno.spines['right'].set_visible(False)
+	ax_motivosFinDeRondaJugadorUno.spines['bottom'].set_visible(False)
+	ax_motivosFinDeRondaJugadorUno.spines['left'].set_visible(False)
+	ax_motivosFinDeRondaJugadorUno.title.set_text(f"Motivos Fin de Ronda ({nombres[1]})")
+
+
+if cantidadJugadores >= 3 and max(administrador._motivosFinDeRondaPorJugador[2].values()) > 0:
 	ax_motivosFinDeRondaJugadorDos.pie(administrador._motivosFinDeRondaPorJugador[2].values(), labels=labelsMotivosFinDeRondaPorJugador, autopct='%1.1f%%', colors=coloresMotivosFinDeRondaPorJugador)
 	ax_motivosFinDeRondaJugadorDos.title.set_text(f"Motivos Fin de Ronda ({nombres[2]})")
 else:
@@ -127,7 +140,7 @@ else:
 	ax_motivosFinDeRondaJugadorDos.spines['left'].set_visible(False)
 	ax_motivosFinDeRondaJugadorDos.title.set_text(f"Motivos Fin de Ronda (Jugador 2)")
 
-if cantidadJugadores == 4:
+if cantidadJugadores == 4 and max(administrador._motivosFinDeRondaPorJugador[3].values()) > 0:
 	ax_motivosFinDeRondaJugadorTres.pie(administrador._motivosFinDeRondaPorJugador[3].values(), labels=labelsMotivosFinDeRondaPorJugador, autopct='%1.1f%%', colors=coloresMotivosFinDeRondaPorJugador)
 	ax_motivosFinDeRondaJugadorTres.title.set_text(f"Motivos Fin de Ronda ({nombres[3]})")
 else:

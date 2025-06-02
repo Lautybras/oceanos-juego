@@ -3,56 +3,50 @@ from administrador.acción import Acción
 from juego.carta import Carta
 from juego.partida import PartidaDeOcéanos
 from administrador.evento import Evento
+from ..base import JugadorBase
 
-class JugadorBase():
+class EjemploDeBot(JugadorBase):
 	# ========================= INTERFAZ DE JUEGO =========================
 	def __init__(self) -> None:
-		self._juego: PartidaDeOcéanos = None
-		self._númeroDeJugador: int = None
-		self._listaDeEventos: list[Evento]
+		super().__init__()
+		#* Acá se pueden hacer más cosas, como definir variables del Bot
 	
 	def configurarParaJuego(self, juego: PartidaDeOcéanos, númeroDeJugador: int, listaDeEventos: list[Evento]) -> None:
-		self._juego = juego
-		self._númeroDeJugador = númeroDeJugador
-		self._listaDeEventos = listaDeEventos
+		super().configurarParaJuego(juego, númeroDeJugador, listaDeEventos)
+		#* Acá se pueden hacer más cosas, como cambiar el comportamiento según el número de jugadores
 	
 	def decidirAcciónDeRobo(self) -> Acción.Robo:
+		# !Implementar y borrar la línea de abajo! 
 		raise Exception("¡Implementame!")
 	
 	def decidirCómoRobarDelMazo(self, opcionesDeRobo: list[Carta]) -> tuple[int, int|None]:
+		# !Implementar y borrar la línea de abajo! 
 		raise Exception("¡Implementame!")
 	
 	def decidirAcciónDeDúos(self) -> tuple[Acción.Dúos, Multiset[Carta]|None, tuple[any]|None]:
+		# !Implementar y borrar la línea de abajo! 
 		raise Exception("¡Implementame!")
 	
 	def decidirAcciónDeFinDeTurno(self) -> Acción.FinDeTurno:
+		# !Implementar y borrar la línea de abajo! 
 		raise Exception("¡Implementame!")
 	
 	def configurarInicioDeRonda(self, cartasInicialesDelDescarte: tuple[Carta, Carta]) -> None:
+		# !Implementar y borrar la línea de abajo! 
 		raise Exception("¡Implementame!")
 	
 	def configurarFinDeRonda(self, manos: list[Multiset[Carta]], puntajesDeRonda: list[int]) -> None:
+		# !Implementar y borrar la línea de abajo! 
 		raise Exception("¡Implementame!")
 	
 	def configurarInicioDeTurno(self) -> None:
+		# !Implementar y borrar la línea de abajo! 
 		raise Exception("¡Implementame!")
 	
 	# ============================ AUXILIARES =============================
-	def _buscarDúoParaJugar(self, tipo: Carta.Tipo) -> Multiset[Carta]|None:
-		cartasDelDúoEnMano = Multiset([])
-		nadadorEncontrado = False
-		tiburónEncontrado = False
-		for cartaEnMano in self._juego.mano.elements():
-			if tipo in [Carta.Tipo.NADADOR, Carta.Tipo.TIBURÓN]:
-				if (cartaEnMano.tipo == Carta.Tipo.NADADOR and not nadadorEncontrado) or (cartaEnMano.tipo == Carta.Tipo.TIBURÓN and not tiburónEncontrado):
-					cartasDelDúoEnMano[cartaEnMano] += 1
-					if cartaEnMano.tipo == Carta.Tipo.NADADOR:
-						nadadorEncontrado = True
-					else:
-						tiburónEncontrado = True
-			else: 
-				if cartaEnMano.tipo == tipo:
-					cartasDelDúoEnMano[cartaEnMano] += 1
-			if cartasDelDúoEnMano.total() == 2:
-				return cartasDelDúoEnMano
-		return None
+	#* Acá se pueden definir más auxiliares para ser usados por tu Bot!
+	def miAuxiliarFachero(self, soyFachero: bool) -> str:
+		if soyFachero:
+			return "Soy fachero!"
+		else:
+			return "No soy tan fachero..."

@@ -12,8 +12,6 @@ class PuntosBotMk1(JugadorBase):
 	def __init__(self):
 		super().__init__()
 		
-		self._inicioDeTurno: bool = True
-		self._primerTurnoDeRonda: bool = True
 		self._juguéPeces: bool = False
 		self._copiaDeMiMano: Multiset[Carta] = None
 		self._primerEventoNoLeído: int = 0
@@ -21,32 +19,8 @@ class PuntosBotMk1(JugadorBase):
 		self._mazoEstimado: Multiset[Carta] = Multiset(cartasDelJuego())
 		self._descarteEstimado: tuple[Multiset[Carta], Multiset[Carta]] = (Multiset([]), Multiset([]))
 		self._manosEstimadas: list[Multiset[Carta]] = None
-		
-	
-	def configurarParaJuego(self, juego, númeroDeJugador, listaDeEventos):
-		super().configurarParaJuego(juego, númeroDeJugador, listaDeEventos)
-		self._manosEstimadas = [ Multiset([]) for _ in range(self._juego.cantidadDeJugadores) ]
-		
 	
 	def decidirAcciónDeRobo(self):
-		if self._primerTurnoDeRonda:
-			# Como es el primer turno de la ronda, considero las cartas en el tope del descarte para mi estimación.
-			#    Es decir, sacamos las cartas del mazo y las agregamos al descarte
-			self._descarteEstimado[0][self._juego.cartasInicialesDelDescarte[0]] += 1
-			self._mazoEstimado[self._juego.cartasInicialesDelDescarte[0]] -= 1
-			if self._mazoEstimado[self._juego.cartasInicialesDelDescarte[0]] == 0:
-				del self._mazoEstimado[self._juego.cartasInicialesDelDescarte[0]]
-			self._descarteEstimado[1][self._juego.cartasInicialesDelDescarte[1]] += 1
-			self._mazoEstimado[self._juego.cartasInicialesDelDescarte[1]] -= 1
-			if self._mazoEstimado[self._juego.cartasInicialesDelDescarte[1]] == 0:
-				del self._mazoEstimado[self._juego.cartasInicialesDelDescarte[1]]
-			
-			self._primerTurnoDeRonda = False
-		
-		if self._inicioDeTurno:
-			self.configurarInicioDeTurno()
-			self._inicioDeTurno = False
-		
 		# Comparamos el valor estimado de nuestras opciones
 		valorEstimadoMazo = self._valorPromedioMazoEstimado()
 		valorEstimadoDescarte0 = (
@@ -122,8 +96,6 @@ class PuntosBotMk1(JugadorBase):
 	def decidirAcciónDeDúos(self):
 		# Pequeño checkeo para considerar la carta que recién robé con dúo de peces
 		if self._juguéPeces:
-			#!print("Estoy acá!!!")
-			#!print(self._listaDeEventos)
 			if not (
 				self._listaDeEventos[-1].jugador == self._númeroDeJugador and
 				self._listaDeEventos[-1].acción == Acción.Dúos.JUGAR_PECES
@@ -139,11 +111,6 @@ class PuntosBotMk1(JugadorBase):
 					cartaRobadaConPeces = carta
 					break
 			
-			#!if len(list(manoActual.elements())) == 0:
-			#!	print("misma mano?")
-			#!	print(self._juego.mano)
-			#!	print(self._copiaDeMiMano)
-			#!	print(manoActual)
 			
 			cartaRobadaConPeces = list(manoActual.elements())[0]
 			
@@ -169,8 +136,6 @@ class PuntosBotMk1(JugadorBase):
 			mejorCartaDelDescarte = (None, None) # (pila, índice)
 			mejorValorDelDescarte = -1.0
 			
-			#!print("descarte:")
-			#!print(self._juego._descarte)
 			
 			# TODO cambiar interfaz de jugar dúo de cangrejos para no romper encapsulamiento
 			for i, cartaEnDescarte in enumerate(self._juego._descarte[0]):
@@ -184,8 +149,6 @@ class PuntosBotMk1(JugadorBase):
 					mejorCartaDelDescarte = (1, i)
 					mejorValorDelDescarte = valorDeCarta
 			
-			#!print("res:")
-			#!print(mejorCartaDelDescarte)
 			
 			pilaARobar = mejorCartaDelDescarte[0]
 			cartaARobar = self._juego._descarte[pilaARobar][mejorCartaDelDescarte[1]]
@@ -212,7 +175,6 @@ class PuntosBotMk1(JugadorBase):
 			# Si se puede, jugar un dúo de peces
 			# Tengo que hacer esto para poder sacar la carta robada del mazo 
 			self._juguéPeces = True
-			#!print("Acá juego pececitos!")
 			self._copiaDeMiMano = deepcopy(self._juego.mano)
 			dúoAJugar = self._buscarDúoParaJugar(Carta.Tipo.PEZ)
 			self._copiaDeMiMano[list(dúoAJugar.elements())[0]] -= 1
@@ -239,8 +201,6 @@ class PuntosBotMk1(JugadorBase):
 			return (Acción.Dúos.NO_JUGAR, None, None)
 	
 	def decidirAcciónDeFinDeTurno(self):
-		self._inicioDeTurno = True
-		
 		if self._juego.puntajeDeRonda >= 7 and not self._juego.últimaChanceEnCurso():
 			# Si puedo terminar la ronda, hagamos 50/50 de cómo hacerlo
 			return choice([Acción.FinDeTurno.DECIR_BASTA, Acción.FinDeTurno.DECIR_ÚLTIMA_CHANCE])
@@ -248,9 +208,23 @@ class PuntosBotMk1(JugadorBase):
 			# Si sólo se puede pasar de turno, hacerlo
 			return Acción.FinDeTurno.PASAR_TURNO
 	
+	def configurarParaJuego(self, juego, númeroDeJugador, listaDeEventos):
+		super().configurarParaJuego(juego, númeroDeJugador, listaDeEventos)
+		self._manosEstimadas = [ Multiset([]) for _ in range(self._juego.cantidadDeJugadores) ]
+	
+	def configurarInicioDeRonda(self, cartasInicialesDelDescarte):
+		# Considero las cartas en el tope del descarte para mi estimación.
+		#    Es decir, sacamos las cartas del mazo y las agregamos al descarte
+		self._descarteEstimado[0][cartasInicialesDelDescarte[0]] += 1
+		self._mazoEstimado[cartasInicialesDelDescarte[0]] -= 1
+		if self._mazoEstimado[cartasInicialesDelDescarte[0]] == 0:
+			del self._mazoEstimado[cartasInicialesDelDescarte[0]]
+		self._descarteEstimado[1][cartasInicialesDelDescarte[1]] += 1
+		self._mazoEstimado[cartasInicialesDelDescarte[1]] -= 1
+		if self._mazoEstimado[cartasInicialesDelDescarte[1]] == 0:
+			del self._mazoEstimado[cartasInicialesDelDescarte[1]]
+	
 	def configurarFinDeRonda(self, manos, puntajesDeRonda):
-		self._inicioDeTurno = True
-		self._primerTurnoDeRonda = True
 		self._primerEventoNoLeído = 0
 		self._mazoEstimado = Multiset(cartasDelJuego())
 		self._descarteEstimado = (Multiset([]), Multiset([]))

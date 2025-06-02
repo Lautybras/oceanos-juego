@@ -1,5 +1,6 @@
 from collections import Counter as Multiset
 from administrador.acción import Acción
+from administrador.evento import Evento
 import cmd
 import re
 from juego.carta import Carta
@@ -9,14 +10,11 @@ from jugador.base import JugadorBase
 
 class JugadorCLI(JugadorBase):
 	# ========================= INTERFAZ DE JUEGO =========================
-	def __init__(self):
-		self._juego = None
-		self._númeroDeJugador = None
+	def __init__(self) -> None:
+		super().__init__()
 	
-	def configurarParaJuego(self, juego, númeroDeJugador, listaDeEventos):
-		self._juego = juego
-		self._númeroDeJugador = númeroDeJugador
-		self._listaDeEventos = listaDeEventos
+	def configurarParaJuego(self, juego: PartidaDeOcéanos, númeroDeJugador: int, listaDeEventos: list[Evento]) -> None:
+		super().configurarParaJuego(juego, númeroDeJugador, listaDeEventos)
 	
 	class Prompt(cmd.Cmd):
 		prompt = '>>> '
@@ -178,44 +176,50 @@ class JugadorCLI(JugadorBase):
 	
 	
 	
-	def decidirAcciónDeRobo(self):
+	def decidirAcciónDeRobo(self) -> Acción.Robo:
 		interfaz = JugadorCLI.AcciónDeRoboPrompt(self)
 		interfaz.cmdloop(intro=self._mensajeIntroParaAcciónRoboPrompt())
 		print("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^")
 		return interfaz.resultado
 	
-	def decidirCómoRobarDelMazo(self, opcionesDeRobo):
+	def decidirCómoRobarDelMazo(self, opcionesDeRobo: list[Carta]) -> tuple[int, int|None]:
 		interfaz = JugadorCLI.AcciónDeRobarDelMazoPrompt(self)
 		interfaz.cmdloop(intro=self._mensajeIntroParaElegirRoboDelMazoPrompt(opcionesDeRobo))
 		print("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^")
 		return interfaz.resultado
 	
-	def decidirAcciónDeDúos(self):
+	def decidirAcciónDeDúos(self) -> tuple[Acción.Dúos, Multiset[Carta]|None, tuple[any]|None]:
 		interfaz = JugadorCLI.AcciónDeDúosPrompt(self)
 		interfaz.cmdloop(intro=self._mensajeIntroParaAcciónDúosPrompt())
 		print("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^")
 		return interfaz.resultado
 	
-	def decidirAcciónDeFinDeTurno(self):
+	def decidirAcciónDeFinDeTurno(self) -> Acción.FinDeTurno:
 		interfaz = JugadorCLI.AcciónDeFinDeTurnoPrompt(self)
 		interfaz.cmdloop(intro=self._mensajeIntroParaAcciónFinDeTurnoPrompt())
 		print("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^")
 		return interfaz.resultado
 	
-	def configurarFinDeRonda(self, manos, puntajesDeRonda):
+	def configurarInicioDeRonda(self, cartasInicialesDelDescarte: tuple[Carta, Carta]) -> None:
+		pass
+	
+	def configurarFinDeRonda(self, manos: list[Multiset[Carta]], puntajesDeRonda: list[int]) -> None:
+		pass
+	
+	def configurarInicioDeTurno(self) -> None:
 		pass
 	
 	# ============================ AUXILIARES =============================
-	def _mensajeIntroParaAcciónRoboPrompt(self):
+	def _mensajeIntroParaAcciónRoboPrompt(self) -> str:
 		return f"vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv\nJugador {self._númeroDeJugador}, decidir acción de robo. Para ver cómo, escribir '?'."
 	
-	def _mensajeIntroParaElegirRoboDelMazoPrompt(self, opcionesDeRobo):
+	def _mensajeIntroParaElegirRoboDelMazoPrompt(self, opcionesDeRobo) -> str:
 		return f"vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv\n{opcionesDeRobo}\nJugador {self._númeroDeJugador}, decidir qué carta del mazo quedarse y cuál descartar. Para ver cómo, escribir '?'."
 	
-	def _mensajeIntroParaAcciónDúosPrompt(self):
+	def _mensajeIntroParaAcciónDúosPrompt(self) -> str:
 		return f"vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv\nJugador {self._númeroDeJugador}, decidir si se quieren jugar dúos. Para ver cómo, escribir '?'."
 	
-	def _mensajeIntroParaAcciónFinDeTurnoPrompt(self):
+	def _mensajeIntroParaAcciónFinDeTurnoPrompt(self) -> str:
 		return f"vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv\nJugador {self._númeroDeJugador}, decidir cómo terminar el turno. Para ver cómo, escribir '?'."
 	
 	

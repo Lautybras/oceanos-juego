@@ -1,21 +1,19 @@
 from random import choice
 from collections import Counter as Multiset
 from administrador.acción import Acción
+from administrador.evento import Evento
 from juego.carta import Carta
 from juego.partida import PartidaDeOcéanos
-from .base import JugadorBase
+from ..base import JugadorBase
 
 class RandyBot(JugadorBase):
 	def __init__(self):
-		self._juego = None
-		self._númeroDeJugador = None
+		super().__init__()
 	
-	def configurarParaJuego(self, juego, númeroDeJugador, listaDeEventos):
-		self._juego = juego
-		self._númeroDeJugador = númeroDeJugador
-		self._listaDeEventos = listaDeEventos
+	def configurarParaJuego(self, juego: PartidaDeOcéanos, númeroDeJugador: int, listaDeEventos: list[Evento]) -> None:
+		super().configurarParaJuego(juego, númeroDeJugador, listaDeEventos)
 	
-	def decidirAcciónDeRobo(self):
+	def decidirAcciónDeRobo(self) -> Acción.Robo:
 		accionesPosibles = [Acción.Robo.DEL_MAZO]
 		if self._juego.cantidadDeCartasEnDescarte[0] > 0:
 			accionesPosibles.append(Acción.Robo.DEL_DESCARTE_0)
@@ -23,7 +21,7 @@ class RandyBot(JugadorBase):
 			accionesPosibles.append(Acción.Robo.DEL_DESCARTE_1)
 		return choice(accionesPosibles)
 	
-	def decidirCómoRobarDelMazo(self, opcionesDeRobo):
+	def decidirCómoRobarDelMazo(self, opcionesDeRobo: list[Carta]) -> tuple[int, int|None]:
 		if len(opcionesDeRobo) == 1:
 			return (0, None)
 		else:
@@ -38,7 +36,7 @@ class RandyBot(JugadorBase):
 				indiceDePilaDondeDescartar = choice([0,1])
 			return (indiceDeCartaARobar, indiceDePilaDondeDescartar)
 	
-	def decidirAcciónDeDúos(self):
+	def decidirAcciónDeDúos(self) -> tuple[Acción.Dúos, Multiset[Carta]|None, tuple[any]|None]:
 		
 		accionesPosibles = [Acción.Dúos.NO_JUGAR]
 		
@@ -84,7 +82,7 @@ class RandyBot(JugadorBase):
 		elif acciónElegida == Acción.Dúos.NO_JUGAR:
 			return (Acción.Dúos.NO_JUGAR, None, None)
 	
-	def decidirAcciónDeFinDeTurno(self):
+	def decidirAcciónDeFinDeTurno(self) -> Acción.FinDeTurno:
 		accionesDeFinDeTurnoPosibles = [Acción.FinDeTurno.PASAR_TURNO]
 		
 		if self._juego.puntajeDeRonda >= 7 and (not self._juego.últimaChanceEnCurso()):
@@ -93,6 +91,12 @@ class RandyBot(JugadorBase):
 		
 		return choice(accionesDeFinDeTurnoPosibles)
 	
-	def configurarFinDeRonda(self, manos, puntajesDeRonda):
+	def configurarInicioDeRonda(self, cartasInicialesDelDescarte: tuple[Carta, Carta]) -> None:
+		pass
+	
+	def configurarFinDeRonda(self, manos: list[Multiset[Carta]], puntajesDeRonda: list[int]) -> None:
+		pass
+	
+	def configurarInicioDeTurno(self) -> None:
 		pass
 	
