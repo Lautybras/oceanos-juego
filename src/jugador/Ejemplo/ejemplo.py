@@ -27,6 +27,10 @@ class EjemploDeBot(JugadorBase):
 		# !Implementar y borrar la línea de abajo! 
 		raise Exception("¡Implementame!")
 	
+	def decidirQuéRobarConDúoDeCangrejos(self, descarteElegido: list[Carta]) -> int:
+		# !Implementar y borrar la línea de abajo! 
+		raise Exception("¡Implementame!")
+	
 	def decidirAcciónDeFinDeTurno(self) -> Acción.FinDeTurno:
 		# !Implementar y borrar la línea de abajo! 
 		raise Exception("¡Implementame!")

@@ -93,7 +93,7 @@ class JugadorCLI(JugadorBase):
 		prompt = '>>> '
 		
 		def do_help(self, arg):
-			print("\nOpciones:\n- no:      no se juegan más dúos este turno\n- peces:   se juega un dúo de peces\n- barcos:  se juega un dúo de barcos\n- cangrejos <pila de descarte> <índice de carta>:  se juega un dúo de cangrejos para robar la <índice de carta>-ésima carta de la <pila de descarte>\n- nadador <número de jugador>:  se juega un dúo de nadador y tiburón para robarle una carta al jugador <número de jugador>\nEjemplos:\n- no\n- peces\n- barcos\n- cangrejos 0 12\n- nadador 3\n\nPara ver información del juego, juego.<método/atributo de PartidaDeOcéanos>\nEjemplos:\n- juego.topeDelDescarte[0]\n- juego.cantidadDeCartasEnMazo\n- juego.mano\n- juego.zonaDeDúos")
+			print("\nOpciones:\n- no:      no se juegan más dúos este turno\n- peces:   se juega un dúo de peces\n- barcos:  se juega un dúo de barcos\n- cangrejos <índice de pila>:  se juega un dúo de cangrejos para robar de la <índice de pila>-ésima pila\n- nadador <número de jugador>:  se juega un dúo de nadador y tiburón para robarle una carta al jugador <número de jugador>\nEjemplos:\n- no\n- peces\n- barcos\n- cangrejos 0\n- nadador 3\n\nPara ver información del juego, juego.<método/atributo de PartidaDeOcéanos>\nEjemplos:\n- juego.topeDelDescarte[0]\n- juego.cantidadDeCartasEnMazo\n- juego.mano\n- juego.zonaDeDúos")
 		
 		def do_no(self, arg):
 			self.resultado = (Acción.Dúos.NO_JUGAR, None, None)
@@ -123,12 +123,12 @@ class JugadorCLI(JugadorBase):
 				print("¡No tenés un dúo de cangrejos para jugar!")
 				return False
 			
-			match = re.fullmatch(r'([01]) (\d+)', arg)
+			match = re.fullmatch(r'([01])', arg)
 			if not match:
 				print("Invocación a \"cangrejos\" inválida")
 				return False
 			
-			parámetrosDelDúo = (int(match.groups()[0]), int(match.groups()[1]))
+			parámetrosDelDúo = (int(match.groups()[0]),)
 			
 			self.resultado = (Acción.Dúos.JUGAR_CANGREJOS, dúoDeCangrejos, parámetrosDelDúo)
 			return True
@@ -147,6 +147,21 @@ class JugadorCLI(JugadorBase):
 			parámetrosDelDúo = (int(match.groups()[0]),)
 			
 			self.resultado = (Acción.Dúos.JUGAR_NADADOR_Y_TIBURÓN, dúoDeNadadorYTiburón, parámetrosDelDúo)
+			return True
+	
+	class AcciónDeRobarConCangrejosPrompt(Prompt):
+		prompt = '>>> '
+		
+		def do_help(self, arg):
+			print("\nOpciones:\n- elegir <índice de carta>:      se roba la <índice de carta>-ésima carta\nEjemplos:\n- elegir 4\n\nPara ver información del juego, juego.<método/atributo de PartidaDeOcéanos>\nEjemplos:\n- juego.topeDelDescarte[0]\n- juego.cantidadDeCartasEnMazo\n- juego.mano\n- juego.zonaDeDúos")
+		
+		def do_elegir(self, arg):
+			match = re.fullmatch(r'(\d+)', arg)
+			if not match:
+				print("Invocación a \"elegir\" inválida")
+				return False
+			
+			self.resultado = int(match.groups()[0])
 			return True
 	
 	class AcciónDeFinDeTurnoPrompt(Prompt):
@@ -194,6 +209,12 @@ class JugadorCLI(JugadorBase):
 		print("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^")
 		return interfaz.resultado
 	
+	def decidirQuéRobarConDúoDeCangrejos(self, descarteElegido: list[Carta]) -> int:
+		interfaz = JugadorCLI.AcciónDeRobarConCangrejosPrompt(self)
+		interfaz.cmdloop(intro=self._mensajeIntroParaRobarConCangrejosPrompt(descarteElegido))
+		print("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^")
+		return interfaz.resultado
+	
 	def decidirAcciónDeFinDeTurno(self) -> Acción.FinDeTurno:
 		interfaz = JugadorCLI.AcciónDeFinDeTurnoPrompt(self)
 		interfaz.cmdloop(intro=self._mensajeIntroParaAcciónFinDeTurnoPrompt())
@@ -218,6 +239,9 @@ class JugadorCLI(JugadorBase):
 	
 	def _mensajeIntroParaAcciónDúosPrompt(self) -> str:
 		return f"vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv\nJugador {self._númeroDeJugador}, decidir si se quieren jugar dúos. Para ver cómo, escribir '?'."
+	
+	def _mensajeIntroParaRobarConCangrejosPrompt(self, descarteElegido) -> str:
+		return f"vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv\nLa pila de descarte elegida para robar es:\n{descarteElegido}\nJugador {self._númeroDeJugador}, decidir qué carta del mazo quedarse y cuál descartar. Para ver cómo, escribir '?'."
 	
 	def _mensajeIntroParaAcciónFinDeTurnoPrompt(self) -> str:
 		return f"vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv\nJugador {self._númeroDeJugador}, decidir cómo terminar el turno. Para ver cómo, escribir '?'."

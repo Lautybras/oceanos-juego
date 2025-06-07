@@ -15,6 +15,7 @@ class PuntosBotMk1(JugadorBase):
 		self._juguéPeces: bool = False
 		self._copiaDeMiMano: Multiset[Carta] = None
 		self._primerEventoNoLeído: int = 0
+		self._pilaARobarConCangrejos: int = None
 		
 		self._mazoEstimado: Multiset[Carta] = Multiset(cartasDelJuego())
 		self._descarteEstimado: tuple[Multiset[Carta], Multiset[Carta]] = (Multiset([]), Multiset([]))
@@ -129,44 +130,49 @@ class PuntosBotMk1(JugadorBase):
 			return (Acción.Dúos.JUGAR_BARCOS, self._buscarDúoParaJugar(Carta.Tipo.BARCO), None)
 		elif (
 			self._buscarDúoParaJugar(Carta.Tipo.CANGREJO) != None and
-			(self._juego.cantidadDeCartasEnDescarte[0] != 0 or
-			self._juego.cantidadDeCartasEnDescarte[1] != 0)
+			(
+				self._juego.cantidadDeCartasEnDescarte[0] != 0 or
+				self._juego.cantidadDeCartasEnDescarte[1] != 0
+			) and
+			(
+				len(self._descarteEstimado[0]) > 0 or
+				len(self._descarteEstimado[1]) > 0
+			)
 		):
 			# Si se puede, jugar un dúo de cangrejos
-			mejorCartaDelDescarte = (None, None) # (pila, índice)
-			mejorValorDelDescarte = -1.0
+			mejorCartaDelDescarteEstimado = (None, None) # (pila, índice)
+			mejorValorDelDescarteEstimado = -1.0
 			
 			
-			# TODO cambiar interfaz de jugar dúo de cangrejos para no romper encapsulamiento
-			for i, cartaEnDescarte in enumerate(self._juego._descarte[0]):
+			for i, cartaEnDescarteEstimado in enumerate(self._descarteEstimado[0]):
+				valorDeCarta = self._valorDeCarta(cartaEnDescarteEstimado, explorar=True)
+				if valorDeCarta > mejorValorDelDescarteEstimado:
+					mejorCartaDelDescarteEstimado = (0, i)
+					mejorValorDelDescarteEstimado = valorDeCarta
+			for i, cartaEnDescarte in enumerate(self._descarteEstimado[1]):
 				valorDeCarta = self._valorDeCarta(cartaEnDescarte, explorar=True)
-				if valorDeCarta > mejorValorDelDescarte:
-					mejorCartaDelDescarte = (0, i)
-					mejorValorDelDescarte = valorDeCarta
-			for i, cartaEnDescarte in enumerate(self._juego._descarte[1]):
-				valorDeCarta = self._valorDeCarta(cartaEnDescarte, explorar=True)
-				if valorDeCarta > mejorValorDelDescarte:
-					mejorCartaDelDescarte = (1, i)
-					mejorValorDelDescarte = valorDeCarta
+				if valorDeCarta > mejorValorDelDescarteEstimado:
+					mejorCartaDelDescarteEstimado = (1, i)
+					mejorValorDelDescarteEstimado = valorDeCarta
 			
 			
-			pilaARobar = mejorCartaDelDescarte[0]
-			cartaARobar = self._juego._descarte[pilaARobar][mejorCartaDelDescarte[1]]
-			
-			##print(f"Mejor valor para robar con cangrejos: {mejorValorDelDescarte} ({cartaARobar})")
 			
 			
-			# Hemos visto la totalidad de la pila de descarte elegida; podemos actualizar nuestra información
-			self._descarteEstimado[pilaARobar].clear()
-			for carta in self._juego._descarte[pilaARobar]:
-				self._descarteEstimado[pilaARobar][carta] += 1
+			pilaARobar = mejorCartaDelDescarteEstimado[0]
+			cartaARobar = self._descarteEstimado[pilaARobar][mejorCartaDelDescarteEstimado[1]]
 			
-			# Y ahora vamos a sacar una carta del descarte; podemos sacarla del descarte estimado
-			self._descarteEstimado[pilaARobar][cartaARobar] -= 1
-			if self._descarteEstimado[pilaARobar][cartaARobar] == 0:
-				del self._descarteEstimado[pilaARobar][cartaARobar]
 			
-			return (Acción.Dúos.JUGAR_CANGREJOS, self._buscarDúoParaJugar(Carta.Tipo.CANGREJO), mejorCartaDelDescarte)
+			##print(f"CREO QUE Mejor valor para robar con cangrejos: {mejorValorDelDescarte} ({cartaARobar})")
+			
+			self._pilaARobarConCangrejos = pilaARobar
+			
+			
+			#! QUICKFIX: no intentes robar de una pila vacía...
+			if self._juego.cantidadDeCartasEnDescarte[pilaARobar] == 0:
+				return (Acción.Dúos.NO_JUGAR, None, None)
+			
+			
+			return (Acción.Dúos.JUGAR_CANGREJOS, self._buscarDúoParaJugar(Carta.Tipo.CANGREJO), (pilaARobar,))
 		
 		elif (
 			self._buscarDúoParaJugar(Carta.Tipo.PEZ) != None and
@@ -199,6 +205,35 @@ class PuntosBotMk1(JugadorBase):
 		else:
 			# Si no se puede jugar ningún dúo, entonces no jugar nada
 			return (Acción.Dúos.NO_JUGAR, None, None)
+	
+	def decidirQuéRobarConDúoDeCangrejos(self, descarteElegido: list[Carta]) -> int:
+		mejorCartaDelDescarte = None # (pila, índice)
+		mejorValorDelDescarte = -1.0
+		
+		for i, cartaEnDescarteElegido in enumerate(descarteElegido):
+			valorDeCarta = self._valorDeCarta(cartaEnDescarteElegido, explorar=True)
+			if valorDeCarta > mejorValorDelDescarte:
+				mejorCartaDelDescarte = i
+				mejorValorDelDescarte = valorDeCarta
+		
+		
+		cartaARobar = descarteElegido[mejorCartaDelDescarte]
+		
+		##print(f"Mejor valor para robar con cangrejos: {mejorValorDelDescarte} ({cartaARobar})")
+		
+		
+		# Hemos visto la totalidad de la pila de descarte elegida; podemos actualizar nuestra información
+		self._descarteEstimado[self._pilaARobarConCangrejos].clear()
+		for carta in descarteElegido:
+			self._descarteEstimado[self._pilaARobarConCangrejos][carta] += 1
+		
+		# Y ahora vamos a sacar una carta del descarte; podemos sacarla del descarte estimado
+		self._descarteEstimado[self._pilaARobarConCangrejos][cartaARobar] -= 1
+		if self._descarteEstimado[self._pilaARobarConCangrejos][cartaARobar] == 0:
+			del self._descarteEstimado[self._pilaARobarConCangrejos][cartaARobar]
+		
+		self._pilaARobarConCangrejos = None
+		return mejorCartaDelDescarte
 	
 	def decidirAcciónDeFinDeTurno(self):
 		if self._juego.puntajeDeRonda >= 7 and not self._juego.últimaChanceEnCurso():

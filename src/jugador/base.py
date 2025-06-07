@@ -25,6 +25,9 @@ class JugadorBase():
 	def decidirAcciónDeDúos(self) -> tuple[Acción.Dúos, Multiset[Carta]|None, tuple[any]|None]:
 		raise Exception("¡Implementame!")
 	
+	def decidirQuéRobarConDúoDeCangrejos(self, descarteElegido: list[Carta]) -> int:
+		raise Exception("¡Implementame!")
+	
 	def decidirAcciónDeFinDeTurno(self) -> Acción.FinDeTurno:
 		raise Exception("¡Implementame!")
 	

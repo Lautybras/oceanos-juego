@@ -71,8 +71,8 @@ class RandyBot(JugadorBase):
 			if (self._juego.cantidadDeCartasEnDescarte[1] > 0):
 				pilasPosibles.append(1)
 			pilaElegida = choice(pilasPosibles)
-			indiceElegido = choice(list(range(self._juego.cantidadDeCartasEnDescarte[pilaElegida])))
-			return (acciónElegida, posibleDúoDeCangrejos, (pilaElegida, indiceElegido))
+			
+			return (acciónElegida, posibleDúoDeCangrejos, (pilaElegida,))
 		
 		elif acciónElegida == Acción.Dúos.JUGAR_NADADOR_Y_TIBURÓN:
 			jugadorARobar = list(range(self._juego.cantidadDeJugadores))
@@ -81,6 +81,9 @@ class RandyBot(JugadorBase):
 		
 		elif acciónElegida == Acción.Dúos.NO_JUGAR:
 			return (Acción.Dúos.NO_JUGAR, None, None)
+	
+	def decidirQuéRobarConDúoDeCangrejos(self, descarteElegido: list[Carta]) -> int:
+		return choice(list(range(len(descarteElegido))))
 	
 	def decidirAcciónDeFinDeTurno(self) -> Acción.FinDeTurno:
 		accionesDeFinDeTurnoPosibles = [Acción.FinDeTurno.PASAR_TURNO]

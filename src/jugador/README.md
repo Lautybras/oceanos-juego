@@ -20,7 +20,7 @@ Este método se invoca al principio del turno si el Bot eligió robar del mazo c
 
 Este método se invoca durante la fase de dúos (luego de robar) para que el Bot elija qué dúo (si alguno) desea jugar inmediatamente. Se espera como respuesta una tripla de la pinta `(acciónElegida, cartasAJugar, parámetrosDelDúo)`, donde `acciónElegida` es una `Acción.Dúos`, `cartasAJugar` es un `Multiset` con las cartas a jugar, y `parámetrosDelDúo` son los parámetros de la siguiente manera:
 * Para dúos de peces y barcos, es `None` (ya que estos dúos no requieren parámetros)
-* Para dúos de cangrejos, es una tupla `(pilaElegida, índiceElegido)`, donde `pilaElegida` es el índice de la pila donde se roba, e `índiceElegido` es el índice de la carta de la pila elegida que se quiere robar (donde 0 es la de más abajo).
+* Para dúos de cangrejos, es una 1-upla `(pilaElegida)`, donde `pilaElegida` es el índice de la pila donde se roba. La decisión de qué carta de dicha pila se va a robar queda delegada a `decidirQuéRobarConDúoDeCangrejos`.
 * Para dúos de nadador y tiburón, es una 1-upla `(jugadorARobar)`, donde `jugadorARobar` es el índice del jugador a robar.
 
 Esta fase es la más compleja por la cantidad de cosas que pueden hacerse, y es importante asegurarse de que los parámetros enviados son válidos:
@@ -30,6 +30,11 @@ Esta fase es la más compleja por la cantidad de cosas que pueden hacerse, y es 
 * Nadador&Tiburón: asegurarse de que el jugador elegido no sea uno mismo...
 
 El método se invoca reiteradas veces sobre el Bot hasta que el Bot responde `Acción.Dúos.NO_JUGAR`, y entonces se pasa a la fase de fin de ronda.
+
+### Método `decidirQuéRobarConDúoDeCangrejos(descarteElegido)`
+
+Este método se invoca si el Bot eligió jugar un dúo de cangrejos cuando se llamó a `decidirAcciónDeRobo()`. El Bot tiene que tomar la decisión de qué carta llevarse de la pila de descarte anteriormente elegida, devolviendo el índice de la carta elegida. El parámetro `descarteElegido` es una copia de la pila de descarte elegida (donde la carta de más arriba es la del índice más alto numéricamente).
+
 
 ### Método `decidirAcciónDeFinDeTurno()`
 

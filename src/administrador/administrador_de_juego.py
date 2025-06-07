@@ -191,7 +191,8 @@ class AdministradorDeJuego():
 				
 			elif acciónDeDúos == Acción.Dúos.JUGAR_CANGREJOS:
 				# Jugar dúo de cangrejos
-				(pilaDeDescarteARobar, indiceDeCartaARobar) = parametrosDelDúo
+				pilaDeDescarteARobar = parametrosDelDúo[0]
+				indiceDeCartaARobar = self._jugadores[self._juego.deQuiénEsTurno].decidirQuéRobarConDúoDeCangrejos(deepcopy(self._juego._descarte[pilaDeDescarteARobar]))
 				
 				self._eventos.append(Evento(self._juego.deQuiénEsTurno, acciónDeDúos,
 					{
