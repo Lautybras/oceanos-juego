@@ -327,6 +327,11 @@ class AdministradorDeJuego():
 					print(f"Jugador {j}: +{self._juego._estadosDeJugadores[j].puntajeDeRonda()} ({self._juego.puntajes[j]}/{self._juego.puntajeParaGanar})")					
 				print("*********************************************************")
 		
+		if self._verbosidad != self.Verbosidad.NADA:
+			for j in range(len(self._jugadores)):
+				print(f"Mano del jugador {j}:\n{self._juego._estadosDeJugadores[j].mano}")
+				print(f"zona de dúos del jugador {j}:\n{self._juego._estadosDeJugadores[j].zonaDeDúos}\n")
+		
 		self._calcularEstadísticasDeRonda()
 		
 		quiénArranca = self._juego._deQuiénEsTurno
